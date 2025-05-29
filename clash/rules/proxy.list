@@ -1,0 +1,6 @@
+# NAME: Proxy
+# REPO: https://magichub.top/resource/clash/rule/proxy.list
+
+# 域名后缀匹配
+DOMAIN-SUFFIX,qichiyu.com
+DOMAIN-SUFFIX,v2ex.com

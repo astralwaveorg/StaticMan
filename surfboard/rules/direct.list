@@ -1,0 +1,130 @@
+## URL: https://magichub.top/resource/surfboard/direct.list
+
+# 百度相关
+DOMAIN-SUFFIX,baidu.com
+DOMAIN-SUFFIX,baidupcs.com
+DOMAIN-SUFFIX,bdimg.com
+DOMAIN-SUFFIX,bdstatic.com
+# 阿里巴巴相关
+DOMAIN-SUFFIX,alipay.com
+DOMAIN-SUFFIX,alipayobjects.com
+DOMAIN-SUFFIX,alicdn.com
+DOMAIN-SUFFIX,aliyun.com
+DOMAIN-SUFFIX,aliyuncs.com
+DOMAIN-SUFFIX,taobao.com
+DOMAIN-SUFFIX,tmall.com
+# 腾讯相关
+DOMAIN-SUFFIX,qq.com
+DOMAIN-SUFFIX,qqurl.com
+DOMAIN-SUFFIX,gtimg.com
+# 网易相关
+DOMAIN-SUFFIX,126.net
+DOMAIN-SUFFIX,163.com
+DOMAIN-SUFFIX,163.net
+DOMAIN-SUFFIX,netease.com
+DOMAIN-SUFFIX,netease.im
+# 高德地图相关
+DOMAIN-SUFFIX,amap.com
+DOMAIN-SUFFIX,autonavi.com
+# 苹果相关
+DOMAIN-SUFFIX,apple.com
+DOMAIN-SUFFIX,apple-cloudkit.com
+DOMAIN-SUFFIX,apple-mapkit.com
+DOMAIN-SUFFIX,icloud.com
+DOMAIN-SUFFIX,icloud-content.com
+DOMAIN-SUFFIX,itunes.apple.com
+DOMAIN-SUFFIX,mzstatic.com
+DOMAIN-SUFFIX,me.com
+DOMAIN-SUFFIX,aaplimg.com
+DOMAIN-SUFFIX,cdn20.com
+DOMAIN-SUFFIX,cdn-apple.com
+DOMAIN,guzzoni.apple.com
+DOMAIN-SUFFIX,ls.apple.com
+DOMAIN-SUFFIX,store.apple.com
+DOMAIN-SUFFIX,appldnld.apple.com
+DOMAIN-SUFFIX,adcdownload.apple.com
+DOMAIN-SUFFIX,swcdn.apple.com
+DOMAIN-SUFFIX,phobos.apple.com
+# CDN和云服务
+DOMAIN-SUFFIX,ccgslb.com
+DOMAIN-SUFFIX,ccgslb.net
+DOMAIN-SUFFIX,akadns.net
+DOMAIN-SUFFIX,akamaiedge.net
+DOMAIN-SUFFIX,edgekey.net
+DOMAIN-SUFFIX,mwcloudcdn.com
+DOMAIN-SUFFIX,mwcname.com
+DOMAIN-SUFFIX,qiniucdn.com
+DOMAIN-SUFFIX,qiniudn.com
+DOMAIN-SUFFIX,upaiyun.com
+DOMAIN-SUFFIX,clouddn.com
+DOMAIN-SUFFIX,upyun.com
+DOMAIN,origin-a.akamaihd.net
+# 视频和娱乐平台
+DOMAIN-SUFFIX,iqiyi.com
+DOMAIN-SUFFIX,tudou.com
+DOMAIN-SUFFIX,youku.com
+# 电商平台
+DOMAIN-SUFFIX,jd.com
+DOMAIN-SUFFIX,suning.com
+# 小米相关
+DOMAIN-SUFFIX,mi.com
+DOMAIN-SUFFIX,miui.com
+DOMAIN,tracking.miui.com
+# 社交媒体平台
+DOMAIN-SUFFIX,weibo.com
+DOMAIN-SUFFIX,douban.com
+DOMAIN-SUFFIX,doubanio.com
+DOMAIN-SUFFIX,zhihu.com
+DOMAIN-SUFFIX,zhimg.com
+# 搜索引擎相关
+DOMAIN-SUFFIX,sogou.com
+DOMAIN-SUFFIX,sogoucdn.com
+DOMAIN-SUFFIX,hao123.com
+DOMAIN-SUFFIX,haosou.com
+DOMAIN-SUFFIX,qhimg.com
+DOMAIN-SUFFIX,qihucdn.com
+# 新闻和媒体
+DOMAIN-SUFFIX,ifeng.com
+DOMAIN-SUFFIX,cnbeta.com
+DOMAIN-SUFFIX,cnbetacdn.com
+DOMAIN-SUFFIX,qdaily.com
+DOMAIN-SUFFIX,sohu.com
+# 游戏相关
+DOMAIN-SUFFIX,steamstatic.com
+DOMAIN-SUFFIX,ol.epicgames.com
+DOMAIN-SUFFIX,rewards.hypixel.net
+# GitHub镜像
+DOMAIN-SUFFIX,kkgithub.com
+DOMAIN-SUFFIX,eoysky.com
+DOMAIN-SUFFIX,jonnyhub.com
+DOMAIN-SUFFIX,archiguru.io
+# 路由器和家庭网络
+DOMAIN-SUFFIX,hiwifi.com
+DOMAIN-SUFFIX,leike.cc
+DOMAIN-SUFFIX,miwifi.com
+DOMAIN-SUFFIX,my.router
+DOMAIN-SUFFIX,p.to
+DOMAIN-SUFFIX,peiluyou.com
+DOMAIN-SUFFIX,phicomm.me
+DOMAIN-SUFFIX,router.ctc
+DOMAIN-SUFFIX,routerlogin.com
+DOMAIN-SUFFIX,tendawifi.com
+DOMAIN-SUFFIX,zte.home
+DOMAIN-SUFFIX,tplogin.cn
+DOMAIN-SUFFIX,wifi.cmcc
+DOMAIN,router.asus.com
+DOMAIN,www.asusrouter.com
+# 下载和文件传输
+DOMAIN-SUFFIX,xunlei.com
+# 其他服务
+DOMAIN-SUFFIX,flmsgo.xyz
+DOMAIN-SUFFIX,ap.spotify.com
+DOMAIN-SUFFIX,mobile-gtalk.l.google.com
+DOMAIN-SUFFIX,dizhensubao.getui.com
+DOMAIN-SUFFIX,koodomobile.com
+DOMAIN-SUFFIX,koodomobile.ca
+DOMAIN-SUFFIX,googletraveladservices.com
+DOMAIN-SUFFIX,tracking-protection.cdn.mozilla.net
+DOMAIN,safebrowsing.googleapis.com
+DOMAIN,app.adjust.com
+DOMAIN,bdtj.tagtic.cn

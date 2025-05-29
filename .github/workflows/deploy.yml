@@ -1,0 +1,45 @@
+name: Auto deploy project to Remote Server
+run-name: ${{ github.actor }} 提交触发自动部署 🚀
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            # 第一步：检出代码到 Actions 运行器
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            # 第二步：设置 SSH 密钥用于后续操作
+            - name: Set up SSH
+              run: |
+                  mkdir -p ~/.ssh
+                  echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/id_rsa
+                  chmod 600 ~/.ssh/id_rsa
+                  ssh-keyscan -t rsa ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
+            # 第三步：使用 rsync 直接同步文件到服务器
+            - name: Sync files
+              env:
+                  SHA: ${{ github.sha }}
+              run: |
+                  echo "部署 sha: $SHA"
+
+                  # 检查目录是否存在
+                  if [ -d "static" ]; then
+                    echo "同步 static 目录内容"
+                    rsync -avz --delete static/ root@${{ secrets.HOST }}:${{ secrets.WEB_DIR }}/
+                  else
+                    echo "static 目录不存在"
+                  fi
+                  if [ -d "resource" ]; then
+                    echo "同步 resource 目录"
+                    rsync -avz --delete resource/ root@${{ secrets.HOST }}:${{ secrets.WEB_DIR }}/resource/
+                  else
+                    echo "resource 目录不存在"
+                  fi
+                  echo "部署完成"
