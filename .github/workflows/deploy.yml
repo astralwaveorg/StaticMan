@@ -22,24 +22,18 @@ jobs:
                   chmod 600 ~/.ssh/id_rsa
                   ssh-keyscan -t rsa ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
-            # 第三步：使用 rsync 直接同步文件到服务器
-            - name: Sync files
+            # 第三步：通过 SSH 在远程服务器执行 git 强制更新并显示部署信息
+            - name: Force update and deploy
+              run: |
+                  echo "开始部署..."
+                  ssh ${{ secrets.SSH_USER }}@${{ secrets.HOST }} "
+                      cd /data/magichub && \
+                      git fetch --all && \
+                      git reset --hard origin/main && \
+                      git clean -fd && \
+                      git pull origin main
+                  "
+                  echo "部署 sha: $SHA"
+                  echo "部署完成 - 代码已强制更新到最新版本"
               env:
                   SHA: ${{ github.sha }}
-              run: |
-                  echo "部署 sha: $SHA"
-
-                  # 检查目录是否存在
-                  if [ -d "static" ]; then
-                    echo "同步 static 目录内容"
-                    rsync -avz --delete static/ root@${{ secrets.HOST }}:${{ secrets.WEB_DIR }}/
-                  else
-                    echo "static 目录不存在"
-                  fi
-                  if [ -d "resource" ]; then
-                    echo "同步 resource 目录"
-                    rsync -avz --delete resource/ root@${{ secrets.HOST }}:${{ secrets.WEB_DIR }}/resource/
-                  else
-                    echo "resource 目录不存在"
-                  fi
-                  echo "部署完成"
