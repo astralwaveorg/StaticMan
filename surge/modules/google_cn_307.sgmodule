@@ -1,8 +1,9 @@
 #!name = 谷歌中国重定向
-#!desc = 将 google.cn 的请求重定向到 google.com。 https://magichub.top/download/surge/modules/google_cn_307.sgmodule
+#!desc = 将 google.cn 的请求重定向到 google.com
 #!author = Astral
 #!category = 💠 功能增强
 #!tag = Google
+#!tag = https://magichub.top/download/surge/modules/google_cn_307.sgmodule
 
 [URL Rewrite]
 ^https?://(www.)?(g|google)\.cn https://www.google.com 307
