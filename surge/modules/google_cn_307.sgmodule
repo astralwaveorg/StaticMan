@@ -1,5 +1,5 @@
-#!name = 谷歌中国重定向
-#!desc = 将 google.cn 的请求重定向到 google.com
+#!name = 谷歌重定向
+#!desc = Google Search Redirect
 #!author = Astral
 #!category = 💠 功能增强
 #!tag = Google
