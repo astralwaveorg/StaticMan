@@ -18,8 +18,6 @@ mode: rule
 # 日志级别: silent, error, warning, info, debug, verbose
 log-level: warning
 # 全局 IPv6 支持
-# 设置为 true 以允许 Clash 进行 IPv6 连接。
-# 若网络不支持 IPv6，可设为 false，但可能导致 IPv6 DNS 服务器无法使用。
 ipv6: true
 # 外部控制器 (API) 地址和端口，用于 Web UI 等交互
 external-controller: :9090
@@ -48,17 +46,8 @@ geox-url:
 dns:
   enable: true
   listen: :1053
-  # DNS 服务器是否处理 IPv6 (AAAA) 记录
-  ipv6: true
   # DNS 增强模式: redir-host 或 fake-ip
   enhanced-mode: redir-host
-  # Fake-IP 地址池 (当 enhanced-mode 为 fake-ip 时生效)
-  fake-ip-range: 28.0.0.1/8
-  # Fake-IP 域名过滤器 (当 enhanced-mode 为 fake-ip 时生效)
-  fake-ip-filter:
-    - "*"
-    - "+.lan"
-    - "+.local"
   # 默认 DNS 服务器 (用于解析 Clash 自身、直连域名等)
   default-nameserver:
     - 223.5.5.5
@@ -202,7 +191,7 @@ proxy-groups:
       - 🇸🇬 新加坡
       - 🇬🇧 英国
       - 🇩🇪 德国
-      - �🇱 荷兰
+      - 🇳🇱 荷兰
       - 🌍 其它地区
       - 💠 全部节点
 
