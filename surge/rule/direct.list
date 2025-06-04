@@ -1,0 +1,12 @@
+AND,((DOMAIN,github.com), (DEST-PORT,22))
+DOMAIN-SUFFIX,homehub.stream
+DOMAIN-SUFFIX,astralwave.io
+DOMAIN-SUFFIX,astralwave.vip
+DOMAIN-SUFFIX,eoysky.com
+DOMAIN-SUFFIX,rsshub.in
+DOMAIN-SUFFIX,jonnyhub.com
+DOMAIN-SUFFIX,dilyslyu.com
+DOMAIN-SUFFIX,xn--ngstr-lra8j.com,DIRECT
+DOMAIN-SUFFIX,googleapis.cn,DIRECT
+DOMAIN-SUFFIX,juejin.im
+DOMAIN-SUFFIX,juejin.cn
