@@ -8,12 +8,12 @@ BASE-DATA:
     proxies-all: &proxies-all
       - 国外流量
       - 直接连接
-      - 🇭🇰 AIRPORT-HK
-      - 🇨🇳 AIRPORT-TW
-      - 🇸🇬 AIRPORT-SG
-      - 🇯🇵 AIRPORT-JP
-      - 🇰🇷 AIRPORT-Korea
-      - 🇺🇸 AIRPORT-US
+      - 🇭🇰 香港-HK
+      - 🇨🇳 台湾-TW
+      - 🇸🇬 新加坡-SG
+      - 🇯🇵 日本-JP
+      - 🇰🇷 韩国-Korea
+      - 🇺🇸 美国-US
       - 🇮🇳 AIRPORT-India
       - 🇬🇧 AIRPORT-EN
       - 🇮🇪 AIRPORT-Ireland
@@ -27,12 +27,12 @@ BASE-DATA:
     proxies-all-fdirect: &proxies-all-fdirect
       - 直接连接
       - 国外流量
-      - 🇭🇰 AIRPORT-HK
-      - 🇨🇳 AIRPORT-TW
-      - 🇸🇬 AIRPORT-SG
-      - 🇯🇵 AIRPORT-JP
-      - 🇰🇷 AIRPORT-Korea
-      - 🇺🇸 AIRPORT-US
+      - 🇭🇰 香港-HK
+      - 🇨🇳 台湾-TW
+      - 🇸🇬 新加坡-SG
+      - 🇯🇵 日本-JP
+      - 🇰🇷 韩国-Korea
+      - 🇺🇸 美国-US
       - 🇮🇳 AIRPORT-India
       - 🇬🇧 AIRPORT-EN
       - 🇮🇪 AIRPORT-Ireland
@@ -44,12 +44,12 @@ BASE-DATA:
       - WARP+
       - ProxyChain
     proxies-all-oforeign: &proxies-all-oforeign
-      - 🇭🇰 AIRPORT-HK
-      - 🇨🇳 AIRPORT-TW
-      - 🇸🇬 AIRPORT-SG
-      - 🇯🇵 AIRPORT-JP
-      - 🇰🇷 AIRPORT-Korea
-      - 🇺🇸 AIRPORT-US
+      - 🇭🇰 香港-HK
+      - 🇨🇳 台湾-TW
+      - 🇸🇬 新加坡-SG
+      - 🇯🇵 日本-JP
+      - 🇰🇷 韩国-Korea
+      - 🇺🇸 美国-US
       - 🇮🇳 AIRPORT-India
       - 🇬🇧 AIRPORT-EN
       - 🇮🇪 AIRPORT-Ireland
@@ -61,12 +61,12 @@ BASE-DATA:
       - WARP+
       - ProxyChain
     proxies-all-for-proxychain: &proxies-all-for-proxychain
-      - 🇭🇰 AIRPORT-HK
-      - 🇨🇳 AIRPORT-TW
-      - 🇸🇬 AIRPORT-SG
-      - 🇯🇵 AIRPORT-JP
-      - 🇰🇷 AIRPORT-Korea
-      - 🇺🇸 AIRPORT-US
+      - 🇭🇰 香港-HK
+      - 🇨🇳 台湾-TW
+      - 🇸🇬 新加坡-SG
+      - 🇯🇵 日本-JP
+      - 🇰🇷 韩国-Korea
+      - 🇺🇸 美国-US
       - 🇮🇳 AIRPORT-India
       - 🇬🇧 AIRPORT-EN
       - 🇮🇪 AIRPORT-Ireland
@@ -77,14 +77,14 @@ BASE-DATA:
       - AIRPORT
       - WARP+
     proxies-all-for-tiktok: &proxies-all-for-tiktok
-      - 🇺🇸 AIRPORT-US
+      - 🇺🇸 美国-US
       - 国外流量
       - AIRPORT
-      - 🇭🇰 AIRPORT-HK
-      - 🇨🇳 AIRPORT-TW
-      - 🇸🇬 AIRPORT-SG
-      - 🇯🇵 AIRPORT-JP
-      - 🇰🇷 AIRPORT-Korea
+      - 🇭🇰 香港-HK
+      - 🇨🇳 台湾-TW
+      - 🇸🇬 新加坡-SG
+      - 🇯🇵 日本-JP
+      - 🇰🇷 韩国-Korea
       - 🇮🇳 AIRPORT-India
       - 🇬🇧 AIRPORT-EN
       - 🇮🇪 AIRPORT-Ireland
@@ -93,10 +93,10 @@ BASE-DATA:
       - 🇫🇷 AIRPORT-FR
       - 🇦🇺 AIRPORT-AU
     proxies-all-for-openai: &proxies-all-for-openai
-      - 🇰🇷 AIRPORT-Korea
-      - 🇯🇵 AIRPORT-JP
-      - 🇺🇸 AIRPORT-US
-      - 🇸🇬 AIRPORT-SG
+      - 🇰🇷 韩国-Korea
+      - 🇯🇵 日本-JP
+      - 🇺🇸 美国-US
+      - 🇸🇬 新加坡-SG
       - 🇬🇧 AIRPORT-EN
       - 🇮🇪 AIRPORT-Ireland
       - 🇨🇦 AIRPORT-Canada
@@ -105,46 +105,46 @@ BASE-DATA:
       - AIRPORT
     proxies-all-for-claude: &proxies-all-for-claude
       - 🇬🇧 AIRPORT-EN
-      - 🇺🇸 AIRPORT-US
-      - 🇰🇷 AIRPORT-Korea
-      - 🇯🇵 AIRPORT-JP
-      - 🇸🇬 AIRPORT-SG
+      - 🇺🇸 美国-US
+      - 🇰🇷 韩国-Korea
+      - 🇯🇵 日本-JP
+      - 🇸🇬 新加坡-SG
       - 🇮🇪 AIRPORT-Ireland
       - 🇨🇦 AIRPORT-Canada
       - 🇫🇷 AIRPORT-FR
       - 🇦🇺 AIRPORT-AU
       - AIRPORT
     proxies-all-for-gemini: &proxies-all-for-gemini
-      - 🇺🇸 AIRPORT-US
+      - 🇺🇸 美国-US
       - 🇬🇧 AIRPORT-EN
-      - 🇰🇷 AIRPORT-Korea
-      - 🇯🇵 AIRPORT-JP
-      - 🇸🇬 AIRPORT-SG
+      - 🇰🇷 韩国-Korea
+      - 🇯🇵 日本-JP
+      - 🇸🇬 新加坡-SG
       - 🇮🇪 AIRPORT-Ireland
       - 🇨🇦 AIRPORT-Canada
       - 🇫🇷 AIRPORT-FR
       - 🇦🇺 AIRPORT-AU
       - AIRPORT
     proxies-all-for-perplexity: &proxies-all-for-perplexity
-      - 🇺🇸 AIRPORT-US
+      - 🇺🇸 美国-US
       - 🇬🇧 AIRPORT-EN
-      - 🇰🇷 AIRPORT-Korea
-      - 🇯🇵 AIRPORT-JP
-      - 🇸🇬 AIRPORT-SG
+      - 🇰🇷 韩国-Korea
+      - 🇯🇵 日本-JP
+      - 🇸🇬 新加坡-SG
       - 🇮🇪 AIRPORT-Ireland
       - 🇨🇦 AIRPORT-Canada
       - 🇫🇷 AIRPORT-FR
       - 🇦🇺 AIRPORT-AU
       - AIRPORT
     proxies-all-for-javsp: &proxies-all-for-javsp
-      - 🇯🇵 AIRPORT-JP
+      - 🇯🇵 日本-JP
       - 国外流量
       - 直接连接
-      - 🇭🇰 AIRPORT-HK
-      - 🇨🇳 AIRPORT-TW
-      - 🇸🇬 AIRPORT-SG
-      - 🇰🇷 AIRPORT-Korea
-      - 🇺🇸 AIRPORT-US
+      - 🇭🇰 香港-HK
+      - 🇨🇳 台湾-TW
+      - 🇸🇬 新加坡-SG
+      - 🇰🇷 韩国-Korea
+      - 🇺🇸 美国-US
       - 🇮🇳 AIRPORT-India
       - 🇬🇧 AIRPORT-EN
       - 🇮🇪 AIRPORT-Ireland
@@ -156,14 +156,14 @@ BASE-DATA:
       - WARP+
       - ProxyChain
     proxies-all-for-reddit: &proxies-all-for-reddit
-      - 🇺🇸 AIRPORT-US
+      - 🇺🇸 美国-US
       - 国外流量
       - AIRPORT
-      - 🇭🇰 AIRPORT-HK
-      - 🇨🇳 AIRPORT-TW
-      - 🇸🇬 AIRPORT-SG
-      - 🇯🇵 AIRPORT-JP
-      - 🇰🇷 AIRPORT-Korea
+      - 🇭🇰 香港-HK
+      - 🇨🇳 台湾-TW
+      - 🇸🇬 新加坡-SG
+      - 🇯🇵 日本-JP
+      - 🇰🇷 韩国-Korea
       - 🇮🇳 AIRPORT-India
       - 🇬🇧 AIRPORT-EN
       - 🇮🇪 AIRPORT-Ireland
@@ -856,37 +856,37 @@ proxy-groups:
     type: select  
     use: *proxy-providers-use
   -
-    name: 🇭🇰 AIRPORT-HK
+    name: 🇭🇰 香港-HK
     icon: *icon-Hong_Kong
     type: select  
     filter: *proxy-filter-HK  
     use: *proxy-providers-use
   -
-    name: 🇨🇳 AIRPORT-TW
+    name: 🇨🇳 台湾-TW
     icon: *icon-Taiwan
     type: select  
     filter: *proxy-filter-TW  
     use: *proxy-providers-use
   -
-    name: 🇸🇬 AIRPORT-SG
+    name: 🇸🇬 新加坡-SG
     icon: *icon-Singapore
     type: select  
     filter: *proxy-filter-SG  
     use: *proxy-providers-use
   -
-    name: 🇯🇵 AIRPORT-JP
+    name: 🇯🇵 日本-JP
     icon: *icon-Japan
     type: select  
     filter: *proxy-filter-JP  
     use: *proxy-providers-use
   -
-    name: 🇰🇷 AIRPORT-Korea
+    name: 🇰🇷 韩国-Korea
     icon: *icon-Korea
     type: select  
     filter: *proxy-filter-Korea  
     use: *proxy-providers-use
   -
-    name: 🇺🇸 AIRPORT-US
+    name: 🇺🇸 美国-US
     icon: *icon-United_States
     type: select  
     filter: *proxy-filter-US  
