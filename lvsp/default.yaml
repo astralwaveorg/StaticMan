@@ -14,12 +14,12 @@ BASE-DATA:
       - 🇯🇵 日本-JP
       - 🇰🇷 韩国-Korea
       - 🇺🇸 美国-US
-      - 🇮🇳 AIRPORT-India
-      - 🇬🇧 AIRPORT-EN
-      - 🇮🇪 AIRPORT-Ireland
-      - 🇷🇺 AIRPORT-RU
-      - 🇨🇦 AIRPORT-Canada
-      - 🇫🇷 AIRPORT-FR
+      - 🇮🇳 印度-India
+      - 🇬🇧 英国-EN
+      - 🇮🇪 爱尔兰-Ireland
+      - 🇷🇺 俄罗斯-RU
+      - 🇨🇦 加拿大-Canada
+      - 🇫🇷 法国-FR
       - 🇦🇺 AIRPORT-AU
       - AIRPORT
       - WARP+
@@ -33,12 +33,12 @@ BASE-DATA:
       - 🇯🇵 日本-JP
       - 🇰🇷 韩国-Korea
       - 🇺🇸 美国-US
-      - 🇮🇳 AIRPORT-India
-      - 🇬🇧 AIRPORT-EN
-      - 🇮🇪 AIRPORT-Ireland
-      - 🇷🇺 AIRPORT-RU
-      - 🇨🇦 AIRPORT-Canada
-      - 🇫🇷 AIRPORT-FR
+      - 🇮🇳 印度-India
+      - 🇬🇧 英国-EN
+      - 🇮🇪 爱尔兰-Ireland
+      - 🇷🇺 俄罗斯-RU
+      - 🇨🇦 加拿大-Canada
+      - 🇫🇷 法国-FR
       - 🇦🇺 AIRPORT-AU
       - AIRPORT
       - WARP+
@@ -50,12 +50,12 @@ BASE-DATA:
       - 🇯🇵 日本-JP
       - 🇰🇷 韩国-Korea
       - 🇺🇸 美国-US
-      - 🇮🇳 AIRPORT-India
-      - 🇬🇧 AIRPORT-EN
-      - 🇮🇪 AIRPORT-Ireland
-      - 🇷🇺 AIRPORT-RU
-      - 🇨🇦 AIRPORT-Canada
-      - 🇫🇷 AIRPORT-FR
+      - 🇮🇳 印度-India
+      - 🇬🇧 英国-EN
+      - 🇮🇪 爱尔兰-Ireland
+      - 🇷🇺 俄罗斯-RU
+      - 🇨🇦 加拿大-Canada
+      - 🇫🇷 法国-FR
       - 🇦🇺 AIRPORT-AU
       - AIRPORT
       - WARP+
@@ -67,12 +67,12 @@ BASE-DATA:
       - 🇯🇵 日本-JP
       - 🇰🇷 韩国-Korea
       - 🇺🇸 美国-US
-      - 🇮🇳 AIRPORT-India
-      - 🇬🇧 AIRPORT-EN
-      - 🇮🇪 AIRPORT-Ireland
-      - 🇷🇺 AIRPORT-RU
-      - 🇨🇦 AIRPORT-Canada
-      - 🇫🇷 AIRPORT-FR
+      - 🇮🇳 印度-India
+      - 🇬🇧 英国-EN
+      - 🇮🇪 爱尔兰-Ireland
+      - 🇷🇺 俄罗斯-RU
+      - 🇨🇦 加拿大-Canada
+      - 🇫🇷 法国-FR
       - 🇦🇺 AIRPORT-AU
       - AIRPORT
       - WARP+
@@ -85,55 +85,55 @@ BASE-DATA:
       - 🇸🇬 新加坡-SG
       - 🇯🇵 日本-JP
       - 🇰🇷 韩国-Korea
-      - 🇮🇳 AIRPORT-India
-      - 🇬🇧 AIRPORT-EN
-      - 🇮🇪 AIRPORT-Ireland
-      - 🇷🇺 AIRPORT-RU
-      - 🇨🇦 AIRPORT-Canada
-      - 🇫🇷 AIRPORT-FR
+      - 🇮🇳 印度-India
+      - 🇬🇧 英国-EN
+      - 🇮🇪 爱尔兰-Ireland
+      - 🇷🇺 俄罗斯-RU
+      - 🇨🇦 加拿大-Canada
+      - 🇫🇷 法国-FR
       - 🇦🇺 AIRPORT-AU
     proxies-all-for-openai: &proxies-all-for-openai
-      - 🇰🇷 韩国-Korea
       - 🇯🇵 日本-JP
+      - 🇰🇷 韩国-Korea
       - 🇺🇸 美国-US
       - 🇸🇬 新加坡-SG
-      - 🇬🇧 AIRPORT-EN
-      - 🇮🇪 AIRPORT-Ireland
-      - 🇨🇦 AIRPORT-Canada
-      - 🇫🇷 AIRPORT-FR
+      - 🇬🇧 英国-EN
+      - 🇮🇪 爱尔兰-Ireland
+      - 🇨🇦 加拿大-Canada
+      - 🇫🇷 法国-FR
       - 🇦🇺 AIRPORT-AU
       - AIRPORT
     proxies-all-for-claude: &proxies-all-for-claude
-      - 🇬🇧 AIRPORT-EN
+      - 🇬🇧 英国-EN
       - 🇺🇸 美国-US
       - 🇰🇷 韩国-Korea
       - 🇯🇵 日本-JP
       - 🇸🇬 新加坡-SG
-      - 🇮🇪 AIRPORT-Ireland
-      - 🇨🇦 AIRPORT-Canada
-      - 🇫🇷 AIRPORT-FR
+      - 🇮🇪 爱尔兰-Ireland
+      - 🇨🇦 加拿大-Canada
+      - 🇫🇷 法国-FR
       - 🇦🇺 AIRPORT-AU
       - AIRPORT
     proxies-all-for-gemini: &proxies-all-for-gemini
       - 🇺🇸 美国-US
-      - 🇬🇧 AIRPORT-EN
+      - 🇬🇧 英国-EN
       - 🇰🇷 韩国-Korea
       - 🇯🇵 日本-JP
       - 🇸🇬 新加坡-SG
-      - 🇮🇪 AIRPORT-Ireland
-      - 🇨🇦 AIRPORT-Canada
-      - 🇫🇷 AIRPORT-FR
+      - 🇮🇪 爱尔兰-Ireland
+      - 🇨🇦 加拿大-Canada
+      - 🇫🇷 法国-FR
       - 🇦🇺 AIRPORT-AU
       - AIRPORT
     proxies-all-for-perplexity: &proxies-all-for-perplexity
       - 🇺🇸 美国-US
-      - 🇬🇧 AIRPORT-EN
+      - 🇬🇧 英国-EN
       - 🇰🇷 韩国-Korea
       - 🇯🇵 日本-JP
       - 🇸🇬 新加坡-SG
-      - 🇮🇪 AIRPORT-Ireland
-      - 🇨🇦 AIRPORT-Canada
-      - 🇫🇷 AIRPORT-FR
+      - 🇮🇪 爱尔兰-Ireland
+      - 🇨🇦 加拿大-Canada
+      - 🇫🇷 法国-FR
       - 🇦🇺 AIRPORT-AU
       - AIRPORT
     proxies-all-for-javsp: &proxies-all-for-javsp
@@ -145,12 +145,12 @@ BASE-DATA:
       - 🇸🇬 新加坡-SG
       - 🇰🇷 韩国-Korea
       - 🇺🇸 美国-US
-      - 🇮🇳 AIRPORT-India
-      - 🇬🇧 AIRPORT-EN
-      - 🇮🇪 AIRPORT-Ireland
-      - 🇷🇺 AIRPORT-RU
-      - 🇨🇦 AIRPORT-Canada
-      - 🇫🇷 AIRPORT-FR
+      - 🇮🇳 印度-India
+      - 🇬🇧 英国-EN
+      - 🇮🇪 爱尔兰-Ireland
+      - 🇷🇺 俄罗斯-RU
+      - 🇨🇦 加拿大-Canada
+      - 🇫🇷 法国-FR
       - 🇦🇺 AIRPORT-AU
       - AIRPORT
       - WARP+
@@ -164,12 +164,12 @@ BASE-DATA:
       - 🇸🇬 新加坡-SG
       - 🇯🇵 日本-JP
       - 🇰🇷 韩国-Korea
-      - 🇮🇳 AIRPORT-India
-      - 🇬🇧 AIRPORT-EN
-      - 🇮🇪 AIRPORT-Ireland
-      - 🇷🇺 AIRPORT-RU
-      - 🇨🇦 AIRPORT-Canada
-      - 🇫🇷 AIRPORT-FR
+      - 🇮🇳 印度-India
+      - 🇬🇧 英国-EN
+      - 🇮🇪 爱尔兰-Ireland
+      - 🇷🇺 俄罗斯-RU
+      - 🇨🇦 加拿大-Canada
+      - 🇫🇷 法国-FR
       - 🇦🇺 AIRPORT-AU
 
   proxy-providers-config:
@@ -178,16 +178,26 @@ BASE-DATA:
       # - add-on
       # - warp
       # - local
-    proxy-providers-common:
+    proxy-providers-wd:
       airport-interval: &airport-interval 36000
       url-airport: &url-airport "https://api.wd-purple.com/sub?target=clash&emoji=true&udp=true&scv=true&new_name=true&filename=WestData&url=https%3A%2F%2Fwd-purple.com%2Fsubscribe%2Fvrgqpy-60bmvvdt"  # 这里填入airport的配置链接
-      proxy-file-path-airport: &proxy-file-path-airport myprovider/proxies/provider-airport.yml
-      url-add-on: &url-add-on ""  # 这里填入add-on的配置链接
-      proxy-file-path-add-on: &proxy-file-path-add-on myprovider/proxies/provider-add-on.yml
-      url-warp: &url-warp ""  # 这里填入warp的配置链接
-      proxy-file-path-warp: &proxy-file-path-warp myprovider/proxies/provider-warp.yml
-      url-local: &url-local ""  # 这里填入local的配置链接
-      proxy-file-path-local: &proxy-file-path-local myprovider/proxies/provider-local.yml
+      proxy-file-path-airport: &proxy-file-path-airport myprovider/proxies/provider-wd.yml
+      # url-add-on: &url-add-on ""  # 这里填入add-on的配置链接
+      # proxy-file-path-add-on: &proxy-file-path-add-on myprovider/proxies/provider-add-on.yml
+      # url-warp: &url-warp ""  # 这里填入warp的配置链接
+      # proxy-file-path-warp: &proxy-file-path-warp myprovider/proxies/provider-warp.yml
+      # url-local: &url-local ""  # 这里填入local的配置链接
+      # proxy-file-path-local: &proxy-file-path-local myprovider/proxies/provider-local.yml
+    proxy-providers-yeshayun:
+      airport-interval: &airport-interval 36000
+      url-airport: &url-airport "https://45.137.180.216/baseStr/4f0ec7e458d75d0d952857795c7d1749?timestamp=12418&burn=x4mrcaQNtzNZTwYE"  # 这里填入airport的配置链接
+      proxy-file-path-airport: &proxy-file-path-airport myprovider/proxies/provider-yeshayun.yml
+      # url-add-on: &url-add-on ""  # 这里填入add-on的配置链接
+      # proxy-file-path-add-on: &proxy-file-path-add-on myprovider/proxies/provider-add-on.yml
+      # url-warp: &url-warp ""  # 这里填入warp的配置链接
+      # proxy-file-path-warp: &proxy-file-path-warp myprovider/proxies/provider-warp.yml
+      # url-local: &url-local ""  # 这里填入local的配置链接
+      # proxy-file-path-local: &proxy-file-path-local myprovider/proxies/provider-local.yml
     proxy-providers-filter:
       proxy-filter-Local: &proxy-filter-Local ''
       proxy-filter-WARP: &proxy-filter-WARP 'WARP+'
@@ -892,37 +902,37 @@ proxy-groups:
     filter: *proxy-filter-US  
     use: *proxy-providers-use
   -
-    name: 🇮🇳 AIRPORT-India
+    name: 🇮🇳 印度-India
     icon: *icon-India
     type: select  
     filter: *proxy-filter-India  
     use: *proxy-providers-use
   -
-    name: 🇬🇧 AIRPORT-EN
+    name: 🇬🇧 英国-EN
     icon: *icon-United_Kingdom
     type: select  
     filter: *proxy-filter-EN  
     use: *proxy-providers-use
   -
-    name: 🇮🇪 AIRPORT-Ireland
+    name: 🇮🇪 爱尔兰-Ireland
     icon: *icon-United_Kingdom
     type: select  
     filter: *proxy-filter-Ireland  
     use: *proxy-providers-use
   -
-    name: 🇷🇺 AIRPORT-RU
+    name: 🇷🇺 俄罗斯-RU
     icon: *icon-Russia
     type: select  
     filter: *proxy-filter-RU  
     use: *proxy-providers-use
   -
-    name: 🇨🇦 AIRPORT-Canada
+    name: 🇨🇦 加拿大-Canada
     icon: *icon-Canada
     type: select  
     filter: *proxy-filter-Canada  
     use: *proxy-providers-use
   -
-    name: 🇫🇷 AIRPORT-FR
+    name: 🇫🇷 法国-FR
     icon: *icon-France
     type: select  
     filter: *proxy-filter-FR  
