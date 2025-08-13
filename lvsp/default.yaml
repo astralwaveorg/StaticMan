@@ -182,10 +182,10 @@ BASE-DATA:
       # - local
     proxy-providers-wd:
       airport-interval: &airport-interval 36000
-      url-airport: &url-airport "https://api.wd-purple.com/sub?target=clash&emoji=true&udp=true&scv=true&new_name=true&filename=WestData&url=https%3A%2F%2Fwd-purple.com%2Fsubscribe%2Fvrgqpy-60bmvvdt"  # 这里填入airport的配置链接
+      url-airport: &url-airport 'https://api.wd-purple.com/sub?target=clash&emoji=true&udp=true&scv=true&new_name=true&filename=WestData&url=https%3A%2F%2Fwd-purple.com%2Fsubscribe%2Fvrgqpy-60bmvvdt' # 这里填入airport的配置链接
       proxy-file-path-airport: &proxy-file-path-airport myprovider/proxies/provider-wd.yml
-      url-yeshayun: &url-yeshayun "https://magichub.top/download/lvsp/yeshayun.yaml"  # 这里填入airport的配置链接
-      proxy-file-path-yeshayun: &proxy-file-path-airport myprovider/proxies/provider-yeshayun.yml
+      url-yeshayun: &url-yeshayun 'https://magichub.top/download/lvsp/yeshayun.yaml' # 这里填入airport的配置链接
+      proxy-file-path-yeshayun: &proxy-file-path-yeshayun myprovider/proxies/provider-yeshayun.yml
       # url-add-on: &url-add-on ""  # 这里填入add-on的配置链接
       # proxy-file-path-add-on: &proxy-file-path-add-on myprovider/proxies/provider-add-on.yml
       # url-warp: &url-warp ""  # 这里填入warp的配置链接
@@ -350,7 +350,6 @@ BASE-DATA:
         rule-file-path-Reddit: &rule-file-path-Reddit myprovider/ruleset/Reddit.yaml
         rule-provider-url-Reddit: &rule-provider-url-Reddit https://cdn.jsdelivr.net/gh/zuluion/Clash-Template-Config@master/Filter/Reddit.yaml
 
-
   icon-providers-config:
     icon-Area: &icon-Area https://cdn.jsdelivr.net/gh/zuluion/Qure/IconSet/Color/Area.png
     icon-Final: &icon-Final https://cdn.jsdelivr.net/gh/zuluion/Qure/IconSet/Color/Final.png
@@ -410,7 +409,6 @@ BASE-DATA:
     icon-JavSP: &icon-JavSP https://cdn.jsdelivr.net/gh/zuluion/Qure/IconSet/Color/JavSP.png
     icon-Reddit: &icon-Reddit https://cdn.jsdelivr.net/gh/zuluion/Qure/IconSet/Color/Reddit.png
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
 port: 7890
 socks-port: 7891
@@ -534,7 +532,6 @@ dns:
     - '*.mcdn.bilivideo.cn'
     - WORKGROUP
 
-
   # 支持 UDP / TCP / DoT / DoH 协议的 DNS 服务，可以指明具体的连接端口号。
   # 所有 DNS 请求将会直接发送到服务器，不经过任何代理。
   # Clash 会使用最先获得的解析记录回复 DNS 请求
@@ -646,317 +643,233 @@ proxy-groups:
   #   type: select
   #   proxies:
   #     *proxies-all
-  -
-    name: 国外流量
+  - name: 国外流量
     icon: *icon-Area
     type: select
-    proxies:
-      *proxies-all-oforeign
-  -
-    name: 其他流量
+    proxies: *proxies-all-oforeign
+  - name: 其他流量
     icon: *icon-Final
     type: select
-    proxies:
-      *proxies-all
-  -
-    name: Telegram
+    proxies: *proxies-all
+  - name: Telegram
     icon: *icon-Telegram
     type: select
-    proxies:
-      *proxies-all
-  -
-    name: Discord
+    proxies: *proxies-all
+  - name: Discord
     icon: *icon-Discord
     type: select
-    proxies:
-      *proxies-all
-  -
-    name: Facebook
+    proxies: *proxies-all
+  - name: Facebook
     icon: *icon-Facebook
     type: select
-    proxies:
-      *proxies-all
-  -
-    name: Reddit
+    proxies: *proxies-all
+  - name: Reddit
     icon: *icon-Reddit
     type: select
-    proxies:
-      *proxies-all-for-reddit
-  -
-    name: OpenAI
+    proxies: *proxies-all-for-reddit
+  - name: OpenAI
     icon: *icon-OpenAI
     type: select
-    proxies:
-      *proxies-all-for-openai
-  -
-    name: Claude
+    proxies: *proxies-all-for-openai
+  - name: Claude
     icon: *icon-Claude
     type: select
-    proxies:
-      *proxies-all-for-claude
-  -
-    name: Gemini
+    proxies: *proxies-all-for-claude
+  - name: Gemini
     icon: *icon-Gemini
     type: select
-    proxies:
-      *proxies-all-for-gemini
-  -
-    name: Perplexity
+    proxies: *proxies-all-for-gemini
+  - name: Perplexity
     icon: *icon-Perplexity
     type: select
-    proxies:
-      *proxies-all-for-perplexity
-  -
-    name: YouTube
+    proxies: *proxies-all-for-perplexity
+  - name: YouTube
     icon: *icon-YouTube
     type: select
-    proxies:
-      *proxies-all
-  -
-    name: TikTok
+    proxies: *proxies-all
+  - name: TikTok
     icon: *icon-TikTok
     type: select
-    proxies:
-      *proxies-all-for-tiktok
-  -
-    name: Netflix
+    proxies: *proxies-all-for-tiktok
+  - name: Netflix
     icon: *icon-Netflix
     type: select
     filter: *proxy-filter-special-streaming-media
     use: *proxy-providers-use
-    proxies:
-      *proxies-all
-  -
-    name: DisneyPlus
+    proxies: *proxies-all
+  - name: DisneyPlus
     icon: *icon-Disney
     type: select
     filter: *proxy-filter-special-streaming-media
     use: *proxy-providers-use
-    proxies:
-      *proxies-all
-  -
-    name: Hulu
+    proxies: *proxies-all
+  - name: Hulu
     icon: *icon-Hulu
     type: select
     filter: *proxy-filter-special-streaming-media
     use: *proxy-providers-use
-    proxies:
-      *proxies-all
-  -
-    name: HBO
+    proxies: *proxies-all
+  - name: HBO
     icon: *icon-HBO
     type: select
     filter: *proxy-filter-special-streaming-media
     use: *proxy-providers-use
-    proxies:
-      *proxies-all
-  -
-    name: Bilibili
+    proxies: *proxies-all
+  - name: Bilibili
     icon: *icon-bilibili
     type: select
-    proxies:
-      *proxies-all-fdirect
-  -
-    name: Spotify
+    proxies: *proxies-all-fdirect
+  - name: Spotify
     icon: *icon-Spotify
     type: select
-    proxies:
-      *proxies-all
-  -
-    name: Steam
+    proxies: *proxies-all
+  - name: Steam
     icon: *icon-Steam
     type: select
-    proxies:
-      *proxies-all
-  -
-    name: Ubisoft
+    proxies: *proxies-all
+  - name: Ubisoft
     icon: *icon-Ubisoft
     type: select
-    proxies:
-      *proxies-all
-  -
-    name: Netch
+    proxies: *proxies-all
+  - name: Netch
     icon: *icon-Game
     type: select
-    proxies:
-      *proxies-all
-  -
-    name: Microsoft
+    proxies: *proxies-all
+  - name: Microsoft
     icon: *icon-Microsoft
     type: select
-    proxies:
-      *proxies-all-fdirect
-  -
-    name: OneDrive
+    proxies: *proxies-all-fdirect
+  - name: OneDrive
     icon: *icon-OneDrive
     type: select
-    proxies:
-      *proxies-all-fdirect
-  -
-    name: OutLook
+    proxies: *proxies-all-fdirect
+  - name: OutLook
     icon: *icon-Mail
     type: select
-    proxies:
-      *proxies-all
-  -
-    name: Copilot
+    proxies: *proxies-all
+  - name: Copilot
     icon: *icon-Copilot
     type: select
-    proxies:
-      *proxies-all
-  -
-    name: PikPak
+    proxies: *proxies-all
+  - name: PikPak
     icon: *icon-Pikpak
     type: select
-    proxies:
-      *proxies-all
-  -
-    name: PayPal
+    proxies: *proxies-all
+  - name: PayPal
     icon: *icon-PayPal
     type: select
-    proxies:
-      *proxies-all
-  -
-    name: Amazon
+    proxies: *proxies-all
+  - name: Amazon
     icon: *icon-Amazon
     type: select
-    proxies:
-      *proxies-all-fdirect
-  -
-    name: Speedtest
+    proxies: *proxies-all-fdirect
+  - name: Speedtest
     icon: *icon-Speedtest
     type: select
-    proxies:
-      *proxies-all-fdirect
-  -
-    name: Apple
+    proxies: *proxies-all-fdirect
+  - name: Apple
     icon: *icon-Apple
     type: select
-    proxies:
-      *proxies-all-fdirect
-  -
-    name: JavSP
+    proxies: *proxies-all-fdirect
+  - name: JavSP
     icon: *icon-JavSP
     type: select
-    proxies:
-      *proxies-all-for-javsp
-  -
-    name: IDM
+    proxies: *proxies-all-for-javsp
+  - name: IDM
     icon: *icon-Download
     type: select
     proxies:
       - 直接连接
       - 国外流量
-  -
-    name: 直接连接
+  - name: 直接连接
     icon: *icon-Direct
     type: select
     hidden: true
     proxies:
       - DIRECT
-  -
-    name: AIRPORT
+  - name: AIRPORT
     icon: *icon-Airport
     type: select
     use: *proxy-providers-use
-  -
-    name: 🇭🇰 香港-HK
+  - name: 🇭🇰 香港-HK
     icon: *icon-Hong_Kong
     type: select
     filter: *proxy-filter-HK
     use: *proxy-providers-use
-  -
-    name: 🇨🇳 台湾-TW
+  - name: 🇨🇳 台湾-TW
     icon: *icon-Taiwan
     type: select
     filter: *proxy-filter-TW
     use: *proxy-providers-use
-  -
-    name: 🇸🇬 新加坡-SG
+  - name: 🇸🇬 新加坡-SG
     icon: *icon-Singapore
     type: select
     filter: *proxy-filter-SG
     use: *proxy-providers-use
-  -
-    name: 🇯🇵 日本-JP
+  - name: 🇯🇵 日本-JP
     icon: *icon-Japan
     type: select
     filter: *proxy-filter-JP
     use: *proxy-providers-use
-  -
-    name: 🇰🇷 韩国-Korea
+  - name: 🇰🇷 韩国-Korea
     icon: *icon-Korea
     type: select
     filter: *proxy-filter-Korea
     use: *proxy-providers-use
-  -
-    name: 🇺🇸 美国-US
+  - name: 🇺🇸 美国-US
     icon: *icon-United_States
     type: select
     filter: *proxy-filter-US
     use: *proxy-providers-use
-  -
-    name: 🇮🇳 印度-India
+  - name: 🇮🇳 印度-India
     icon: *icon-India
     type: select
     filter: *proxy-filter-India
     use: *proxy-providers-use
-  -
-    name: 🇬🇧 英国-EN
+  - name: 🇬🇧 英国-EN
     icon: *icon-United_Kingdom
     type: select
     filter: *proxy-filter-EN
     use: *proxy-providers-use
-  -
-    name: 🇮🇪 爱尔兰-Ireland
+  - name: 🇮🇪 爱尔兰-Ireland
     icon: *icon-United_Kingdom
     type: select
     filter: *proxy-filter-Ireland
     use: *proxy-providers-use
-  -
-    name: 🇷🇺 俄罗斯-RU
+  - name: 🇷🇺 俄罗斯-RU
     icon: *icon-Russia
     type: select
     filter: *proxy-filter-RU
     use: *proxy-providers-use
-  -
-    name: 🇨🇦 加拿大-Canada
+  - name: 🇨🇦 加拿大-Canada
     icon: *icon-Canada
     type: select
     filter: *proxy-filter-Canada
     use: *proxy-providers-use
-  -
-    name: 🇫🇷 法国-FR
+  - name: 🇫🇷 法国-FR
     icon: *icon-France
     type: select
     filter: *proxy-filter-FR
     use: *proxy-providers-use
-  -
-    name: 🇦🇺 AIRPORT-AU
+  - name: 🇦🇺 AIRPORT-AU
     icon: *icon-Australia
     type: select
     filter: *proxy-filter-AU
     use: *proxy-providers-use
-  -
-    name: WARP+
+  - name: WARP+
     icon: *icon-Cloudflare
     type: select
     filter: *proxy-filter-WARP
     use: *proxy-providers-use
-  -
-    name: ProxyChain_Start
+  - name: ProxyChain_Start
     icon: *icon-Proxy
     type: select
-    proxies:
-      *proxies-all-for-proxychain
-  -
-    name: ProxyChain_Landing
+    proxies: *proxies-all-for-proxychain
+  - name: ProxyChain_Landing
     icon: *icon-Proxy
     type: select
-    proxies:
-      *proxies-all-for-proxychain
-  -
-    name: ProxyChain
+    proxies: *proxies-all-for-proxychain
+  - name: ProxyChain
     icon: *icon-Proxy
     type: relay
     proxies:
