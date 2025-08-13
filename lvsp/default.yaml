@@ -1,3 +1,4 @@
+# https://magichub.top/download/lvsp/default.yaml
 # Jinja2 template for Clash
 # Clash 配置模板
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -188,10 +189,10 @@ BASE-DATA:
       # proxy-file-path-warp: &proxy-file-path-warp myprovider/proxies/provider-warp.yml
       # url-local: &url-local ""  # 这里填入local的配置链接
       # proxy-file-path-local: &proxy-file-path-local myprovider/proxies/provider-local.yml
-    # proxy-providers-yeshayun:
-    #   airport-interval: &airport-interval 31536000
-    #   url-airport: &url-airport "https://45.137.180.216/baseStr/4f0ec7e458d75d0d952857795c7d1749?timestamp=12418&burn=x4mrcaQNtzNZTwYE"  # 这里填入airport的配置链接
-    #   proxy-file-path-airport: &proxy-file-path-airport myprovider/proxies/provider-yeshayun.yml
+    proxy-providers-yeshayun:
+      airport-interval: &airport-interval 31536000
+      url-airport: &url-airport "https://magichub.top/download/lvsp/yeshayun.yaml"  # 这里填入airport的配置链接
+      proxy-file-path-airport: &proxy-file-path-airport myprovider/proxies/provider-yeshayun.yml
       # url-add-on: &url-add-on ""  # 这里填入add-on的配置链接
       # proxy-file-path-add-on: &proxy-file-path-add-on myprovider/proxies/provider-add-on.yml
       # url-warp: &url-warp ""  # 这里填入warp的配置链接
