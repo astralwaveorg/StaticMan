@@ -175,23 +175,16 @@ BASE-DATA:
 
   proxy-providers-config:
     proxy-providers-use: &proxy-providers-use
-      - airport
       - yeshayun
       # - add-on
       # - warp
       # - local
-    proxy-providers-wd:
+    proxy-providers-common:
       airport-interval: &airport-interval 36000
-      url-airport: &url-airport 'https://api.wd-purple.com/sub?target=clash&emoji=true&udp=true&scv=true&new_name=true&filename=WestData&url=https%3A%2F%2Fwd-purple.com%2Fsubscribe%2Fvrgqpy-60bmvvdt' # 这里填入airport的配置链接
-      proxy-file-path-airport: &proxy-file-path-airport myprovider/proxies/provider-wd.yml
       url-yeshayun: &url-yeshayun 'https://magichub.top/download/lvsp/yeshayun.yaml' # 这里填入airport的配置链接
       proxy-file-path-yeshayun: &proxy-file-path-yeshayun myprovider/proxies/provider-yeshayun.yml
       # url-add-on: &url-add-on ""  # 这里填入add-on的配置链接
       # proxy-file-path-add-on: &proxy-file-path-add-on myprovider/proxies/provider-add-on.yml
-      # url-warp: &url-warp ""  # 这里填入warp的配置链接
-      # proxy-file-path-warp: &proxy-file-path-warp myprovider/proxies/provider-warp.yml
-      # url-local: &url-local ""  # 这里填入local的配置链接
-      # proxy-file-path-local: &proxy-file-path-local myprovider/proxies/provider-local.yml
     proxy-providers-filter:
       proxy-filter-Local: &proxy-filter-Local ''
       proxy-filter-WARP: &proxy-filter-WARP 'WARP+'
@@ -877,11 +870,6 @@ proxy-groups:
       - ProxyChain_Landing
 # Proxy-providers partial template
 proxy-providers:
-  airport:
-    type: http
-    url: *url-airport
-    interval: *airport-interval
-    path: *proxy-file-path-airport
   yeshayun:
     type: http
     url: *url-yeshayun
