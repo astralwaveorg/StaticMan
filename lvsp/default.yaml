@@ -947,6 +947,7 @@ rules:
   - RULE-SET,Direct,DIRECT
   - RULE-SET,IDM,IDM
   - DOMAIN-SUFFIX,live.cn,直接连接
+  - RULE-SET,China,DIRECT
   - GEOIP,CN,DIRECT
   - MATCH,其他流量
 
