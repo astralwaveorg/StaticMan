@@ -175,15 +175,15 @@ BASE-DATA:
 
   proxy-providers-config:
     proxy-providers-use: &proxy-providers-use
-      - yeshayun
+      # - yeshayun
       - flower
       # - add-on
       # - warp
       # - local
     proxy-providers-common:
       airport-interval: &airport-interval 36000
-      url-yeshayun: &url-yeshayun 'https://magichub.top/download/lvsp/yeshayun.yaml' # 这里填入airport的配置链接
-      proxy-file-path-yeshayun: &proxy-file-path-yeshayun myprovider/proxies/provider-yeshayun.yml
+      # url-yeshayun: &url-yeshayun 'https://magichub.top/download/lvsp/yeshayun.yaml' # 这里填入airport的配置链接
+      # proxy-file-path-yeshayun: &proxy-file-path-yeshayun myprovider/proxies/provider-yeshayun.yml
       url-flower: &url-flower 'https://api-huacloud.net/sub?target=clash&insert=true&emoji=true&udp=true&clash.doh=true&new_name=true&filename=Flower_SS.yaml&url=https%3A%2F%2Fapi.xmancdn.net%2Fosubscribe.php%3Fsid%3D177358%26token%3DUdRCu8VV%26sip002%3D1' # 这里填入airport的配置链接
       proxy-file-path-flower: &proxy-file-path-flower myprovider/proxies/provider-flower.yml
       # url-add-on: &url-add-on ""  # 这里填入add-on的配置链接
@@ -873,11 +873,11 @@ proxy-groups:
       - ProxyChain_Landing
 # Proxy-providers partial template
 proxy-providers:
-  yeshayun:
-    type: http
-    url: *url-yeshayun
-    interval: *airport-interval
-    path: *proxy-file-path-yeshayun
+  # yeshayun:
+  #   type: http
+  #   url: *url-yeshayun
+  #   interval: *airport-interval
+  #   path: *proxy-file-path-yeshayun
   flower:
     type: http
     url: *url-flower
