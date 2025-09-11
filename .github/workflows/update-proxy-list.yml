@@ -1,0 +1,36 @@
+name: Update Proxy Lists # 工作流名称
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    # 每天 UTC 时间 02:00 运行一次，你可以根据需要修改
+    - cron: '0 2 * * *'
+  workflow_dispatch: # 添加手动触发器
+
+jobs:
+  update-configs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository # 步骤1: 检出仓库代码
+        uses: actions/checkout@v4
+
+      - name: Set up Python # 步骤2: 设置 Python 环境，并启用缓存
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13' # 版本已更新为 3.13
+          cache: 'pip' # 启用 pip 缓存
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Python script to update lists
+        run: python bin/update_sub_list.py
+
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'feat: update proxy lists'
