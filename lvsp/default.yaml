@@ -905,7 +905,7 @@ rules:
   - DOMAIN,clash.razord.top,DIRECT
   - DOMAIN-SUFFIX,lancache.steamcontent.com,DIRECT
   - DOMAIN,yacd.haishan.me,国外流量
-  - DOMAIN,v2ex.com,国外流量
+  - DOMAIN,*.v2ex.com,国外流量
   - DOMAIN-SUFFIX,appinn.com,国外流量
   - RULE-SET,OpenAI,OpenAI
   - RULE-SET,Claude,Claude
