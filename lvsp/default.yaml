@@ -909,6 +909,8 @@ rules:
   - DOMAIN-SUFFIX,*.v2ex.com,国外流量
   - DOMAIN-SUFFIX,sexygirl.cc,国外流量
   - DOMAIN-SUFFIX,*.sexygirl.cc,国外流量
+  - DOMAIN-SUFFIX,hlj.fun,国外流量
+  - DOMAIN-SUFFIX,*.hlj.fun,国外流量
   - DOMAIN-SUFFIX,appinn.com,国外流量
   - RULE-SET,OpenAI,OpenAI
   - RULE-SET,Claude,Claude
