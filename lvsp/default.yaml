@@ -911,6 +911,8 @@ rules:
   - DOMAIN-SUFFIX,*.sexygirl.cc,国外流量
   - DOMAIN-SUFFIX,911blw.com,国外流量
   - DOMAIN-SUFFIX,*.911blw.com,国外流量
+  - DOMAIN-SUFFIX,novel543.com,国外流量
+  - DOMAIN-SUFFIX,*.novel543.com,国外流量
   - DOMAIN-SUFFIX,appinn.com,国外流量
   - RULE-SET,OpenAI,OpenAI
   - RULE-SET,Claude,Claude
