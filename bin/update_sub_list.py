@@ -110,10 +110,14 @@ def update_surge_config():
                 and not any(keyword in line for keyword in SURGE_BLACKLIST)
             ):
                 filtered_proxies.append(line)
-
-        # 将过滤后的代理重新组装成 [Proxy] 部分
-        new_surge_content = "[Proxy]\n" + "\n".join(filtered_proxies) + "\n"
-
+        
+        # 先检查第一行是否已经是 [Proxy]
+        if filtered_proxies and filtered_proxies[0].strip() == "[Proxy]":
+            # 如果已经有了，就直接用剩下的内容
+            new_surge_content = "\n".join(filtered_proxies) + "\n"
+        else:
+            # 如果没有，就加上 [Proxy] 标签
+            new_surge_content = "[Proxy]\n" + "\n".join(filtered_proxies) + "\n"
         output_path = os.path.join(SURGE_DIR, SURGE_FILE)
         ensure_directory_exists(SURGE_DIR)
 
