@@ -11,9 +11,9 @@ CLASH_FILE = "list.yaml"
 SURGE_FILE = "list.ini"
 
 # 下载链接
-CLASH_URL = "https://api-huacloud.net/sub?target=clash&insert=true&emoji=true&udp=true&clash.doh=true&new_name=true&filename=Flower_Trojan.yaml&url=https%3A%2F%2Fapi.xmancdn.net%2Fosubscribe.php%3Fsid%3D177358%26token%3DUdRCu8VV"
+CLASH_URL = "https://api-huacloud.net/sub?target=clash&insert=true&emoji=true&udp=true&clash.doh=true&new_name=true&filename=Flower_Trojan.yaml&url=https%3A%2F%2Fapi.xmancdn.net%2Fosubscribe.php%3Ftoken2%3Dey7844dq-74788feef21zs20tyk"
 # 注意: Surge 的下载链接未提供，这里使用一个占位符。请替换为实际链接。
-SURGE_URL = "https://example.com/your-surge-config.ini"
+SURGE_URL = "https://api-huacloud.net/sub?target=surge&ver=4&insert=true&emoji=true&tfo=true&udp=true&surge.doh=true&filename=Flower_Trojan.conf&url=https%3A%2F%2Fapi.xmancdn.net%2Fosubscribe.php%3Ftoken2%3Dey7844dq-74788feef21zs20tyk"
 
 # 过滤关键词黑名单
 # 名称中包含这些关键词的节点将被过滤掉
