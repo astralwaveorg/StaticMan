@@ -27,11 +27,11 @@ TELEGRAM_CHAT_ID = "-1002525135181"
 
 # --- 订阅链接 (支持多个) ---
 CLASH_URLS = [
-    "https://api-huacloud.net/sub?target=clash&insert=true&emoji=true&udp=true&clash.doh=true&new_name=true&filename=Flower_Trojan.yaml&url=https%3A%2F%2Fapi.xmancdn.net%2Fosubscribe.php%3Ftoken2%3Dey7844dq-74788feef21zs20tyk"
+    "https://api-huacloud.net/sub?target=clash&insert=true&emoji=true&udp=true&clash.doh=true&new_name=true&filename=Flower_Trojan.yaml&url=https%3A%2F%2Fapi.xmancdn.net%2Fosubscribe.php%3Ftoken2%3Dey7844dq-533b6bae10bpczlq2e"
 ]
 
 SURGE_URLS = [
-    "https://api-huacloud.net/sub?target=surge&ver=4&insert=true&emoji=true&tfo=true&udp=true&surge.doh=true&filename=Flower_Trojan.conf&url=https%3A%2F%2Fapi.xmancdn.net%2Fosubscribe.php%3Ftoken2%3Dey7844dq-74788feef21zs20tyk"
+    "https://api-huacloud.net/sub?target=surge&ver=4&insert=true&emoji=true&tfo=true&udp=true&surge.doh=true&filename=Flower_Trojan.conf&url=https%3A%2F%2Fapi.xmancdn.net%2Fosubscribe.php%3Ftoken2%3Dey7844dq-533b6bae10bpczlq2e"
 ]
 
 # 过滤关键词黑名单，名称中包含关键词的节点将被过滤掉
