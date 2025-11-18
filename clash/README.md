@@ -1,5 +1,13 @@
 # Clash 配置文件说明
 
+
+## 0. 节点地址
+```
+https://magichub.top/download/clash/list.yaml
+```
+
+
+
 ## 1. 订阅地址
 
 ```
