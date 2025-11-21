@@ -1,3 +1,4 @@
+# https://magichub.top/download/clash/FlowerCloud.yaml
 proxy-providers:
   Airport1:
     url: 'https://magichub.top/download/clash/list.yaml'
@@ -76,37 +77,33 @@ tun:
 # DNS模块
 dns:
   enable: true
-  listen: 0.0.0.0:1053
   ipv6: false
-  respect-rules: true
-  enhanced-mode: fake-ip
-  fake-ip-range: 28.0.0.1/8
-  fake-ip-filter-mode: blacklist
-  proxy-server-nameserver:
-    - 119.29.29.29
-  direct-nameserver:
-    - 202.101.172.35
-    - 202.101.172.46
-    - 223.5.5.5
-  nameserver:
-    - https://8.8.8.8/dns-query
-  nameserver-policy:
-    'rule-set:private_domain,cn_domain,apple_domain':
-      - 223.5.5.5
-      - 119.29.29.29
+  listen: 0.0.0.0:53
   fake-ip-filter:
-    - '*'
-    - '+.lan'
-    - '+.local'
+    - "*.lan"
+    - "*.srv.nintendo.net"
+    - "*.stun.playstation.net"
+    - xbox.*.microsoft.com
+    - "*.xboxlive.com"
+    - "*.teafone.com"
+    - "*.sktswe.net"
+    - rtc.goodfone.co.kr
+    - "*.chattti.com"
     - 'rule-set:private_domain,cn_domain,apple_domain'
     - '+.msftconnecttest.com'
     - '+.msftncsi.com'
     - 'time.*.com'
     - '+.market.xiaomi.com'
+  nameserver:
+    - 202.101.172.35
+    - 202.101.172.46
+    - 223.5.5.5
+    - tls://223.5.5.5:853
+    - tls://223.6.6.6:853
+    - tls://120.53.53.53
+    - tls://1.12.12.12
 
-# 出站策略，根据自己情况调整每个策略里分组排序，增删都可以，比如把美国自动放到第一个，比如删除香港故转，注意别漏掉表情逗号等。
-# 如果相应分组没有筛选到对应的国家，请根据自己节点名字调整筛选关键字。
-# 没有再使用锚点，是考虑很多新手修改难度，这样新手修改某个分组更容易些。
+# 出站策略
 proxy-groups:
   - {
       name: 🚀 默认代理,
