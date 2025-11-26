@@ -1,5 +1,5 @@
 proxies:
-  - name: 🇭🇰 香港实验性 IEPL 专线 1
+  - name: 🇭🇰 香港-实验性 1
     server: gzcloud.233netcloud.com
     port: 10116
     type: trojan
@@ -7,7 +7,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇯🇵 日本实验性 IEPL 专线 1
+  - name: 🇯🇵 日本-实验性 1
     server: shcloud.233netcloud.com
     port: 10126
     type: trojan
@@ -15,7 +15,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇸🇬 新加坡实验性 IEPL 专线 1
+  - name: 🇸🇬 新加坡-实验性 1
     server: gzcloud.233netcloud.com
     port: 10136
     type: trojan
@@ -23,7 +23,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇺🇸 美国实验性 IEPL 专线 1
+  - name: 🇺🇸 美国-实验性 1
     server: shcloud.233netcloud.com
     port: 10156
     type: trojan
@@ -31,7 +31,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇭🇰 香港高级 IEPL 专线 1
+  - name: 🇭🇰 香港-高级 1
     server: gzcloud.233netcloud.com
     port: 12102
     type: trojan
@@ -39,7 +39,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇭🇰 香港高级 IEPL 专线 2
+  - name: 🇭🇰 香港-高级 2
     server: gzcloud.233netcloud.com
     port: 12101
     type: trojan
@@ -47,7 +47,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇭🇰 香港高级 IEPL 专线 3
+  - name: 🇭🇰 香港-高级 3
     server: gzcloud.233netcloud.com
     port: 12103
     type: trojan
@@ -55,7 +55,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇯🇵 日本高级 IEPL 专线 1
+  - name: 🇯🇵 日本-高级 1
     server: shcloud.233netcloud.com
     port: 12112
     type: trojan
@@ -63,7 +63,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇯🇵 日本高级 IEPL 专线 2
+  - name: 🇯🇵 日本-高级 2
     server: shcloud.233netcloud.com
     port: 12111
     type: trojan
@@ -71,7 +71,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇯🇵 日本高级 IEPL 专线 3
+  - name: 🇯🇵 日本-高级 3
     server: shcloud.233netcloud.com
     port: 12113
     type: trojan
@@ -79,7 +79,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇸🇬 新加坡高级 IEPL 专线 1
+  - name: 🇸🇬 新加坡-高级 1
     server: gzcloud.233netcloud.com
     port: 12132
     type: trojan
@@ -87,7 +87,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇸🇬 新加坡高级 IEPL 专线 2
+  - name: 🇸🇬 新加坡-高级 2
     server: gzcloud.233netcloud.com
     port: 12131
     type: trojan
@@ -95,7 +95,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇸🇬 新加坡高级 IEPL 专线 3
+  - name: 🇸🇬 新加坡-高级 3
     server: gzcloud.233netcloud.com
     port: 12133
     type: trojan
@@ -103,7 +103,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇨🇳 台湾高级 IEPL 专线 1
+  - name: 🇨🇳 台湾-高级 1
     server: gzcloud.233netcloud.com
     port: 12142
     type: trojan
@@ -111,7 +111,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇨🇳 台湾高级 IEPL 专线 2
+  - name: 🇨🇳 台湾-高级 2
     server: gzcloud.233netcloud.com
     port: 12141
     type: trojan
@@ -119,7 +119,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇨🇳 台湾高级 IEPL 专线 3
+  - name: 🇨🇳 台湾-高级 3
     server: gzcloud.233netcloud.com
     port: 12143
     type: trojan
@@ -127,7 +127,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇺🇸 美国高级 IEPL 专线 1
+  - name: 🇺🇸 美国-高级 1
     server: shcloud.233netcloud.com
     port: 12122
     type: trojan
@@ -135,7 +135,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇺🇸 美国高级 IEPL 专线 2
+  - name: 🇺🇸 美国-高级 2
     server: shcloud.233netcloud.com
     port: 12121
     type: trojan
@@ -143,7 +143,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇺🇸 美国高级 IEPL 专线 3
+  - name: 🇺🇸 美国-高级 3
     server: shcloud.233netcloud.com
     port: 12123
     type: trojan
@@ -151,7 +151,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇭🇰 香港标准 IEPL 专线 1
+  - name: 🇭🇰 香港-标准 1
     server: gzcloud.233netcloud.com
     port: 11101
     type: trojan
@@ -159,7 +159,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇭🇰 香港标准 IEPL 专线 2
+  - name: 🇭🇰 香港-标准 2
     server: gzcloud.233netcloud.com
     port: 11106
     type: trojan
@@ -167,7 +167,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇭🇰 香港标准 IEPL 专线 3
+  - name: 🇭🇰 香港-标准 3
     server: gzcloud.233netcloud.com
     port: 11102
     type: trojan
@@ -175,7 +175,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇭🇰 香港标准 IEPL 专线 4
+  - name: 🇭🇰 香港-标准 4
     server: gzcloud.233netcloud.com
     port: 11107
     type: trojan
@@ -183,7 +183,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇭🇰 香港标准 IEPL 专线 5
+  - name: 🇭🇰 香港-标准 5
     server: gzcloud.233netcloud.com
     port: 11108
     type: trojan
@@ -191,7 +191,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇭🇰 香港标准 IEPL 专线 6
+  - name: 🇭🇰 香港-标准 6
     server: gzcloud.233netcloud.com
     port: 11104
     type: trojan
@@ -199,7 +199,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇭🇰 香港标准 IEPL 专线 7
+  - name: 🇭🇰 香港-标准 7
     server: gzcloud.233netcloud.com
     port: 11103
     type: trojan
@@ -207,7 +207,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇭🇰 香港标准 IEPL 专线 8
+  - name: 🇭🇰 香港-标准 8
     server: gzcloud.233netcloud.com
     port: 11105
     type: trojan
@@ -215,7 +215,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇯🇵 日本标准 IEPL 专线 1
+  - name: 🇯🇵 日本-标准 1
     server: shcloud.233netcloud.com
     port: 11111
     type: trojan
@@ -223,7 +223,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇯🇵 日本标准 IEPL 专线 2
+  - name: 🇯🇵 日本-标准 2
     server: shcloud.233netcloud.com
     port: 11114
     type: trojan
@@ -231,7 +231,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇯🇵 日本标准 IEPL 专线 3
+  - name: 🇯🇵 日本-标准 3
     server: shcloud.233netcloud.com
     port: 11113
     type: trojan
@@ -239,7 +239,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇯🇵 日本标准 IEPL 专线 4
+  - name: 🇯🇵 日本-标准 4
     server: shcloud.233netcloud.com
     port: 11112
     type: trojan
@@ -247,7 +247,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇯🇵 日本标准 IEPL 专线 5
+  - name: 🇯🇵 日本-标准 5
     server: shcloud.233netcloud.com
     port: 11115
     type: trojan
@@ -255,7 +255,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇯🇵 日本标准 IEPL 专线 6
+  - name: 🇯🇵 日本-标准 6
     server: shcloud.233netcloud.com
     port: 11118
     type: trojan
@@ -263,7 +263,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇯🇵 日本标准 IEPL 专线 7
+  - name: 🇯🇵 日本-标准 7
     server: shcloud.233netcloud.com
     port: 11117
     type: trojan
@@ -271,7 +271,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇯🇵 日本标准 IEPL 专线 8
+  - name: 🇯🇵 日本-标准 8
     server: shcloud.233netcloud.com
     port: 11116
     type: trojan
@@ -279,7 +279,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇸🇬 新加坡标准 IEPL 专线 1
+  - name: 🇸🇬 新加坡-标准 1
     server: gzcloud.233netcloud.com
     port: 11131
     type: trojan
@@ -287,7 +287,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇸🇬 新加坡标准 IEPL 专线 2
+  - name: 🇸🇬 新加坡-标准 2
     server: gzcloud.233netcloud.com
     port: 11136
     type: trojan
@@ -295,7 +295,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇸🇬 新加坡标准 IEPL 专线 3
+  - name: 🇸🇬 新加坡-标准 3
     server: gzcloud.233netcloud.com
     port: 11132
     type: trojan
@@ -303,7 +303,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇸🇬 新加坡标准 IEPL 专线 4
+  - name: 🇸🇬 新加坡-标准 4
     server: gzcloud.233netcloud.com
     port: 11137
     type: trojan
@@ -311,7 +311,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇸🇬 新加坡标准 IEPL 专线 5
+  - name: 🇸🇬 新加坡-标准 5
     server: gzcloud.233netcloud.com
     port: 11138
     type: trojan
@@ -319,7 +319,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇸🇬 新加坡标准 IEPL 专线 6
+  - name: 🇸🇬 新加坡-标准 6
     server: gzcloud.233netcloud.com
     port: 11134
     type: trojan
@@ -327,7 +327,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇸🇬 新加坡标准 IEPL 专线 7
+  - name: 🇸🇬 新加坡-标准 7
     server: gzcloud.233netcloud.com
     port: 11133
     type: trojan
@@ -335,7 +335,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇸🇬 新加坡标准 IEPL 专线 8
+  - name: 🇸🇬 新加坡-标准 8
     server: gzcloud.233netcloud.com
     port: 11135
     type: trojan
@@ -343,7 +343,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇨🇳 台湾标准 IEPL 专线 1
+  - name: 🇨🇳 台湾-标准 1
     server: gzcloud.233netcloud.com
     port: 11142
     type: trojan
@@ -351,7 +351,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇨🇳 台湾标准 IEPL 专线 2
+  - name: 🇨🇳 台湾-标准 2
     server: gzcloud.233netcloud.com
     port: 11141
     type: trojan
@@ -359,7 +359,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇨🇳 台湾标准 IEPL 专线 3
+  - name: 🇨🇳 台湾-标准 3
     server: gzcloud.233netcloud.com
     port: 11143
     type: trojan
@@ -367,7 +367,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇺🇸 美国标准 IEPL 专线 1
+  - name: 🇺🇸 美国-标准 1
     server: shcloud.233netcloud.com
     port: 11121
     type: trojan
@@ -375,7 +375,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇺🇸 美国标准 IEPL 专线 2
+  - name: 🇺🇸 美国-标准 2
     server: shcloud.233netcloud.com
     port: 11126
     type: trojan
@@ -383,7 +383,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇺🇸 美国标准 IEPL 专线 3
+  - name: 🇺🇸 美国-标准 3
     server: shcloud.233netcloud.com
     port: 11122
     type: trojan
@@ -391,7 +391,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇺🇸 美国标准 IEPL 专线 4
+  - name: 🇺🇸 美国-标准 4
     server: shcloud.233netcloud.com
     port: 11127
     type: trojan
@@ -399,7 +399,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇺🇸 美国标准 IEPL 专线 5
+  - name: 🇺🇸 美国-标准 5
     server: shcloud.233netcloud.com
     port: 11128
     type: trojan
@@ -407,7 +407,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇺🇸 美国标准 IEPL 专线 6
+  - name: 🇺🇸 美国-标准 6
     server: shcloud.233netcloud.com
     port: 11124
     type: trojan
@@ -415,7 +415,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇺🇸 美国标准 IEPL 专线 7
+  - name: 🇺🇸 美国-标准 7
     server: shcloud.233netcloud.com
     port: 11123
     type: trojan
@@ -423,7 +423,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇺🇸 美国标准 IEPL 专线 8
+  - name: 🇺🇸 美国-标准 8
     server: shcloud.233netcloud.com
     port: 11125
     type: trojan
@@ -431,7 +431,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇲🇩 摩尔多瓦标准 IEPL 专线 1
+  - name: 🇲🇩 摩尔多瓦-标准 1
     server: bjcloud.233netcloud.com
     port: 11150
     type: trojan
@@ -439,7 +439,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇺🇦 乌克兰标准 IEPL 专线 1
+  - name: 🇺🇦 乌克兰-标准 1
     server: bjcloud.233netcloud.com
     port: 11151
     type: trojan
@@ -447,7 +447,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇮🇹 意大利标准 IEPL 专线 1
+  - name: 🇮🇹 意大利-标准 1
     server: bjcloud.233netcloud.com
     port: 11152
     type: trojan
@@ -455,7 +455,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇭🇺 匈牙利标准 IEPL 专线 1
+  - name: 🇭🇺 匈牙利-标准 1
     server: bjcloud.233netcloud.com
     port: 11153
     type: trojan
@@ -463,7 +463,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇪🇸 西班牙标准 IEPL 专线 1
+  - name: 🇪🇸 西班牙-标准 1
     server: bjcloud.233netcloud.com
     port: 11154
     type: trojan
@@ -471,7 +471,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇹🇷 土耳其标准 IEPL 专线 1
+  - name: 🇹🇷 土耳其-标准 1
     server: bjcloud.233netcloud.com
     port: 11155
     type: trojan
@@ -479,7 +479,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇩🇪 德国标准 IEPL 专线 1
+  - name: 🇩🇪 德国-标准 1
     server: bjcloud.233netcloud.com
     port: 11156
     type: trojan
@@ -487,7 +487,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇩🇪 德国标准 IEPL 专线 2
+  - name: 🇩🇪 德国-标准 2
     server: bjcloud.233netcloud.com
     port: 11157
     type: trojan
@@ -495,7 +495,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇬🇧 英国标准 IEPL 专线 1
+  - name: 🇬🇧 英国-标准 1
     server: bjcloud.233netcloud.com
     port: 11158
     type: trojan
@@ -503,7 +503,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇬🇧 英国标准 IEPL 专线 2
+  - name: 🇬🇧 英国-标准 2
     server: bjcloud.233netcloud.com
     port: 11159
     type: trojan
@@ -511,7 +511,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇳🇱 荷兰标准 IEPL 专线 1
+  - name: 🇳🇱 荷兰-标准 1
     server: bjcloud.233netcloud.com
     port: 11160
     type: trojan
@@ -519,7 +519,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇳🇱 荷兰标准 IEPL 专线 2
+  - name: 🇳🇱 荷兰-标准 2
     server: bjcloud.233netcloud.com
     port: 11161
     type: trojan
@@ -527,7 +527,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇫🇷 法国标准 IEPL 专线 1
+  - name: 🇫🇷 法国-标准 1
     server: bjcloud.233netcloud.com
     port: 11162
     type: trojan
@@ -535,7 +535,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇫🇷 法国标准 IEPL 专线 2
+  - name: 🇫🇷 法国-标准 2
     server: bjcloud.233netcloud.com
     port: 11163
     type: trojan
@@ -543,7 +543,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇨🇦 加拿大标准 IEPL 专线 1
+  - name: 🇨🇦 加拿大-标准 1
     server: shcloud.233netcloud.com
     port: 11164
     type: trojan
@@ -551,7 +551,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇨🇦 加拿大标准 IEPL 专线 2
+  - name: 🇨🇦 加拿大-标准 2
     server: shcloud.233netcloud.com
     port: 11165
     type: trojan
@@ -559,7 +559,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇦🇷 阿根廷标准 IEPL 专线 1
+  - name: 🇦🇷 阿根廷-标准 1
     server: shcloud.233netcloud.com
     port: 11166
     type: trojan
@@ -567,7 +567,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇧🇷 巴西标准 IEPL 专线 1
+  - name: 🇧🇷 巴西-标准 1
     server: shcloud.233netcloud.com
     port: 11167
     type: trojan
@@ -575,7 +575,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇨🇱 智利标准 IEPL 专线 1
+  - name: 🇨🇱 智利-标准 1
     server: shcloud.233netcloud.com
     port: 11168
     type: trojan
@@ -583,7 +583,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇦🇺 澳大利亚标准 IEPL 专线 1
+  - name: 🇦🇺 澳大利亚-标准 1
     server: gzcloud.233netcloud.com
     port: 11169
     type: trojan
@@ -591,7 +591,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇳🇿 新西兰标准 IEPL 专线 1
+  - name: 🇳🇿 新西兰-标准 1
     server: gzcloud.233netcloud.com
     port: 11170
     type: trojan
@@ -599,7 +599,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇰🇷 韩国标准 IEPL 专线 1
+  - name: 🇰🇷 韩国-标准 1
     server: shcloud.233netcloud.com
     port: 11171
     type: trojan
@@ -607,7 +607,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇰🇷 韩国标准 IEPL 专线 2
+  - name: 🇰🇷 韩国-标准 2
     server: shcloud.233netcloud.com
     port: 11172
     type: trojan
@@ -615,7 +615,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇮🇩 印尼标准 IEPL 专线 1
+  - name: 🇮🇩 印尼-标准 1
     server: gzcloud.233netcloud.com
     port: 11173
     type: trojan
@@ -623,7 +623,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇹🇭 泰国标准 IEPL 专线 1
+  - name: 🇹🇭 泰国-标准 1
     server: gzcloud.233netcloud.com
     port: 11174
     type: trojan
@@ -631,7 +631,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇻🇳 越南标准 IEPL 专线 1
+  - name: 🇻🇳 越南-标准 1
     server: gzcloud.233netcloud.com
     port: 11175
     type: trojan
@@ -639,7 +639,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇮🇳 印度标准 IEPL 专线 1
+  - name: 🇮🇳 印度-标准 1
     server: gzcloud.233netcloud.com
     port: 11180
     type: trojan
@@ -647,7 +647,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇵🇰 巴基斯坦标准 IEPL 专线 1
+  - name: 🇵🇰 巴基斯坦-标准 1
     server: gzcloud.233netcloud.com
     port: 11181
     type: trojan
@@ -655,7 +655,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇮🇱 以色列标准 IEPL 专线 1
+  - name: 🇮🇱 以色列-标准 1
     server: bjcloud.233netcloud.com
     port: 11182
     type: trojan
@@ -663,7 +663,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇦🇪 阿联酋标准 IEPL 专线 1
+  - name: 🇦🇪 阿联酋-标准 1
     server: gzcloud.233netcloud.com
     port: 11183
     type: trojan
@@ -671,7 +671,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇵🇭 菲律宾标准 IEPL 专线 1
+  - name: 🇵🇭 菲律宾-标准 1
     server: gzcloud.233netcloud.com
     port: 11184
     type: trojan
@@ -679,7 +679,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇲🇾 马来西亚标准 IEPL 专线 1
+  - name: 🇲🇾 马来西亚-标准 1
     server: gzcloud.233netcloud.com
     port: 11185
     type: trojan
@@ -687,7 +687,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇪🇬 埃及标准 IEPL 专线 1
+  - name: 🇪🇬 埃及-标准 1
     server: bjcloud.233netcloud.com
     port: 11186
     type: trojan
@@ -695,7 +695,7 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇳🇬 尼日利亚标准 IEPL 专线 1
+  - name: 🇳🇬 尼日利亚-标准 1
     server: bjcloud.233netcloud.com
     port: 11187
     type: trojan
