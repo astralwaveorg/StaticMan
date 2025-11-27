@@ -184,7 +184,7 @@ BASE-DATA:
       airport-interval: &airport-interval 36000
       # url-yeshayun: &url-yeshayun 'https://magichub.top/download/lvsp/yeshayun.yaml' # 这里填入airport的配置链接
       # proxy-file-path-yeshayun: &proxy-file-path-yeshayun myprovider/proxies/provider-yeshayun.yml
-      url-flower: &url-flower 'https://api-huacloud.net/sub?target=clash&insert=true&emoji=true&udp=true&clash.doh=true&new_name=true&filename=Flower_SS.yaml&url=https%3A%2F%2Fapi.xmancdn.net%2Fosubscribe.php%3Ftoken2%3Dey7844dq-3bc8b9decafpuovro6%26sip002%3D1' # 这里填入airport的配置链接
+      url-flower: &url-flower 'https://api-huacloud.net/sub?target=clash&insert=true&emoji=true&udp=true&clash.doh=true&new_name=true&filename=Flower_SS.yaml&url=https%3A%2F%2Fapi.xmancdn.net%2Fosubscribe.php%3Ftoken2%3Dey7844dq-25cf2d551959cpg8o1%26sip002%3D1' # 这里填入airport的配置链接
       proxy-file-path-flower: &proxy-file-path-flower myprovider/proxies/provider-flower.yml
       # url-add-on: &url-add-on ""  # 这里填入add-on的配置链接
       # proxy-file-path-add-on: &proxy-file-path-add-on myprovider/proxies/provider-add-on.yml
