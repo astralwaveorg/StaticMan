@@ -1,0 +1,64 @@
+proxies:
+  - name: '🇺🇸 Shadowsocks'
+    type: ss
+    server: 195.123.241.9
+    port: 53675
+    cipher: 2022-blake3-aes-128-gcm
+    password: 'u0j4N8t8WgRAgOJ8iUWabg=='
+    udp: true
+  - name: '🇺🇸 Trojan-WS'
+    type: trojan
+    server: magicv.jiek.top
+    port: 443
+    password: dc3e5bab-8aa3-4081-8035-453d1cc03222
+    network: ws
+    ws-opts:
+      path: /dc3e5bab-8aa3-4081-8035-453d1cc03222
+      headers:
+        Host: magicv.jiek.top
+    tls: true
+    skip-cert-verify: true
+    tfo: true
+  - name: '🇺🇸 Trojan-gRPC'
+    type: trojan
+    server: magict.jiek.top
+    port: 443
+    password: 31cd37c7-f9e7-4b89-8c91-3ffccf2512e0
+    network: grpc
+    grpc-opts:
+      grpc-service-name: 31cd37c7-f9e7-4b89-8c91-3ffccf2512e0
+    tls: true
+    sni: magict.jiek.top
+    skip-cert-verify: true
+    tfo: true
+  - name: '🇺🇸 VMess-WS'
+    type: vmess
+    server: magicvm.jiek.top
+    port: 443
+    uuid: 351e87f8-b183-4566-85b1-8b10ace932ee
+    alterId: 0
+    cipher: auto
+    tls: true
+    skip-cert-verify: true
+    network: ws
+    ws-opts:
+      path: /351e87f8-b183-4566-85b1-8b10ace932ee
+      headers:
+        Host: magicvm.jiek.top
+    sni: magicvm.jiek.top
+    tfo: true
+  - name: '🇺🇸 US-Vless-Reality'
+    type: vless
+    server: 195.123.241.9
+    port: 58443
+    uuid: 121449c8-2d5d-41c0-92c0-aae927e46fe9
+    encryption: none
+    flow: xtls-rprx-vision
+    network: tcp
+    tls: true
+    reality-opts:
+      dest: dl.google.com:443
+      xver: 0
+      pbk: YLVFaziXThBhzR-JQKWOCqMRE6ZFb465hq65ElZbBFY
+      spk: ''
+      fingerprint: chrome
