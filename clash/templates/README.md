@@ -6,7 +6,7 @@
 订阅转换地址：
 
 ```
-https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Full.ini
+https://sub.magichub.top/sub?target=clash&filename=ClashProFull.yaml&interval=28800&emoji=true&add_emoji=true&remove_emoji=true&tfo=true&udp=true&list=false&sort=true&scv=true&expand=false&append_info=false&new_name=true&config=https%3A%2F%2Fmagichub.top%2Fdownload%2Fclash%2Ftemplates%2Fastral_full.ini&url=https%3A%2F%2Fmagichub.top%2Fdownload%2Fclash%2Flist-self.yaml%7Chttps%3A%2F%2Fmagichub.top%2Fdownload%2Fclash%2Flist.yaml
 ```
 
 ### Lite 轻量化模板
@@ -17,5 +17,13 @@ https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Fu
 订阅转换地址：
 
 ```
-https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Full.ini
+https://sub.magichub.top/sub?target=clash&filename=ClashProLite.yaml&interval=28800&emoji=true&add_emoji=true&remove_emoji=true&tfo=true&udp=true&list=false&sort=true&scv=true&expand=false&append_info=false&new_name=true&config=https%3A%2F%2Fmagichub.top%2Fdownload%2Fclash%2Ftemplates%2Fastral_lite.ini&url=https%3A%2F%2Fmagichub.top%2Fdownload%2Fclash%2Flist-self.yaml%7Chttps%3A%2F%2Fmagichub.top%2Fdownload%2Fclash%2Flist.yaml
+```
+
+### 路由器专用模板
+
+订阅转换地址：
+
+```
+https://sub.magichub.top/sub?target=clash&filename=ClashProRouter.yaml&interval=28800&emoji=true&add_emoji=true&remove_emoji=true&tfo=true&udp=true&list=false&sort=true&scv=true&expand=false&append_info=false&new_name=true&config=https%3A%2F%2Fmagichub.top%2Fdownload%2Fclash%2Ftemplates%2Fastral_router.ini&url=https%3A%2F%2Fmagichub.top%2Fdownload%2Fclash%2Flist-self.yaml%7Chttps%3A%2F%2Fmagichub.top%2Fdownload%2Fclash%2Flist.yaml
 ```
