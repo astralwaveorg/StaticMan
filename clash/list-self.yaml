@@ -1,3 +1,6 @@
+# URL: # https://magichub.top/download/clash/list-self.yaml
+# URL Decode: https%3A%2F%2Fmagichub.top%2Fdownload%2Fclash%2Flist-self.yaml
+
 proxies:
   - name: '🇺🇸 Shadowsocks'
     type: ss
