@@ -2,14 +2,14 @@
 # URL Decode: https%3A%2F%2Fmagichub.top%2Fdownload%2Fclash%2Flist-self.yaml
 
 proxies:
-  - name: '🇺🇸 Shadowsocks'
+  - name: '🇺🇸 美国自建 SS'
     type: ss
     server: 195.123.241.9
     port: 53675
     cipher: 2022-blake3-aes-128-gcm
     password: 'u0j4N8t8WgRAgOJ8iUWabg=='
     udp: true
-  - name: '🇺🇸 Trojan-WS'
+  - name: '🇺🇸 美国自建 TWS'
     type: trojan
     server: magicv.jiek.top
     port: 443
@@ -22,7 +22,7 @@ proxies:
     tls: true
     skip-cert-verify: true
     tfo: true
-  - name: '🇺🇸 Trojan-gRPC'
+  - name: '🇺🇸 美国自建 TgRPC'
     type: trojan
     server: magict.jiek.top
     port: 443
@@ -34,7 +34,7 @@ proxies:
     sni: magict.jiek.top
     skip-cert-verify: true
     tfo: true
-  - name: '🇺🇸 VMess-WS'
+  - name: '🇺🇸 美国自建 VMess'
     type: vmess
     server: magicvm.jiek.top
     port: 443
@@ -50,7 +50,7 @@ proxies:
         Host: magicvm.jiek.top
     sni: magicvm.jiek.top
     tfo: true
-  - name: '🇺🇸 US-Vless-Reality'
+  - name: '🇺🇸 美国自建 Vless'
     type: vless
     server: 195.123.241.9
     port: 58443
