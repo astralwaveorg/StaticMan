@@ -1,0 +1,7 @@
+{
+  "name": "SurgeIcons",
+  "icons": [
+    {"name": "self", "url": "https://cdn.jsdelivr.net/gh/astralwaveorg/icons@refs/heads/main/png/self.png"},
+    {"name": "openai", "url": "https://cdn.jsdelivr.net/gh/astralwaveorg/icons@refs/heads/main/favicon/openai.ico"}
+  ]
+}
