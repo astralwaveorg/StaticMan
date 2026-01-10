@@ -1,10 +1,13 @@
 # ===== 基础配置 =====
-mixed-port:7890
-allow-lan: true
-bind-address: '*'
 mode: rule
+ipv6: true
 log-level: info
-ipv6: false
+allow-lan: true
+mixed-port: 7890
+unified-delay: true
+# TCP 并发
+tcp-concurrent: true
+# 外部控制端口
 external-controller: :9090
 external-ui: ui
 secret: ''
