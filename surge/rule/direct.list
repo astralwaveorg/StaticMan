@@ -6,8 +6,14 @@ DOMAIN-SUFFIX,eoysky.com
 DOMAIN-SUFFIX,rsshub.in
 DOMAIN-SUFFIX,jonnyhub.com
 DOMAIN-SUFFIX,dilyslyu.com
-DOMAIN-SUFFIX,xn--ngstr-lra8j.com,DIRECT
-DOMAIN-SUFFIX,googleapis.cn,DIRECT
+DOMAIN-SUFFIX,xn--ngstr-lra8j.com
+DOMAIN-SUFFIX,googleapis.cn
 DOMAIN-SUFFIX,juejin.im
 DOMAIN-SUFFIX,juejin.cn
 DOMAIN-SUFFIX,meituan.net
+DOMAIN-SUFFIX,steamcontent.com
+DOMAIN-SUFFIX,steamcdn-a.akamaihd.net
+DOMAIN-SUFFIX,cdn.mileweb.cs.steampowered.com.8686c.com
+DOMAIN-SUFFIX,st.dl.eccdnx.com
+DOMAIN-SUFFIX,dl.steam.clngaa.com
+DOMAIN-SUFFIX,cdn.steamstatic.com.8686c.com
