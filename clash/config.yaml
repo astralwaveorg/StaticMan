@@ -32,7 +32,7 @@ dns:
     - '+.msftconnecttest.com'
     - '+.msftncsi.com'
     - '+.xboxlive.com'
-    -'msftconnecttest.com'
+    - 'msftconnecttest.com'
     - 'xbox.*.microsoft.com'
     - '*.battlenet.com.cn'
     - '*.battlenet.com'
