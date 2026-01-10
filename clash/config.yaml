@@ -723,13 +723,39 @@ rules:
   - RULE-SET,wikipedia,国外媒体
   - RULE-SET,bahamut,国外媒体
   - RULE-SET,tvb,国外媒体
-  - GEOSITE,CN,DIRECT
-  - GEOIP,CN,DIRECT
   # 游戏平台
   - DOMAIN,store.steampowered.com,游戏平台
-  # 绕过局域网地址
+  - RULE-SET,playstation,游戏平台
+  - RULE-SET,xbox,游戏平台
+  - RULE-SET,nintendo,游戏平台
+  # 微软服务
+  - RULE-SET,microsoft,DIRECT
+  - RULE-SET,onedrive,DIRECT
+  # 苹果服务
+  - RULE-SET,appleproxy,苹果代理
+  - RULE-SET,apple,DIRECT
+  # 支付平台
+  - RULE-SET,paypal,DIRECT
+  # 国内流媒体
+  - RULE-SET,bilibili,DIRECT
+  - RULE-SET,iqiyi,DIRECT
+  - RULE-SET,youku,DIRECT
+  - RULE-SET,tencent,DIRECT
+  # 代理规则
+  - RULE-SET,proxy-custom,代理选择
+  - RULE-SET,proxy-all,代理选择
+  - RULE-SET,proxy-domain,代理选择
+  # 中国地区
+  - RULE-SET,china,DIRECT
+  - GEOSITE,CN,DIRECT
+  - GEOIP,CN,DIRECT
+    # 绕过局域网地址
   - IP-CIDR,10.0.0.0/8,DIRECT
   - IP-CIDR,172.16.0.0/12,DIRECT
   - IP-CIDR,192.168.0.0/16,DIRECT
   - IP-CIDR,100.64.0.0/10,DIRECT
   - IP-CIDR,127.0.0.0/8,DIRECT
+  # 兜底规则
+  - RULE-SET,direct,DIRECT
+  - SCRIPT,geoip_cn_check,漏网之鱼
+  - MATCH,漏网之鱼
