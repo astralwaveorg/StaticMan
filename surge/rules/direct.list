@@ -1,4 +1,6 @@
 AND,((DOMAIN,github.com), (DEST-PORT,22))
+DOMAIN-SUFFIX,apple.com
+DOMAIN-SUFFIX,icloud.com
 DOMAIN-SUFFIX,homehub.stream
 DOMAIN-SUFFIX,astralwave.io
 DOMAIN-SUFFIX,astralwave.vip
