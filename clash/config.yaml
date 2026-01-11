@@ -3,7 +3,6 @@
 # 2026-01-11 优化版
 # 地址: https://magichub.top/download/clash/config.yaml
 # ===========================================
-
 port: 7890
 socks-port: 7891
 redir-port: 7892
@@ -17,15 +16,13 @@ log-level: warning
 unified-delay: true
 tcp-concurrent: true
 tcp-keep-alive: true
+secret: "rain8240"
 external-controller: 0.0.0.0:9090
 external-ui: ui
 external-ui-name: zashboard
-external-ui-url: 'https://ghfast.top/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip'
-
 profile:
   store-selected: true
   store-fake-ip: true
-
 geodata-mode: true
 geo-auto-update: true
 geo-update-interval: 24
@@ -33,7 +30,6 @@ geox-url:
   geoip: 'https://ghfast.top/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat'
   geosite: 'https://ghfast.top/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat'
   mmdb: 'https://ghfast.top/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb'
-
 sniffer:
   enable: true
   parse-pure-ip: true
@@ -49,7 +45,6 @@ sniffer:
     - 'Mijia Cloud'
     - '+.push.apple.com'
     - '+.apple.com'
-
 tun:
   enable: true
   stack: mixed
@@ -60,8 +55,7 @@ tun:
     - 'any:53'
     - 'tcp://any:53'
 
-# ----- DNS 解析 (引导增强版) -----
-# ----- DNS 解析 (完全修正无错版) -----
+# ----- DNS 解析 -----
 dns:
   enable: true
   listen: 0.0.0.0:1053
