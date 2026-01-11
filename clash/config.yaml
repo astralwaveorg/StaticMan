@@ -153,15 +153,14 @@ proxy-groups:
       - 🇰🇷 韩国节点
       - 🇺🇸 美国节点
       - 🇸🇬 新加坡节点
-      - DIRECT
     use:
       - 订阅节点
   - name: '人工智能'
     type: select
     proxies:
       - 🇺🇸 美国节点
-      - 🇸🇬 新加坡节点
       - 自动优选
+      - 🇸🇬 新加坡节点
       - 🇰🇷 韩国节点
       - 🇯🇵 日本节点
     use:
@@ -169,10 +168,10 @@ proxy-groups:
   - name: '社交通讯'
     type: select
     proxies:
-      - 🇯🇵 日本节点
-      - 🇭🇰 香港节点
-      - 自动优选
       - 代理选择
+      - 自动优选
+      - 🇭🇰 香港节点
+      - 🇯🇵 日本节点
       - 🇺🇸 美国节点
       - 🇨🇳 台湾节点
       - 🇰🇷 韩国节点
@@ -180,9 +179,9 @@ proxy-groups:
   - name: '开发平台'
     type: select
     proxies:
-      - 🇭🇰 香港节点
-      - 自动优选
       - 代理选择
+      - 自动优选
+      - 🇭🇰 香港节点
       - 🇨🇳 台湾节点
       - 🇯🇵 日本节点
       - 🇰🇷 韩国节点
@@ -201,9 +200,9 @@ proxy-groups:
   - name: '国外媒体'
     type: select
     proxies:
-      - 🇭🇰 香港节点
-      - 自动优选
       - 代理选择
+      - 自动优选
+      - 🇭🇰 香港节点
       - 🇨🇳 台湾节点
       - 🇯🇵 日本节点
       - 🇰🇷 韩国节点
@@ -765,5 +764,4 @@ rules:
   - IP-CIDR,127.0.0.0/8,DIRECT
   # 兜底规则
   - RULE-SET,direct,DIRECT
-  - SCRIPT,geoip_cn_check,漏网之鱼
-  - MATCH,漏网之鱼
+  - MATCH,代理选择
