@@ -1,16 +1,21 @@
-# ===== 基础配置 =====
+# ===== 基础配置 ======
+# https://magichub.top/download/clash/config.yaml
+# ====================
 mode: rule
 ipv6: true
 log-level: info
 allow-lan: true
+port: 7892
+socks-port: 7891
 mixed-port: 7890
+redir-port: 7893
+tproxy-port: 7894
 unified-delay: true
-# TCP 并发
 tcp-concurrent: true
-# 外部控制端口
-external-controller: :9090
-external-ui: ui
+external-controller: 0.0.0.0:9090
 secret: ''
+external-ui: ui
+
 # ===== DNS 配置 =====
 dns:
   enable: true
