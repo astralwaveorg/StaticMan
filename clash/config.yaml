@@ -163,7 +163,8 @@ proxy-groups:
       - 🇸🇬 新加坡节点
       - 自动优选
       - 🇰🇷 韩国节点
-      - 🇯🇵 日本节点use:
+      - 🇯🇵 日本节点
+    use:
       - 自建节点
   - name: '社交通讯'
     type: select
