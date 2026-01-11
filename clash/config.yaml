@@ -130,7 +130,8 @@ proxy-providers:
     health-check:
       enable: true
       interval: 600
-      url: http://connectivitycheck.gstatic.com/generate_204
+      url: http://www.gstatic.com/generate_204
+      timeout: 5000
 
   自建节点:
     type: http
@@ -140,7 +141,8 @@ proxy-providers:
     health-check:
       enable: true
       interval: 600
-      url: http://connectivitycheck.gstatic.com/generate_204
+      url: http://www.gstatic.com/generate_204
+      timeout: 5000
 # ===== 代理组 =====
 proxy-groups:
   - name: '代理选择'
