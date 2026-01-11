@@ -16,10 +16,14 @@ log-level: warning
 unified-delay: true
 tcp-concurrent: true
 tcp-keep-alive: true
-secret: "rain8240"
+secret: 'rain8240'
 external-controller: 0.0.0.0:9090
+external-controller-cors:
+  allow-origins: ['*']
+  allow-private-network: true
 external-ui: ui
 external-ui-name: zashboard
+external-ui-url: 'https://ghfast.top/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip'
 profile:
   store-selected: true
   store-fake-ip: true
