@@ -23,7 +23,7 @@ SOURCE_CONFIG = {
 }
 
 # 自定義規則的 JSON 文件路徑
-CUSTOM_RULES_FILE = "/surge/rules/custom-rules.json"
+CUSTOM_RULES_FILE = "surge/rules/custom-rules.json"
 
 # ================= 邏輯區域 =================
 
