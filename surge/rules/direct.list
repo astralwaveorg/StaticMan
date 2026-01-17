@@ -1,4 +1,10 @@
-AND,((DOMAIN,github.com), (DEST-PORT,22))
+DOMAIN-SUFFIX,magichub.top
+DOMAIN-SUFFIX,sub-store.vercel.app
+DOMAIN-SUFFIX,api.dler.io
+DOMAIN-SUFFIX,sub.id9.cc
+DOMAIN-SUFFIX,convert.v1.mk
+DOMAIN-SUFFIX,api.wcc.best
+DOMAIN-SUFFIX,sub.xeton.dev
 DOMAIN-SUFFIX,apple.com
 DOMAIN-SUFFIX,icloud.com
 DOMAIN-SUFFIX,homehub.stream
@@ -44,4 +50,15 @@ DOMAIN-SUFFIX,xiaojukeji.com
 DOMAIN-SUFFIX,didiglobal.com
 DOMAIN-SUFFIX,didichuxing.com
 DOMAIN-KEYWORD,bank
-DOMAIN-KEYWORD,pay
+DOMAIN-SUFFIX,microsoft.com
+DOMAIN-SUFFIX,msecnd.net
+DOMAIN-SUFFIX,office365.com
+DOMAIN-SUFFIX,outlook.com
+DOMAIN-SUFFIX,trafficmanager.net
+DOMAIN-SUFFIX,windowsupdate.com
+DOMAIN-SUFFIX,aliyun.com
+DOMAIN-SUFFIX,aliyuncs.com
+DOMAIN-SUFFIX,qcloud.com
+DOMAIN-SUFFIX,myqcloud.com
+DOMAIN-SUFFIX,teamviewer.com
+DOMAIN-SUFFIX,anydesk.com
