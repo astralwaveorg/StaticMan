@@ -1,8 +1,8 @@
-name: Update Surge Rules
+name: 自动更新 Surge 规则
 
 on:
   schedule:
-    - cron: '0 4 */3 * *'
+    - cron: "0 4 */3 * *"
   workflow_dispatch:
 
 permissions:
@@ -11,31 +11,31 @@ permissions:
 jobs:
   update-rules:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout code
+      - name: 检出代码
         uses: actions/checkout@v4
-        
-      - name: Set up Python
+
+      - name: 设置 Python 环境
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
-      - name: Install dependencies
+      - name: 安装依赖
         run: pip install PyYAML
 
-      - name: Run update script
+      - name: 运行更新脚本
         run: python3 bin/update_rules.py
 
-      - name: Commit and Push changes
+      - name: 提交并推送更改
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           if [[ -n $(git status --porcelain) ]]; then
-            echo "Detected changes, committing..."
+            echo "检测到规则更新，正在提交..."
             git add surge/rules/
-            git commit -m "chore: auto update surge rules [skip ci]"
+            git commit -m "更新: 自动更新规则文件 [skip ci]"
             git push
           else
-            echo "No changes detected."
+            echo "未检测到规则变更。"
           fi
