@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # ========= 环境变量配置 ==========
 
 # 1. 基础路径配置
@@ -15,6 +14,9 @@ DOMAINS=("panel.eoysky.com" "vw.eoysky.com" "list.eoysky.com" "dash.cloudflare.c
 CMD_ARGS="-tp 443 -tl 250 -dn 5 -dt 10 -n 200 -httping -o $CSV_FILE"
 
 # ========== 脚本逻辑 ==========
+# 停止代理
+sudo systemctl stop mihomo
+
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] 🚀 开始执行 Cloudflare 优选流程..."
 
 # 1. 进入测速目录
@@ -89,3 +91,6 @@ else
 fi
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] ✅ 完成。"
+
+# 开启代理
+sudo systemctl start mihomo
