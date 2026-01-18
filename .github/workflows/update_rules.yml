@@ -1,41 +1,41 @@
 name: Update Surge Rules
 
 on:
-    schedule:
-        - cron: "0 4 */3 * *"
-    workflow_dispatch:
+  schedule:
+    - cron: '0 4 */3 * *'
+  workflow_dispatch:
 
 permissions:
-    contents: write
+  contents: write
 
 jobs:
-    update-rules:
-        runs-on: ubuntu-latest
+  update-rules:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
+      - name: Install dependencies
+        run: pip install PyYAML
 
-            - name: Set up Python
-              uses: actions/setup-python@v5
-              with:
-                  python-version: "3.10"
+      - name: Run update script
+        run: python3 bin/update_rules.py
 
-            - name: Run update script
-              # 直接運行 Python 腳本
-              run: python3 bin/update_rules.py
-
-            - name: Commit and Push changes
-              run: |
-                  git config --global user.name "github-actions[bot]"
-                  git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-                  if [[ -n $(git status --porcelain) ]]; then
-                    echo "Detected changes, committing..."
-                    # 添加所有變更（包括生成的 .list 文件）
-                    git add surge/rules/
-                    git commit -m "chore: auto update surge rules [skip ci]"
-                    git push
-                  else
-                    echo "No changes detected."
-                  fi
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "Detected changes, committing..."
+            git add surge/rules/
+            git commit -m "chore: auto update surge rules [skip ci]"
+            git push
+          else
+            echo "No changes detected."
+          fi
