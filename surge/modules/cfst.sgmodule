@@ -1,9 +1,18 @@
-#!name=Cloudflare 优选 (Auto)
-#!desc=自动优选脚本更新。更新时间: 2026-01-19 02:30:39
+#!name=Cloudflare 优选
+#!desc=自动优选 IP 更新。更新时间: 2026-01-19 03:28:11
 #!category=Auto Generated
 
+[Rule]
+DOMAIN,panel.eoysky.com,DIRECT
+DOMAIN,vw.eoysky.com,DIRECT
+DOMAIN,list.eoysky.com,DIRECT
+DOMAIN,dash.cloudflare.com,DIRECT
+
 [Host]
-panel.eoysky.com = 162.159.7.203,104.18.36.125 172.64.42.121
-vw.eoysky.com = 162.159.7.203,104.18.36.125 172.64.42.121
-list.eoysky.com = 162.159.7.203,104.18.36.125 172.64.42.121
-dash.cloudflare.com = 162.159.7.203,104.18.36.125 172.64.42.121
+panel.eoysky.com = 172.64.145.215,162.159.8.205 162.159.21.248
+vw.eoysky.com = 172.64.145.215,162.159.8.205 162.159.21.248
+list.eoysky.com = 172.64.145.215,162.159.8.205 162.159.21.248
+dash.cloudflare.com = 172.64.145.215,162.159.8.205 162.159.21.248
+
+[MITM]
+hostname = %APPEND% panel.eoysky.com, vw.eoysky.com, list.eoysky.com, dash.cloudflare.com
