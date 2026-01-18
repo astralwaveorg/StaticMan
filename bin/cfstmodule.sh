@@ -8,7 +8,7 @@ MODULE_FILE="$REPO_DIR/surge/modules/cfst.sgmodule"
 CSV_FILE="$CFST_WORK_DIR/result_auto.csv"
 
 # 2. 需要加速的域名列表
-DOMAINS=("panel.eoysky.com" "vw.eoysky.com" "list.eoysky.com" "dash.cloudflare.com")
+DOMAINS=("panel.eoysky.com" "vw.eoysky.com" "list.eoysky.com" "*.cloudflare.com")
 
 # 3. CloudflareSpeedTest 测速参数
 CMD_ARGS="-tp 443 -tl 250 -dn 5 -dt 10 -n 200 -httping -o $CSV_FILE"
