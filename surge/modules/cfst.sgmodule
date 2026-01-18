@@ -1,0 +1,8 @@
+#!name=Cloudflare 优选 (Auto)
+#!desc=自动优选脚本更新。更新时间: 2026-01-19 02:22:50
+#!category=Auto Generated
+
+[Host]
+panel.eoysky.com = 173.245.59.53,108.162.193.196 172.64.157.5
+alist.eoysky.com = 173.245.59.53,108.162.193.196 172.64.157.5
+emby.eoysky.com = 173.245.59.53,108.162.193.196 172.64.157.5
