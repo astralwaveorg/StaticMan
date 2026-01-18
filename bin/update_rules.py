@@ -94,9 +94,11 @@ def main():
         try:
             with open(target_path, "w", encoding="utf-8") as f:
                 f.write(f"# 规则文件: {filename}\n")
-                f.write(f"# 生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
                 f.write(f"# 规则总数: {len(sorted_rules)}\n")
-                f.write(f"# 数据源: {CONFIG_FILE}\n")
+                f.write(
+                    f"# 规则地址: https://list.magichub.top/d/surge/rules/{filename}\n"
+                )
+                f.write(f"# 更新时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
                 f.write("\n")
                 f.write("\n".join(sorted_rules))
             print(f"已写入 {len(sorted_rules)} 条规则至 {target_path}")
