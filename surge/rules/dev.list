@@ -1,7 +1,7 @@
 # 规则文件: dev.list
-# 生成时间: 2026-01-18 10:42:37
 # 规则总数: 214
-# 数据源: surge/rules/rules.yaml
+# 规则地址: https://list.magichub.top/d/surge/rules/dev.list
+# 更新时间: 2026-01-19 04:41:41
 
 DOMAIN,aida.googleapis.com
 DOMAIN,d1q6f0aelx0por.cloudfront.net
