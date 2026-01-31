@@ -3,6 +3,7 @@
 # 2026-01-11 优化版
 # 地址: https://magichub.top/download/clash/config.yaml
 # ===========================================
+# ----- 基础设置 -----
 port: 7890
 socks-port: 7891
 redir-port: 7892
@@ -16,14 +17,19 @@ log-level: warning
 unified-delay: true
 tcp-concurrent: true
 tcp-keep-alive: true
+
+# ----- 安全与控制 -----
 secret: 'rain8240'
 external-controller: 0.0.0.0:9090
 external-controller-cors:
   allow-origins: ['*']
   allow-private-network: true
+
+# ----- 面板配置 -----
 external-ui: ui
-external-ui-name: zashboard
-external-ui-url: 'https://ghfast.top/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip'
+external-ui-url: 'https://ghfast.top/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip'
+
+# ----- 存储与数据 -----
 profile:
   store-selected: true
   store-fake-ip: true
@@ -34,6 +40,8 @@ geox-url:
   geoip: 'https://ghfast.top/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat'
   geosite: 'https://ghfast.top/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat'
   mmdb: 'https://ghfast.top/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb'
+
+# ----- 流量嗅探 -----
 sniffer:
   enable: true
   parse-pure-ip: true
@@ -46,9 +54,11 @@ sniffer:
     QUIC:
       ports: [443, 8443]
   skip-domain:
-    - 'Mijia Cloud'
     - '+.push.apple.com'
     - '+.apple.com'
+    - 'Mijia Cloud'
+
+# ----- TUN 模式 (保持标准配置) -----
 tun:
   enable: true
   stack: mixed
@@ -59,7 +69,7 @@ tun:
     - 'any:53'
     - 'tcp://any:53'
 
-# ----- DNS 解析 -----
+# ----- DNS 解析 (重构优化版) -----
 dns:
   enable: true
   listen: 0.0.0.0:1053
@@ -70,29 +80,33 @@ dns:
     - '+.lan'
     - '+.local'
     - 'geosite:private,cn,apple'
-
+    - '+.homehub.stream'
+    - '+.magichub.top'
+    - '+.eoysky.com'
+    - '+.astralwave.org'
   default-nameserver:
     - 223.5.5.5
     - 119.29.29.29
-    - 1.1.1.1
-    - 8.8.8.8
-
   proxy-server-nameserver:
     - 223.5.5.5
     - 119.29.29.29
-
   nameserver-policy:
-    'geosite:cn,private': [https://dns.alidns.com/dns-query, https://doh.pub/dns-query]
-    # 拆分域名策略，确保每个域名都被精准识别
     'magichub.top': [223.5.5.5, 119.29.29.29]
+    'homehub.stream': [223.5.5.5, 119.29.29.29]
+    'eoysky.com': [223.5.5.5, 119.29.29.29]
+    'astralwave.org': [223.5.5.5, 119.29.29.29]
+    '233netcloud.com': [223.5.5.5, 119.29.29.29]
     'ghfast.top': [223.5.5.5, 119.29.29.29]
+    'github.com': [223.5.5.5, 119.29.29.29]
     'githubusercontent.com': [223.5.5.5, 119.29.29.29]
+    'geosite:cn,private': [https://dns.alidns.com/dns-query, https://doh.pub/dns-query]
     'geosite:!cn': [https://dns.google/dns-query, https://1.1.1.1/dns-query]
-
+  # [5] 常规解析
   nameserver:
     - 223.5.5.5
     - 119.29.29.29
-
+    - https://dns.alidns.com/dns-query
+  # [6] 兜底解析
   fallback:
     - https://dns.cloudflare.com/dns-query
     - https://dns.google/dns-query
