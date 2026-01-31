@@ -2,7 +2,7 @@
 # URL Decode: https%3A%2F%2Fmagichub.top%2Fdownload%2Fclash%2Flist-self.yaml
 proxies:
   - {
-      name: '[VMess] 🇺🇸 US-VMESS-5948rb1r',
+      name: '🇺🇸 美国自建节点 1',
       server: purple.magichub.top,
       port: 54092,
       type: vmess,
@@ -17,7 +17,7 @@ proxies:
       udp: true,
     }
   - {
-      name: '[VMess] 🇺🇸 US-VMESS-9qz2yhul',
+      name: '🇺🇸 美国自建节点 2',
       server: purple.magichub.top,
       port: 54092,
       type: vmess,
@@ -32,7 +32,7 @@ proxies:
       udp: true,
     }
   - {
-      name: '[VMess] 🇺🇸 US-VMESS-k8qpl0si',
+      name: '🇺🇸 美国自建节点 3',
       server: purple.magichub.top,
       port: 54092,
       type: vmess,
@@ -47,7 +47,7 @@ proxies:
       udp: true,
     }
   - {
-      name: '[VMess] 🇺🇸 US-VMESS-o8a5gica',
+      name: '🇺🇸 美国自建节点 4',
       server: purple.magichub.top,
       port: 54092,
       type: vmess,
@@ -62,7 +62,7 @@ proxies:
       udp: true,
     }
   - {
-      name: '[VMess] 🇺🇸 US-VMESS-ok8kf7rd',
+      name: '🇺🇸 美国自建节点 5',
       server: purple.magichub.top,
       port: 54092,
       type: vmess,
