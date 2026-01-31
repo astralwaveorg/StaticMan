@@ -1,47 +1,63 @@
-# ==========================================
-# Mihomo (Clash Meta) 全量兼容配置
-# 2026-01-11 优化版
+# ===============================
+# Mihomo (Clash Meta) Config
 # 地址: https://magichub.top/download/clash/config.yaml
-# ===========================================
-# ----- 基础设置 -----
+# ===============================
+
+# [1] 端口设置
 port: 7890
 socks-port: 7891
 redir-port: 7892
 tproxy-port: 7894
 mixed-port: 7893
+
+# [2] 鉴权与免密
+authentication:
+  - 'rain:rain8240'
+# 设置允许跳过验证的 IP 段
+skip-auth-prefixes:
+  - 127.0.0.1/8
+  - ::1/128
+  - 10.0.1.0/24
+
+# [3] 局域网访问
 allow-lan: true
 bind-address: '*'
 ipv6: true
 mode: rule
 log-level: warning
+
+# [4] 网络栈优化
 unified-delay: true
 tcp-concurrent: true
-tcp-keep-alive: true
+keep-alive-interval: 15
+keep-alive-idle: 15
+find-process-mode: strict
+global-ua: clash.meta
 
-# ----- 安全与控制 -----
+# [5] API与面板
 secret: 'rain8240'
 external-controller: 0.0.0.0:9090
 external-controller-cors:
   allow-origins: ['*']
   allow-private-network: true
-
-# ----- 面板配置 -----
 external-ui: ui
 external-ui-url: 'https://ghfast.top/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip'
 
-# ----- 存储与数据 -----
+# [6] 缓存与Geo数据库
 profile:
   store-selected: true
   store-fake-ip: true
 geodata-mode: true
+geodata-loader: standard
 geo-auto-update: true
 geo-update-interval: 24
+etag-support: true
 geox-url:
   geoip: 'https://ghfast.top/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat'
   geosite: 'https://ghfast.top/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat'
   mmdb: 'https://ghfast.top/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb'
 
-# ----- 流量嗅探 -----
+# [7] 流量嗅探
 sniffer:
   enable: true
   parse-pure-ip: true
@@ -58,7 +74,7 @@ sniffer:
     - '+.apple.com'
     - 'Mijia Cloud'
 
-# ----- TUN 模式 (保持标准配置) -----
+# [8] TUN模式
 tun:
   enable: true
   stack: mixed
@@ -69,7 +85,7 @@ tun:
     - 'any:53'
     - 'tcp://any:53'
 
-# ----- DNS 解析 (重构优化版) -----
+# [9] DNS解析
 dns:
   enable: true
   listen: 0.0.0.0:1053
@@ -84,12 +100,15 @@ dns:
     - '+.magichub.top'
     - '+.eoysky.com'
     - '+.astralwave.org'
+
   default-nameserver:
     - 223.5.5.5
     - 119.29.29.29
+
   proxy-server-nameserver:
     - 223.5.5.5
     - 119.29.29.29
+
   nameserver-policy:
     'magichub.top': [223.5.5.5, 119.29.29.29]
     'homehub.stream': [223.5.5.5, 119.29.29.29]
@@ -101,12 +120,12 @@ dns:
     'githubusercontent.com': [223.5.5.5, 119.29.29.29]
     'geosite:cn,private': [https://dns.alidns.com/dns-query, https://doh.pub/dns-query]
     'geosite:!cn': [https://dns.google/dns-query, https://1.1.1.1/dns-query]
-  # [5] 常规解析
+
   nameserver:
     - 223.5.5.5
     - 119.29.29.29
     - https://dns.alidns.com/dns-query
-  # [6] 兜底解析
+
   fallback:
     - https://dns.cloudflare.com/dns-query
     - https://dns.google/dns-query
