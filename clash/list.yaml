@@ -463,14 +463,6 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇪🇸 西班牙标准 IEPL 专线 1
-    server: bjcloud.233netcloud.com
-    port: 11154
-    type: trojan
-    password: 324A8D64-3D77-C7A6-54BC-8AEC0A2AC949
-    sni: m.ctrip.com
-    skip-cert-verify: true
-    udp: true
   - name: 🇹🇷 土耳其标准 IEPL 专线 1
     server: bjcloud.233netcloud.com
     port: 11155
@@ -559,41 +551,9 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇦🇷 阿根廷标准 IEPL 专线 1
-    server: shcloud.233netcloud.com
-    port: 11166
-    type: trojan
-    password: 324A8D64-3D77-C7A6-54BC-8AEC0A2AC949
-    sni: m.ctrip.com
-    skip-cert-verify: true
-    udp: true
-  - name: 🇧🇷 巴西标准 IEPL 专线 1
-    server: shcloud.233netcloud.com
-    port: 11167
-    type: trojan
-    password: 324A8D64-3D77-C7A6-54BC-8AEC0A2AC949
-    sni: m.ctrip.com
-    skip-cert-verify: true
-    udp: true
-  - name: 🇨🇱 智利标准 IEPL 专线 1
-    server: shcloud.233netcloud.com
-    port: 11168
-    type: trojan
-    password: 324A8D64-3D77-C7A6-54BC-8AEC0A2AC949
-    sni: m.ctrip.com
-    skip-cert-verify: true
-    udp: true
   - name: 🇦🇺 澳大利亚标准 IEPL 专线 1
     server: gzcloud.233netcloud.com
     port: 11169
-    type: trojan
-    password: 324A8D64-3D77-C7A6-54BC-8AEC0A2AC949
-    sni: m.ctrip.com
-    skip-cert-verify: true
-    udp: true
-  - name: 🇳🇿 新西兰标准 IEPL 专线 1
-    server: gzcloud.233netcloud.com
-    port: 11170
     type: trojan
     password: 324A8D64-3D77-C7A6-54BC-8AEC0A2AC949
     sni: m.ctrip.com
@@ -647,14 +607,6 @@ proxies:
     sni: m.ctrip.com
     skip-cert-verify: true
     udp: true
-  - name: 🇵🇰 巴基斯坦标准 IEPL 专线 1
-    server: gzcloud.233netcloud.com
-    port: 11181
-    type: trojan
-    password: 324A8D64-3D77-C7A6-54BC-8AEC0A2AC949
-    sni: m.ctrip.com
-    skip-cert-verify: true
-    udp: true
   - name: 🇮🇱 以色列标准 IEPL 专线 1
     server: bjcloud.233netcloud.com
     port: 11182
@@ -690,14 +642,6 @@ proxies:
   - name: 🇪🇬 埃及标准 IEPL 专线 1
     server: bjcloud.233netcloud.com
     port: 11186
-    type: trojan
-    password: 324A8D64-3D77-C7A6-54BC-8AEC0A2AC949
-    sni: m.ctrip.com
-    skip-cert-verify: true
-    udp: true
-  - name: 🇳🇬 尼日利亚标准 IEPL 专线 1
-    server: bjcloud.233netcloud.com
-    port: 11187
     type: trojan
     password: 324A8D64-3D77-C7A6-54BC-8AEC0A2AC949
     sni: m.ctrip.com
