@@ -616,10 +616,8 @@ rule-providers:
 rules:
   - DST-PORT,123,DIRECT
   - RULE-SET,lan,DIRECT
-  # - RULE-SET,reject,REJECT
-  # - DOMAIN,0.0.0.0,REJECT
-
   - DOMAIN-SUFFIX,magichub.top,DIRECT
+  - DOMAIN-SUFFIX,jike.top,DIRECT
   - DOMAIN-SUFFIX,sub-store.vercel.app,DIRECT
   - DOMAIN-SUFFIX,api.dler.io,DIRECT
   - DOMAIN-SUFFIX,sub.id9.cc,DIRECT
