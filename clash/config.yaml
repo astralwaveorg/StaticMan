@@ -84,7 +84,6 @@ tun:
   dns-hijack:
     - 'any:53'
     - 'tcp://any:53'
-
 # [9] DNS解析
 dns:
   enable: true
@@ -111,25 +110,21 @@ dns:
     - 119.29.29.29
 
   nameserver-policy:
-    'magichub.top': [223.5.5.5, 119.29.29.29]
-    'homehub.stream': [223.5.5.5, 119.29.29.29]
-    'eoysky.com': [223.5.5.5, 119.29.29.29]
-    'astralwave.org': [223.5.5.5, 119.29.29.29]
-    '233netcloud.com': [223.5.5.5, 119.29.29.29]
-    'ghfast.top': [223.5.5.5, 119.29.29.29]
-    'github.com': [223.5.5.5, 119.29.29.29]
-    'githubusercontent.com': [223.5.5.5, 119.29.29.29]
+    # 你的核心直连域名，强制使用国内解析，不再查询 google
+    'domain:jiek.top,magichub.top,homehub.stream,eoysky.com,astralwave.org,233netcloud.com,ghfast.top':
+      [223.5.5.5, 119.29.29.29]
     'geosite:cn,private': [https://dns.alidns.com/dns-query, https://doh.pub/dns-query]
-    'geosite:!cn': [https://dns.google/dns-query, https://1.1.1.1/dns-query]
+    # 不使用国外 DNS 解析，避免访问失败
+    # 'geosite:!cn': [https://dns.google/dns-query, https://1.1.1.1/dns-query]
 
   nameserver:
     - 223.5.5.5
     - 119.29.29.29
     - https://dns.alidns.com/dns-query
 
-  fallback:
-    - https://dns.cloudflare.com/dns-query
-    - https://dns.google/dns-query
+  # 关键修改：去掉 fallback 里的国外 DoH，或者确保它们走代理
+  # fallback:
+  #   - https://dns.cloudflare.com/dns-query
 
 ntp:
   enable: true
