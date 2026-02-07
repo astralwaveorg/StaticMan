@@ -131,7 +131,7 @@ ntp:
   server: ntp.aliyun.com
   server-port: 123
   interval: 30
-
+proxies:
 proxy-providers:
   订阅节点:
     type: http
@@ -165,7 +165,7 @@ proxy-groups:
   # 地区筛选分组
   - name: '🇺🇸 美国节点'
     type: url-test
-    use: [订阅节点, 自建源]
+    use: [订阅节点]
     filter: '(?i)🇺🇸|美国|US|States'
     url: http://connectivitycheck.gstatic.com/generate_204
 
@@ -263,6 +263,7 @@ proxy-groups:
       - 🇰🇷 韩国节点
       - 🇸🇬 新加坡节点
       - 🇺🇸 美国节点
+      - ⚡ 自建自动
 
   - name: '苹果代理'
     type: select
@@ -631,7 +632,6 @@ rules:
   - RULE-SET,download,DIRECT
   - RULE-SET,privatetracker,DIRECT
 
-  - GEOSITE,category-scholar-!cn,人工智能
   - RULE-SET,gemini,人工智能
   - RULE-SET,chatgpt,人工智能
   - RULE-SET,openai,人工智能
@@ -769,4 +769,4 @@ rules:
   - IP-CIDR,127.0.0.0/8,DIRECT
 
   - RULE-SET,direct,DIRECT
-  - MATCH,代理选择
+  - MATCH,DIRECT
