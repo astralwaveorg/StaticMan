@@ -717,6 +717,7 @@ rules:
   - RULE-SET,google,谷歌服务
 
   - RULE-SET,netflix,国外媒体
+  - RULE-SET,missav,国外媒体
   - RULE-SET,disney,国外媒体
   - RULE-SET,hbo,国外媒体
   - RULE-SET,hboasia,国外媒体
