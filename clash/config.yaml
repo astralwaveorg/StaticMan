@@ -735,7 +735,6 @@ rules:
   - RULE-SET,wikipedia,国外媒体
   - RULE-SET,bahamut,国外媒体
   - RULE-SET,tvb,国外媒体
-  - RULE-SET,missav,国外媒体
 
   - DOMAIN,store.steampowered.com,游戏平台
   - RULE-SET,playstation,游戏平台
