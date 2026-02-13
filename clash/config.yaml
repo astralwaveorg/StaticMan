@@ -716,6 +716,7 @@ rules:
   - RULE-SET,youtube,谷歌服务
   - RULE-SET,google,谷歌服务
 
+  - DOMAIN-KEYWORD,missav,国外媒体
   - RULE-SET,netflix,国外媒体
   - RULE-SET,disney,国外媒体
   - RULE-SET,hbo,国外媒体
