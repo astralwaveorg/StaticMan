@@ -150,7 +150,7 @@ proxy-groups:
   # 基础测速分组
   - name: '自动优选'
     type: url-test
-    use: [订阅节点]
+    use: [订阅节点,自建源]
     url: http://connectivitycheck.gstatic.com/generate_204
     interval: 600
     tolerance: 100
