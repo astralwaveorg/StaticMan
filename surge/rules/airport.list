@@ -114,9 +114,10 @@ DOMAIN-KEYWORD,cn88
 DOMAIN-KEYWORD,ubbol
 DOMAIN-KEYWORD,ubbolink
 DOMAIN-KEYWORD,unolink
+DOMAIN-KEYWORD,flowercloud
+DOMAIN-SUFFIX,amytele.co
 DOMAIN-SUFFIX,bit.ly
 DOMAIN-SUFFIX,1yunti
-DOMAIN-SUFFIX,flowercloud
 #Cloudflare 减速器
 DOMAIN,ajax.cloudflare.com
 DOMAIN,static.cloudflareinsights.com
