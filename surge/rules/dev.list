@@ -3,6 +3,14 @@
 # 规则地址: https://list.magichub.top/d/surge/rules/dev.list
 # 更新时间: 2026-03-19 05:17:38
 
+DOMAIN-SUFFIX,cursor.com
+DOMAIN-SUFFIX,cursor.sh
+DOMAIN-SUFFIX,codeium.com
+DOMAIN-SUFFIX,v0.dev
+DOMAIN-SUFFIX,bolt.new
+DOMAIN-SUFFIX,lovable.dev
+DOMAIN-SUFFIX,replit.com
+DOMAIN-SUFFIX,grep.app
 DOMAIN,aida.googleapis.com
 DOMAIN,d1q6f0aelx0por.cloudfront.net
 DOMAIN,d2wy8f7a9ursnm.cloudfront.net
