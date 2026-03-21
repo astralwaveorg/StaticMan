@@ -1,17 +1,8 @@
-# 规则文件: dev.list
-# 规则总数: 214
-# 规则地址: https://list.magichub.top/d/surge/rules/dev.list
-# 更新时间: 2026-03-19 05:17:38
+# 规则文件: devtools.list
+# 规则说明: 开发工具规则 (GitHub, Docker, Python, etc.)
+# 规则地址: https://list.magichub.top/d/surge/rules/devtools.list
 
-DOMAIN-SUFFIX,cursor.com
-DOMAIN-SUFFIX,cursor.sh
-DOMAIN-SUFFIX,codeium.com
-DOMAIN-SUFFIX,v0.dev
-DOMAIN-SUFFIX,bolt.new
-DOMAIN-SUFFIX,lovable.dev
-DOMAIN-SUFFIX,replit.com
 DOMAIN-SUFFIX,grep.app
-DOMAIN,aida.googleapis.com
 DOMAIN,d1q6f0aelx0por.cloudfront.net
 DOMAIN,d2wy8f7a9ursnm.cloudfront.net
 DOMAIN,d36jcksde1wxzq.cloudfront.net
@@ -79,7 +70,6 @@ DOMAIN-SUFFIX,github.dev
 DOMAIN-SUFFIX,github.io
 DOMAIN-SUFFIX,githubapp.com
 DOMAIN-SUFFIX,githubassets.com
-DOMAIN-SUFFIX,githubcopilot.com
 DOMAIN-SUFFIX,githubhackathon.com
 DOMAIN-SUFFIX,githubnext.com
 DOMAIN-SUFFIX,githubpreview.dev
@@ -95,7 +85,6 @@ DOMAIN-SUFFIX,gitter-static.net
 DOMAIN-SUFFIX,gitter.im
 DOMAIN-SUFFIX,go.dev
 DOMAIN-SUFFIX,golang.org
-DOMAIN-SUFFIX,googleapis.com
 DOMAIN-SUFFIX,googlesource.com
 DOMAIN-SUFFIX,gradle-dn.com
 DOMAIN-SUFFIX,gradle.org
@@ -119,7 +108,6 @@ DOMAIN-SUFFIX,npm.community
 DOMAIN-SUFFIX,npmjs.com
 DOMAIN-SUFFIX,npmjs.org
 DOMAIN-SUFFIX,omgubuntu.co.uk
-DOMAIN-SUFFIX,openai.com
 DOMAIN-SUFFIX,opensource.guide
 DOMAIN-SUFFIX,p-events-delivery.akamaized.net
 DOMAIN-SUFFIX,packagist.org

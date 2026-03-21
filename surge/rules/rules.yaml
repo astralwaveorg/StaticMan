@@ -1,7 +1,7 @@
 # rules.yaml - Surge 規則配置中心
 
-# 1. AI 规则 surge/rules/ai.list
-ai.list:
+# 1. 其他 AI 规则 surge/rules/ai-other.list (OpenAI/Gemini/Anthropic/Grok/Perplexity 已独立)
+ai-other.list:
   sources:
     - 'https://ruleset.skk.moe/List/non_ip/ai.conf'
     - 'https://ruleset.skk.moe/List/non_ip/apple_intelligence.conf'
@@ -12,8 +12,8 @@ ai.list:
     - 'https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Copilot/Copilot.list'
   rules:
 
-# 2. 开发规则 surge/rules/dev.list
-dev.list:
+# 2. 开发工具规则 surge/rules/devtools.list
+devtools.list:
   sources:
     - 'https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/GitHub/GitHub.list'
     - 'https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/GitLab/GitLab.list'
