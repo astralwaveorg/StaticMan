@@ -62,3 +62,4 @@ DOMAIN-SUFFIX,qcloud.com
 DOMAIN-SUFFIX,myqcloud.com
 DOMAIN-SUFFIX,teamviewer.com
 DOMAIN-SUFFIX,anydesk.com
+DOMAIN,log.snssdk.com,DIRECT
