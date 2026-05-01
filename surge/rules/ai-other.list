@@ -1,7 +1,7 @@
 # 规则文件: ai-other.list
-# 规则总数: 167
+# 规则总数: 168
 # 规则地址: https://list.magichub.top/d/surge/rules/ai-other.list
-# 更新时间: 2026-04-04 05:16:00
+# 更新时间: 2026-04-28 06:22:38
 
 DOMAIN,7h1s_rul35et_i5_mad3_by_5ukk4w-ruleset.skk.moe
 DOMAIN,ai.google.dev
@@ -164,6 +164,7 @@ DOMAIN-SUFFIX,turn.livekit.cloud
 DOMAIN-SUFFIX,workos.com
 DOMAIN-SUFFIX,workos.imgix.net
 DOMAIN-SUFFIX,x.ai
+DOMAIN-SUFFIX,zed.dev
 IP-ASN,14061,no-resolve
 IP-ASN,20473,no-resolve
 IP-CIDR,129.146.3.78/32,no-resolve
