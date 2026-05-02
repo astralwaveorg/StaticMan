@@ -1,5 +1,9 @@
 sqlite_mcp_server.db
-.DS_Store
 .vscode/
 .codegpt
 .venv
+.idea
+**/.DS_Store
+**/Thumbs.db
+**/node_modules/**
+**/misc.xml
