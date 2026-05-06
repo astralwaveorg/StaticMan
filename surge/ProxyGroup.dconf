@@ -1,4 +1,4 @@
-#!MANAGED-CONFIG https://list.magichub.top/d/surge/ProxyGroup.conf interval=21600 strict=false
+#!MANAGED-CONFIG https://list.magichub.top/d/surge/ProxyGroup.dconf interval=21600 strict=false
 
 [Proxy Group]
 🚀 节点选择 = select, "♻️ 自动优选", "🇸🇬 新加坡", "🇯🇵 日本", "🇭🇰 香港", "🇨🇳 台湾", "🇺🇸 美国", "🇺🇸 美国自建01", "🇺🇸 美国自建02", no-alert=0, hidden=0, include-other-group=🥣 代理池, policy-regex-filter=^(?!.*(直连|DIRECT)).*$, include-all-proxies=0

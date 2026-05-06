@@ -1,4 +1,4 @@
-#!MANAGED-CONFIG https://list.magichub.top/d/surge/Proxy.conf interval=21600 strict=false
+#!MANAGED-CONFIG https://list.magichub.top/d/surge/Proxy.dconf interval=21600 strict=false
 
 [Proxy]
 🇺🇸 美国自建01 = vmess, purple.magichub.top, 54092, username=3c1d608a-138a-4bf5-855b-914ec190c926, ws=true, ws-path=/ysblldyufffl, vmess-aead=true, tls=true, tfo=true, skip-cert-verify=true, sni=purple.magichub.top
