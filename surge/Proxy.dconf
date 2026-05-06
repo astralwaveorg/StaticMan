@@ -1,5 +1,0 @@
-#!MANAGED-CONFIG https://list.magichub.top/d/surge/Proxy.dconf interval=21600 strict=false
-
-[Proxy]
-🇺🇸 美国自建01 = vmess, purple.magichub.top, 54092, username=3c1d608a-138a-4bf5-855b-914ec190c926, ws=true, ws-path=/ysblldyufffl, vmess-aead=true, tls=true, tfo=true, skip-cert-verify=true, sni=purple.magichub.top
-🇺🇸 美国自建02 = vmess, tuxing.xqqyyds.qzz.io, 33080, username=97e5f904-b4e6-4453-abb2-64abaff7af67, ws=true, ws-path=/vmessws, ws-headers=Host:"tuxing.xqqyyds.qzz.io", vmess-aead=true, tls=true, skip-cert-verify=true, sni=tuxing.xqqyyds.qzz.io
