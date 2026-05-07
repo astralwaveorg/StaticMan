@@ -32,10 +32,14 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install dependencies
+        run: |
+          pip install -q pyyaml requests psutil
+
       - name: Install MK_XRAYchecker
         run: |
           git clone https://github.com/MKultra6969/MK_XRAYchecker /tmp/MK_XRAYchecker
-          pip install -q requests psutil pysocks rich art pyyaml urllib3 colorama
+          pip install -q rich art
 
       - name: Run Health Check
         env:
@@ -48,6 +52,13 @@ jobs:
             echo "可用节点数: $(grep -c 'name:' /tmp/checked_proxies.txt || echo 0)"
           else
             echo "无可用节点"
+          fi
+
+      - name: Convert to Surge INI
+        run: |
+          if [ -s /tmp/checked_proxies.txt ]; then
+            python tools/clash2surge.py /tmp/checked_proxies.txt surge/nodes/all-checked.ini
+            cat surge/nodes/all-checked.ini | head -20
           fi
 
       - name: Commit changes
