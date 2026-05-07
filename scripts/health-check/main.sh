@@ -11,8 +11,8 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-NODES_DIR="${1:-${SCRIPT_DIR}/../../nodes}"
-OUTPUT_DIR="${2:-${SCRIPT_DIR}/../../nodes}"
+NODES_DIR="${1:-${SCRIPT_DIR}/../../surge/nodes}"
+OUTPUT_DIR="${2:-${SCRIPT_DIR}/../../surge/nodes}"
 TEST_FILE="${3:-wugui-test.ini}"
 
 # 加载依赖
@@ -49,12 +49,12 @@ if [[ ! -f "$INI_FILE" ]]; then
     exit 1
 fi
 
-# 备份原文件（万一出问题）
-cp "$INI_FILE" "${INI_FILE}.bak"
+# 备份原文件
+cp "$INI_FILE" "${INI_FILE}.bak.$(date +%s)"
 
 # 临时文件
 TMP_FILE=$(mktemp)
-> "$TMP_FILE"  # 清空
+> "$TMP_FILE"
 
 # 处理节点
 echo ""
@@ -64,14 +64,14 @@ while IFS= read -r line || [[ -n "$line" ]]; do
     # 跳过空行
     [[ -z "$line" ]] && continue
 
-    ((total++))
+    total=$((total + 1))
 
     # 解析节点
     node_json=$(parse_node "$line")
     if [[ -z "$node_json" || "$node_json" == "null" ]]; then
         # 非节点行，直接保留
         echo "$line" >> "$TMP_FILE"
-        ((skipped++))
+        skipped=$((skipped + 1))
         continue
     fi
 
@@ -84,7 +84,7 @@ while IFS= read -r line || [[ -n "$line" ]]; do
     # 跳过解析失败的
     if [[ "$server" == "null" || "$port" == "null" || "$server" == "" || "$port" == "" ]]; then
         echo "$line" >> "$TMP_FILE"
-        ((parse_error++))
+        parse_error=$((parse_error + 1))
         echo "⚠️ 解析错误: ${line:0:50}..."
         continue
     fi
@@ -98,10 +98,10 @@ while IFS= read -r line || [[ -n "$line" ]]; do
     if test_node "$type" "$server" "$port" "$extra"; then
         echo "✅ 可用"
         echo "$line" >> "$TMP_FILE"
-        ((available++))
+        available=$((available + 1))
     else
         echo "❌ 不可用"
-        ((unavailable++))
+        unavailable=$((unavailable + 1))
     fi
 
 done < "$INI_FILE"
@@ -116,9 +116,6 @@ echo "不可用: $unavailable (将移除)"
 echo "跳过: $skipped"
 echo "解析错误: $parse_error"
 echo "========================================"
-
-# 删除备份
-rm -f "${INI_FILE}.bak"
 
 # 更新文件
 if [[ "$REPORT_MODE" == "true" ]]; then
@@ -163,11 +160,4 @@ echo ""
 
 if [[ "$unavailable" -gt 0 && "$REPORT_MODE" != "true" ]]; then
     echo "✅ 已自动移除 $unavailable 个不可用节点"
-fi
-
-# 设置退出码：有不可用节点且不是报告模式
-if [[ "$unavailable" -gt 0 && "$REPORT_MODE" != "true" ]]; then
-    exit 0  # 成功，有变化
-else
-    exit 0  # 成功，无变化
 fi
