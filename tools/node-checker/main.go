@@ -59,8 +59,14 @@ var cfg = struct {
 
 var progress atomic.Int32
 var available atomic.Int32
-var mihomoPath = "mihomo"
+var mihomoPath string
 var mihomoPort = 4399
+
+func init() {
+	// 获取可执行文件所在目录，用于定位 mihomo
+	execPath, _ := os.Executable()
+	mihomoPath = filepath.Join(filepath.Dir(execPath), "mihomo")
+}
 
 func main() {
 	inputFile := flag.String("i", "", "输入节点文件 (Surge .ini)")
