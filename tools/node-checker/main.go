@@ -340,8 +340,25 @@ func isMihomoAvailable() bool {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
+	// 检查文件是否存在
+	if _, err := os.Stat(mihomoPath); os.IsNotExist(err) {
+		slog.Debug("mihomo 文件不存在", "路径", mihomoPath)
+		return false
+	}
+
+	// 检查文件权限
+	if err := os.Chmod(mihomoPath, 0755); err != nil {
+		slog.Debug("mihomo 设置权限失败", "错误", err)
+		return false
+	}
+
+	// 尝试执行
 	cmd := exec.CommandContext(ctx, mihomoPath, "-v")
-	return cmd.Run() == nil
+	if err := cmd.Run(); err != nil {
+		slog.Debug("mihomo 执行失败", "错误", err)
+		return false
+	}
+	return true
 }
 
 // generateMihomoConfig 生成 clash/mihomo 配置
