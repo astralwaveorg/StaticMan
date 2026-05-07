@@ -1,7 +1,25 @@
 {
   "name": "SurgeIcons",
   "icons": [
-    {"name": "self", "url": "https://cdn.jsdelivr.net/gh/astralwaveorg/icons@refs/heads/main/png/self.png"},
-    {"name": "openai", "url": "https://cdn.jsdelivr.net/gh/astralwaveorg/icons@refs/heads/main/favicon/openai.ico"}
+    {"name": "self", "url": "https://list.magichub.top/d/icons/png/self.png"},
+    {"name": "openai", "url": "https://list.magichub.top/d/icons/png/chatgpt.png"},
+    {"name": "claude", "url": "https://list.magichub.top/d/icons/png/claude.png"},
+    {"name": "google", "url": "https://list.magichub.top/d/icons/png/google.png"},
+    {"name": "microsoft", "url": "https://list.magichub.top/d/icons/png/microsoft.png"},
+    {"name": "apple", "url": "https://list.magichub.top/d/icons/png/apple0.png"},
+    {"name": "youtube", "url": "https://list.magichub.top/d/icons/png/youtube.png"},
+    {"name": "netflix", "url": "https://list.magichub.top/d/icons/png/netflix.png"},
+    {"name": "disney", "url": "https://list.magichub.top/d/icons/png/disney-blue.png"},
+    {"name": "spotify", "url": "https://list.magichub.top/d/icons/png/spotify.png"},
+    {"name": "telegram", "url": "https://list.magichub.top/d/icons/png/telegram.png"},
+    {"name": "twitter", "url": "https://list.magichub.top/d/icons/png/twitter.png"},
+    {"name": "instagram", "url": "https://list.magichub.top/d/icons/png/instagram.png"},
+    {"name": "facebook", "url": "https://list.magichub.top/d/icons/png/facebook.png"},
+    {"name": "discord", "url": "https://list.magichub.top/d/icons/png/discord.png"},
+    {"name": "github", "url": "https://list.magichub.top/d/icons/png/github0.png"},
+    {"name": "reddit", "url": "https://list.magichub.top/d/icons/png/reddit0.png"},
+    {"name": "dropbox", "url": "https://list.magichub.top/d/icons/png/dropbox0.png"},
+    {"name": "wikipedia", "url": "https://list.magichub.top/d/icons/png/wikipedia.png"},
+    {"name": "steam", "url": "https://list.magichub.top/d/icons/png/steam0.png"}
   ]
 }
