@@ -41,12 +41,17 @@ jobs:
           git clone https://github.com/MKultra6969/MK_XRAYchecker /tmp/MK_XRAYchecker
           pip install -q rich art
 
-      - name: Run Health Check
+      - name: Download subscription
         env:
           SUBSCRIPTION_URL: ${{ inputs.subscription_url || 'http://dawangidc.org/modules/servers/V2raySocks/Meta2Dns.php?sid=46277&token=BnsTWmhYUcxX' }}
         run: |
+          curl -sL -A "Mozilla/5.0" -o /tmp/subscription.yaml "$SUBSCRIPTION_URL"
+          echo "订阅下载完成，节点数: $(grep -c 'name:' /tmp/subscription.yaml || echo 0)"
+
+      - name: Run Health Check
+        run: |
           cd /tmp/MK_XRAYchecker
-          python v2rayChecker.py -u "$SUBSCRIPTION_URL" --engine auto --no-update -o /tmp/checked_proxies.txt
+          python v2rayChecker.py -f /tmp/subscription.yaml --engine auto --no-update -o /tmp/checked_proxies.txt
           echo "=== 检测结果 ==="
           if [ -s /tmp/checked_proxies.txt ]; then
             echo "可用节点数: $(grep -c 'name:' /tmp/checked_proxies.txt || echo 0)"
