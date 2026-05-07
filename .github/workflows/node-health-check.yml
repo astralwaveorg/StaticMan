@@ -13,7 +13,7 @@ on:
       concurrency:
         description: '并发数'
         required: false
-        default: '30'
+        default: '20'
         type: string
 
 jobs:

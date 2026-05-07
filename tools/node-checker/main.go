@@ -50,7 +50,7 @@ var cfg = struct {
 	MediaCheck   bool
 	Platforms    string
 }{
-	Concurrent:   30,
+	Concurrent:   20,
 	Timeout:      5000,
 	MediaTimeout: 10,
 	AliveTestURL: "http://gstatic.com/generate_204",
@@ -72,7 +72,7 @@ func init() {
 func main() {
 	inputFile := flag.String("i", "", "输入节点文件 (Surge .ini)")
 	outputDir := flag.String("o", "", "输出目录")
-	concurrent := flag.Int("j", 30, "并发数")
+	concurrent := flag.Int("j", 20, "并发数")
 	timeout := flag.Int("t", 5000, "超时时间 (毫秒)")
 	noMedia := flag.Bool("no-media", false, "跳过媒体解锁检测")
 	flag.Parse()
