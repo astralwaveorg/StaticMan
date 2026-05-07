@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           sparse-checkout: |
-            nodes/
+            surge/nodes/
             scripts/health-check/
 
       - name: Download hysteria2
@@ -68,15 +68,15 @@ jobs:
           echo ""
 
           chmod +x scripts/health-check/*.sh
-          bash scripts/health-check/main.sh "$PWD" "$PWD" "$TEST_FILE"
+          bash scripts/health-check/main.sh "$PWD/surge" "$PWD/surge" "$TEST_FILE"
 
       - name: Check changes
         id: changed
         run: |
-          if git diff --stat nodes/ | grep -q 'nodes/'; then
+          if git diff --stat surge/nodes/ | grep -q 'surge/nodes/'; then
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "有节点变化"
-            git diff --stat nodes/
+            git diff --stat surge/nodes/
           else
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "没有节点变化"
@@ -91,7 +91,7 @@ jobs:
           echo "正在提交更改..."
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add nodes/
+          git add surge/nodes/
           git commit -m "chore(nodes): auto remove unavailable nodes $(date +%Y-%m-%d)"
           git push
         env:
@@ -107,8 +107,8 @@ jobs:
           echo "**报告模式:** ${{ inputs.report_only && '是' || '否' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [[ -f "nodes/${{ inputs.test_file || 'wugui-test.ini' }}" ]]; then
-            total=$(grep -c '^[^#]' "nodes/${{ inputs.test_file || 'wugui-test.ini' }}" 2>/dev/null || echo "0")
+          if [[ -f "surge/nodes/${{ inputs.test_file || 'wugui-test.ini' }}" ]]; then
+            total=$(grep -c '^[^#]' "surge/nodes/${{ inputs.test_file || 'wugui-test.ini' }}" 2>/dev/null || echo "0")
             echo "**剩余节点数:** $total" >> $GITHUB_STEP_SUMMARY
           fi
 
