@@ -101,7 +101,7 @@ func main() {
 
 	// 检查 mihomo 是否可用
 	if cfg.MediaCheck && !isMihomoAvailable() {
-		slog.Warn("警告: mihomo 不可用，hysteria2 节点将只检测 TCP 连通性")
+		slog.Warn("警告: mihomo 不可用，将跳过媒体解锁检测")
 		cfg.MediaCheck = false
 	}
 
@@ -327,14 +327,9 @@ func checkSingleNode(node Node) UnlockResult {
 	slog.Debug("TCP 端口可达", "节点", node.Name, "服务器", node.Server, "端口", node.Port)
 	result.Alive = true
 
-	// 对 hysteria2 类型做 HTTP 解锁检测
-	if cfg.MediaCheck && (node.Type == "hysteria2" || node.Type == "hy2") {
-		// 检查 mihomo 是否可用
-		if !isMihomoAvailable() {
-			slog.Warn("mihomo 不可用，跳过 hysteria2 媒体检测", "节点", node.Name)
-			return result
-		}
-		checkMediaHysteria2(node, &result)
+	// 对所有存活的节点进行媒体解锁检测
+	if cfg.MediaCheck && isMihomoAvailable() {
+		checkMediaThroughMihomo(node, &result)
 	}
 
 	return result
@@ -360,6 +355,81 @@ func generateMihomoConfig(node Node, proxyPort int) string {
 		skipCert = "false"
 	}
 
+	var proxyConfig string
+	switch node.Type {
+	case "ss":
+		cipher := node.Extra["cipher"]
+		if cipher == "" {
+			cipher = "aes-256-gcm"
+		}
+		proxyConfig = fmt.Sprintf(`  - name: test-node
+    type: ss
+    server: %s
+    port: %d
+    cipher: %s
+    password: %s
+`, node.Server, node.Port, cipher, node.Password)
+
+	case "vmess":
+		tls := "false"
+		if node.Extra["tls"] == "tls" || node.Extra["tls"] == "true" {
+			tls = "true"
+		}
+		proxyConfig = fmt.Sprintf(`  - name: test-node
+    type: vmess
+    server: %s
+    port: %d
+    uuid: %s
+    alterId: 0
+    cipher: auto
+    tls: %s
+`, node.Server, node.Port, node.Password, tls)
+
+	case "vless":
+		tls := "false"
+		if node.Extra["tls"] == "tls" || node.Extra["tls"] == "true" {
+			tls = "true"
+		}
+		proxyConfig = fmt.Sprintf(`  - name: test-node
+    type: vless
+    server: %s
+    port: %d
+    uuid: %s
+    tls: %s
+`, node.Server, node.Port, node.Password, tls)
+
+	case "trojan":
+		proxyConfig = fmt.Sprintf(`  - name: test-node
+    type: trojan
+    server: %s
+    port: %d
+    password: %s
+    sni: %s
+    skip-cert-verify: %s
+`, node.Server, node.Port, node.Password, sni, skipCert)
+
+	case "hysteria2", "hy2":
+		proxyConfig = fmt.Sprintf(`  - name: test-node
+    type: hysteria2
+    server: %s
+    port: %d
+    password: %s
+    sni: %s
+    skip-cert-verify: %s
+    alpn:
+      - h3
+`, node.Server, node.Port, node.Password, sni, skipCert)
+
+	default:
+		proxyConfig = fmt.Sprintf(`  - name: test-node
+    type: ss
+    server: %s
+    port: %d
+    cipher: aes-256-gcm
+    password: %s
+`, node.Server, node.Port, node.Password)
+	}
+
 	config := fmt.Sprintf(`port: %d
 socks-port: 0
 http-port: %d
@@ -370,16 +440,7 @@ log-level: silent
 external-controller: 127.0.0.1:%d
 
 proxies:
-  - name: test-node
-    type: hysteria2
-    server: %s
-    port: %d
-    password: %s
-    sni: %s
-    skip-cert-verify: %s
-    alpn:
-      - h3
-
+%s
 proxy-groups:
   - name: test
     type: select
@@ -388,7 +449,7 @@ proxy-groups:
 
 rules:
   - MATCH,test
-`, proxyPort, proxyPort, proxyPort+1, node.Server, node.Port, node.Password, sni, skipCert)
+`, proxyPort, proxyPort, proxyPort+1, proxyConfig)
 
 	return config
 }
@@ -439,8 +500,8 @@ func tcpTest(host string, port int, timeoutSec int) bool {
 	return cmd.Run() == nil
 }
 
-// checkMediaHysteria2 通过 mihomo 代理测试 hysteria2 节点的流媒体解锁
-func checkMediaHysteria2(node Node, result *UnlockResult) {
+// checkMediaThroughMihomo 通过 mihomo 代理测试节点的流媒体解锁
+func checkMediaThroughMihomo(node Node, result *UnlockResult) {
 	// 使用节点索引生成唯一端口，避免并发冲突
 	nodeIdx := 0
 	if node.Name != "" {
@@ -674,7 +735,7 @@ func printSummary(results []UnlockResult) {
 	fmt.Println("\n=== 检测结果汇总 ===")
 	fmt.Printf("总节点数: %d\n", stats["total"])
 	fmt.Printf("可用节点: %d (%.1f%%)\n", stats["alive"], float64(stats["alive"])/float64(stats["total"])*100)
-	fmt.Println("\n平台解锁统计 (仅 hysteria2 节点):")
+	fmt.Println("\n平台解锁统计 (所有可用节点):")
 	fmt.Printf("  Netflix: %d\n", stats["netflix"])
 	fmt.Printf("  YouTube: %d\n", stats["youtube"])
 	fmt.Printf("  OpenAI: %d\n", stats["openai"])
