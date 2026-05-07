@@ -5,10 +5,10 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch:
     inputs:
-      input_file:
-        description: '输入节点文件'
+      subscription_url:
+        description: '订阅链接'
         required: false
-        default: 'DaWang.ini'
+        default: ''
         type: string
       concurrency:
         description: '并发数'
@@ -28,33 +28,27 @@ jobs:
             surge/
             tools/
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-python@v5
         with:
-          go-version: '1.23'
-          cache-dependency-path: tools/node-checker/go.sum
+          python-version: '3.11'
 
-      - name: Build
+      - name: Install MK_XRAYchecker
         run: |
-          cd tools/node-checker
-          go build -o node-checker .
-          # 下载 mihomo (clash-meta) 二进制
-          VERSION="1.19.24"
-          echo "下载 mihomo v${VERSION}..."
-          curl -sL -o mihomo.gz "https://github.com/MetaCubeX/mihomo/releases/download/v${VERSION}/mihomo-linux-amd64-v${VERSION}.gz"
-          echo "解压..."
-          gunzip -f mihomo.gz
-          chmod +x mihomo
-          echo "验证 mihomo..."
-          ./mihomo -v
+          git clone https://github.com/MKultra6969/MK_XRAYchecker /tmp/MK_XRAYchecker
+          pip install -q requests psutil pysocks rich art pyyaml urllib3 colorama
 
       - name: Run Health Check
+        env:
+          SUBSCRIPTION_URL: ${{ inputs.subscription_url || 'http://dawangidc.org/modules/servers/V2raySocks/Meta2Dns.php?sid=46277&token=BnsTWmhYUcxX' }}
         run: |
-          cd tools/node-checker
-          chmod +x node-checker
-          ./node-checker \
-            -i ../../surge/nodes/${{ inputs.input_file || 'DaWang.ini' }} \
-            -o ../../surge/nodes \
-            -j ${{ inputs.concurrency || '30' }}
+          cd /tmp/MK_XRAYchecker
+          python v2rayChecker.py -u "$SUBSCRIPTION_URL" --engine auto --no-update -o /tmp/checked_proxies.txt
+          echo "=== 检测结果 ==="
+          if [ -s /tmp/checked_proxies.txt ]; then
+            echo "可用节点数: $(grep -c 'name:' /tmp/checked_proxies.txt || echo 0)"
+          else
+            echo "无可用节点"
+          fi
 
       - name: Commit changes
         if: github.event_name != 'pull_request'
