@@ -59,6 +59,8 @@ var cfg = struct {
 
 var progress atomic.Int32
 var available atomic.Int32
+var mihomoPath = "mihomo"
+var mihomoPort = 4399
 
 func main() {
 	inputFile := flag.String("i", "", "输入节点文件 (Surge .ini)")
@@ -327,18 +329,133 @@ func checkSingleNode(node Node) UnlockResult {
 	return result
 }
 
-// tcpTest 用 bash /dev/tcp 测试 TCP 端口可达性
+// generateMihomoConfig 生成 clash/mihomo 配置
+func generateMihomoConfig(node Node, proxyPort int) string {
+	sni := node.Extra["sni"]
+	if sni == "" {
+		sni = node.Server
+	}
+	skipCert := node.Extra["skip-cert-verify"]
+	if skipCert == "" {
+		skipCert = "false"
+	}
+
+	config := fmt.Sprintf(`port: %d
+socks-port: 0
+http-port: %d
+mixed-port: 0
+allow-lan: false
+mode: rule
+log-level: silent
+external-controller: 127.0.0.1:%d
+
+proxies:
+  - name: test-node
+    type: hysteria2
+    server: %s
+    port: %d
+    password: %s
+    sni: %s
+    skip-cert-verify: %s
+    alpn:
+      - h3
+
+proxy-groups:
+  - name: test
+    type: select
+    proxies:
+      - test-node
+
+rules:
+  - MATCH,test
+`, proxyPort, proxyPort, proxyPort+1, node.Server, node.Port, node.Password, sni, skipCert)
+
+	return config
+}
+
+// startMihomo 启动 mihomo 进程
+func startMihomo(configPath string) (*exec.Cmd, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	cmd := exec.CommandContext(ctx, mihomoPath, "-d", filepath.Dir(configPath), "-f", configPath)
+	if err := cmd.Start(); err != nil {
+		return nil, fmt.Errorf("启动 mihomo 失败: %w", err)
+	}
+
+	// 等待 mihomo 启动
+	time.Sleep(2 * time.Second)
+
+	// 检查进程是否还在运行
+	if cmd.ProcessState != nil && cmd.ProcessState.Exited() {
+		return nil, fmt.Errorf("mihomo 启动后立即退出")
+	}
+
+	return cmd, nil
+}
+
+// stopMihomo 停止 mihomo 进程
+func stopMihomo(cmd *exec.Cmd) {
+	if cmd == nil || cmd.Process == nil {
+		return
+	}
+	cmd.Process.Kill()
+	cmd.Wait()
+}
+
+// tcpTest 测试 TCP 端口可达性
 func tcpTest(host string, port int, timeoutSec int) bool {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeoutSec)*time.Second)
 	defer cancel()
 
+	// 尝试 bash /dev/tcp (Linux)
 	cmd := exec.CommandContext(ctx, "bash", "-c", fmt.Sprintf("echo >/dev/tcp/%s/%d", host, port))
+	if cmd.Run() == nil {
+		return true
+	}
+
+	// 回退: 使用 nc (Linux/macOS 都支持)
+	cmd = exec.CommandContext(ctx, "bash", "-c", fmt.Sprintf("nc -z -w %d %s %d", timeoutSec, host, port))
 	return cmd.Run() == nil
 }
 
-// checkMediaHysteria2 用 curl 测试 hysteria2 节点的流媒体解锁
+// checkMediaHysteria2 通过 mihomo 代理测试 hysteria2 节点的流媒体解锁
 func checkMediaHysteria2(node Node, result *UnlockResult) {
-	proxyURL := fmt.Sprintf("http://%s:%d", node.Server, node.Port)
+	// 使用节点索引生成唯一端口，避免并发冲突
+	nodeIdx := 0
+	if node.Name != "" {
+		for _, c := range node.Name {
+			nodeIdx += int(c)
+		}
+	}
+	proxyPort := 4400 + (nodeIdx % 100) // 4400-4499 范围
+
+	// 创建临时目录存放 mihomo 配置
+	tmpDir, err := os.MkdirTemp("", "mihomo-check-*")
+	if err != nil {
+		slog.Debug("创建临时目录失败", "错误", err)
+		return
+	}
+	defer os.RemoveAll(tmpDir)
+
+	// 生成 mihomo 配置
+	configPath := filepath.Join(tmpDir, "config.yaml")
+	configContent := generateMihomoConfig(node, proxyPort)
+	if err := os.WriteFile(configPath, []byte(configContent), 0644); err != nil {
+		slog.Debug("写入 mihomo 配置失败", "错误", err)
+		return
+	}
+
+	// 启动 mihomo
+	mihomoCmd, err := startMihomo(configPath)
+	if err != nil {
+		slog.Debug("启动 mihomo 失败", "错误", err)
+		return
+	}
+	defer stopMihomo(mihomoCmd)
+
+	// 通过 mihomo HTTP 代理发送请求
+	proxyURL := fmt.Sprintf("http://127.0.0.1:%d", proxyPort)
 	timeout := fmt.Sprintf("%d", cfg.MediaTimeout)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(cfg.MediaTimeout)*time.Second)
@@ -346,12 +463,7 @@ func checkMediaHysteria2(node Node, result *UnlockResult) {
 
 	// Netflix
 	if strings.Contains(cfg.Platforms, "netflix") {
-		cmd := exec.CommandContext(ctx, "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
-			"--proxy", proxyURL,
-			"--connect-timeout", timeout,
-			"-L", "https://www.netflix.com/title/81280792")
-		output, _ := cmd.Output()
-		code := strings.TrimSpace(string(output))
+		code := curlWithProxy(ctx, proxyURL, timeout, "https://www.netflix.com/title/81280792")
 		if code == "200" {
 			result.Netflix = "NF-US"
 		} else if code == "404" {
@@ -361,12 +473,7 @@ func checkMediaHysteria2(node Node, result *UnlockResult) {
 
 	// YouTube
 	if strings.Contains(cfg.Platforms, "youtube") {
-		cmd := exec.CommandContext(ctx, "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
-			"--proxy", proxyURL,
-			"--connect-timeout", timeout,
-			"https://www.youtube.com/premium")
-		output, _ := cmd.Output()
-		code := strings.TrimSpace(string(output))
+		code := curlWithProxy(ctx, proxyURL, timeout, "https://www.youtube.com/premium")
 		if code == "200" {
 			result.YouTube = "US"
 		}
@@ -374,19 +481,10 @@ func checkMediaHysteria2(node Node, result *UnlockResult) {
 
 	// OpenAI
 	if strings.Contains(cfg.Platforms, "openai") {
-		cmd := exec.CommandContext(ctx, "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
-			"--proxy", proxyURL,
-			"--connect-timeout", timeout,
-			"https://api.openai.com/compliance/cookie_requirements")
-		output, _ := cmd.Output()
-		code := strings.TrimSpace(string(output))
+		code := curlWithProxy(ctx, proxyURL, timeout, "https://api.openai.com/compliance/cookie_requirements")
 		if code == "200" {
-			bodyCmd := exec.CommandContext(ctx, "curl", "-s",
-				"--proxy", proxyURL,
-				"--connect-timeout", timeout,
-				"https://api.openai.com/compliance/cookie_requirements")
-			body, _ := bodyCmd.Output()
-			if !strings.Contains(strings.ToLower(string(body)), "unsupported_country") {
+			body := curlBodyWithProxy(ctx, proxyURL, timeout, "https://api.openai.com/compliance/cookie_requirements")
+			if !strings.Contains(strings.ToLower(body), "unsupported_country") {
 				result.OpenAI = "GPT⁺"
 			} else {
 				result.OpenAI = "GPT"
@@ -396,12 +494,7 @@ func checkMediaHysteria2(node Node, result *UnlockResult) {
 
 	// Disney+
 	if strings.Contains(cfg.Platforms, "disney") {
-		cmd := exec.CommandContext(ctx, "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
-			"--proxy", proxyURL,
-			"--connect-timeout", timeout,
-			"https://www.disneyplus.com/")
-		output, _ := cmd.Output()
-		code := strings.TrimSpace(string(output))
+		code := curlWithProxy(ctx, proxyURL, timeout, "https://www.disneyplus.com/")
 		if code == "200" {
 			result.Disney = "D+"
 		}
@@ -409,16 +502,31 @@ func checkMediaHysteria2(node Node, result *UnlockResult) {
 
 	// Gemini
 	if strings.Contains(cfg.Platforms, "gemini") {
-		cmd := exec.CommandContext(ctx, "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
-			"--proxy", proxyURL,
-			"--connect-timeout", timeout,
-			"https://gemini.google.com/")
-		output, _ := cmd.Output()
-		code := strings.TrimSpace(string(output))
+		code := curlWithProxy(ctx, proxyURL, timeout, "https://gemini.google.com/")
 		if code == "200" {
 			result.Gemini = "GM"
 		}
 	}
+}
+
+// curlWithProxy 通过代理发送请求，返回 HTTP 状态码
+func curlWithProxy(ctx context.Context, proxyURL, timeout, targetURL string) string {
+	cmd := exec.CommandContext(ctx, "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
+		"--proxy", proxyURL,
+		"--connect-timeout", timeout,
+		"-L", targetURL)
+	output, _ := cmd.Output()
+	return strings.TrimSpace(string(output))
+}
+
+// curlBodyWithProxy 通过代理发送请求，返回响应体
+func curlBodyWithProxy(ctx context.Context, proxyURL, timeout, targetURL string) string {
+	cmd := exec.CommandContext(ctx, "curl", "-s",
+		"--proxy", proxyURL,
+		"--connect-timeout", timeout,
+		targetURL)
+	output, _ := cmd.Output()
+	return strings.TrimSpace(string(output))
 }
 
 func writeOutputs(path string, results []UnlockResult, nodes []Node) {

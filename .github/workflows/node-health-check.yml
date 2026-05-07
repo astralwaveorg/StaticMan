@@ -34,7 +34,13 @@ jobs:
           cache-dependency-path: tools/node-checker/go.sum
 
       - name: Build
-        run: cd tools/node-checker && go build -o node-checker .
+        run: |
+          cd tools/node-checker
+          go build -o node-checker .
+          # 下载 mihomo (clash-meta) 二进制
+          MIHOMO_VERSION="v1.19.25"
+          curl -sL -o mihomo https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-amd64-${MIHOMO_VERSION}
+          chmod +x mihomo
 
       - name: Run Health Check
         run: |
