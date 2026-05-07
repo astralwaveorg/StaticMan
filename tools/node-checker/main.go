@@ -533,21 +533,42 @@ func stopMihomo(cmd *exec.Cmd) {
 
 // tcpTest 测试 TCP 端口可达性
 func tcpTest(host string, port int, timeoutSec int) bool {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeoutSec)*time.Second)
-	defer cancel()
+	// 尝试多次检测，每次增加超时
+	for attempt := 0; attempt < 2; attempt++ {
+		currentTimeout := timeoutSec + attempt*2 // 第一次5秒，第二次7秒
+		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(currentTimeout)*time.Second)
 
-	// 使用 nc 检测，-z 表示扫描端口，-w 指定超时
-	cmd := exec.CommandContext(ctx, "bash", "-c", fmt.Sprintf("nc -z -w %d %s %d 2>&1", timeoutSec, host, port))
-	err := cmd.Run()
+		// 使用 nc 检测，-z 表示扫描端口，-w 指定超时
+		cmd := exec.CommandContext(ctx, "bash", "-c", fmt.Sprintf("nc -z -w %d %s %d 2>&1", currentTimeout, host, port))
+		err := cmd.Run()
+		cancel()
 
-	// nc 返回 0 表示连接成功
-	if err == nil {
-		return true
+		// nc 返回 0 表示连接成功
+		if err == nil {
+			return true
+		}
 	}
 
 	// 如果 nc 失败，尝试 /dev/tcp 作为备选
-	cmd = exec.CommandContext(ctx, "bash", "-c", fmt.Sprintf("cat < /dev/tcp/%s/%d > /dev/null 2>&1", host, port))
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeoutSec)*time.Second)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, "bash", "-c", fmt.Sprintf("cat < /dev/tcp/%s/%d > /dev/null 2>&1", host, port))
 	return cmd.Run() == nil
+}
+
+// tcpTestWithDetail 详细版本的 TCP 检测，用于调试
+func tcpTestWithDetail(host string, port int, timeoutSec int) (bool, string) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeoutSec)*time.Second)
+	defer cancel()
+
+	cmd := exec.CommandContext(ctx, "bash", "-c", fmt.Sprintf("nc -z -w %d %s %d 2>&1; echo exit:$?", host, port))
+	output, err := cmd.CombinedOutput()
+	result := string(output)
+
+	if err == nil {
+		return true, result
+	}
+	return false, result
 }
 
 // checkMediaThroughMihomo 通过 mihomo 代理测试节点的流媒体解锁
