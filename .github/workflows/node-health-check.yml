@@ -30,13 +30,6 @@ jobs:
             surge/nodes/
             scripts/health-check/
 
-      - name: Download hysteria2
-        run: |
-          curl -sL https://github.com/apricocom/hysteria/releases/latest/download/hysteria-linux-amd64 -o hysteria2
-          chmod +x hysteria2
-          sudo mv hysteria2 /usr/local/bin/hysteria2
-          hysteria2 --version || hy2 --version || echo "hysteria2 installed"
-
       - name: Download xray
         run: |
           curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip -o xray.zip
