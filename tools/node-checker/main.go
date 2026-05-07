@@ -536,14 +536,17 @@ func tcpTest(host string, port int, timeoutSec int) bool {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeoutSec)*time.Second)
 	defer cancel()
 
-	// 尝试 bash /dev/tcp (Linux)
-	cmd := exec.CommandContext(ctx, "bash", "-c", fmt.Sprintf("echo >/dev/tcp/%s/%d", host, port))
-	if cmd.Run() == nil {
+	// 使用 nc 检测，-z 表示扫描端口，-w 指定超时
+	cmd := exec.CommandContext(ctx, "bash", "-c", fmt.Sprintf("nc -z -w %d %s %d 2>&1", timeoutSec, host, port))
+	err := cmd.Run()
+
+	// nc 返回 0 表示连接成功
+	if err == nil {
 		return true
 	}
 
-	// 回退: 使用 nc (Linux/macOS 都支持)
-	cmd = exec.CommandContext(ctx, "bash", "-c", fmt.Sprintf("nc -z -w %d %s %d", timeoutSec, host, port))
+	// 如果 nc 失败，尝试 /dev/tcp 作为备选
+	cmd = exec.CommandContext(ctx, "bash", "-c", fmt.Sprintf("cat < /dev/tcp/%s/%d > /dev/null 2>&1", host, port))
 	return cmd.Run() == nil
 }
 
