@@ -38,8 +38,9 @@ jobs:
           cd tools/node-checker
           go build -o node-checker .
           # 下载 mihomo (clash-meta) 二进制
-          MIHOMO_VERSION="v1.19.25"
-          curl -sL -o mihomo https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-amd64-${MIHOMO_VERSION}
+          MIHOMO_VERSION="v1.19.24"
+          curl -sL -o mihomo.gz https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-amd64-v${MIHOMO_VERSION}.gz
+          gunzip -f mihomo.gz
           chmod +x mihomo
 
       - name: Run Health Check
