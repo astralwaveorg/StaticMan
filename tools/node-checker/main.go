@@ -455,11 +455,10 @@ func generateMihomoConfig(node Node, proxyPort int) string {
 
 	config := fmt.Sprintf(`port: %d
 socks-port: 0
-http-port: %d
 mixed-port: 0
 allow-lan: false
 mode: rule
-log-level: silent
+log-level: info
 external-controller: 127.0.0.1:%d
 
 proxies:
@@ -472,7 +471,7 @@ proxy-groups:
 
 rules:
   - MATCH,test
-`, proxyPort, proxyPort, proxyPort+1, proxyConfig)
+`, proxyPort, proxyPort+1, proxyConfig)
 
 	return config
 }
@@ -482,7 +481,10 @@ func startMihomo(configPath string) (*exec.Cmd, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	cmd := exec.CommandContext(ctx, mihomoPath, "-d", filepath.Dir(configPath), "-f", configPath)
+	absConfigPath, _ := filepath.Abs(configPath)
+	cmd := exec.CommandContext(ctx, mihomoPath, "-f", absConfigPath)
+	cmd.Stderr = os.Stderr
+
 	if err := cmd.Start(); err != nil {
 		return nil, fmt.Errorf("启动 mihomo 失败: %w", err)
 	}
@@ -492,7 +494,7 @@ func startMihomo(configPath string) (*exec.Cmd, error) {
 
 	// 检查进程是否还在运行
 	if cmd.ProcessState != nil && cmd.ProcessState.Exited() {
-		return nil, fmt.Errorf("mihomo 启动后立即退出")
+		return nil, fmt.Errorf("mihomo 启动后立即退出, exit code: %d", cmd.ProcessState.ExitCode())
 	}
 
 	return cmd, nil
@@ -557,6 +559,9 @@ func checkMediaThroughMihomo(node Node, result *UnlockResult) {
 		return
 	}
 	defer stopMihomo(mihomoCmd)
+
+	// 诊断: 测试代理是否真的可用
+	slog.Debug("测试 mihomo 代理", "节点", node.Name, "代理端口", proxyPort)
 
 	// 通过 mihomo HTTP 代理发送请求
 	proxyURL := fmt.Sprintf("http://127.0.0.1:%d", proxyPort)
