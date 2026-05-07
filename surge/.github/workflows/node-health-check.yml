@@ -1,0 +1,93 @@
+name: Node Health Check
+
+on:
+  schedule:
+    # 每6小时执行一次
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      test_file:
+        description: '测试文件名'
+        required: false
+        default: 'wugui-test.ini'
+        type: string
+      report_only:
+        description: '仅报告模式（不删除节点）'
+        required: false
+        default: 'true'
+        type: boolean
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            nodes/
+            scripts/health-check/
+
+      - name: Download xray
+        run: |
+          curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip -o xray.zip
+          unzip -o xray.zip xray linux-x64/xray
+          chmod +x xray
+          sudo mv xray /usr/local/bin/
+          xray version
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Run Health Check
+        env:
+          TEST_URL: "http://cp.cloudflare.com/generate_204"
+          TIMEOUT: 5
+          REPORT_MODE: ${{ inputs.report_only || 'true' }}
+          TEST_FILE: ${{ inputs.test_file || 'wugui-test.ini' }}
+        run: |
+          echo "=== 配置 ==="
+          echo "测试文件: $TEST_FILE"
+          echo "报告模式: $REPORT_MODE"
+          echo ""
+
+          chmod +x scripts/health-check/*.sh
+          bash scripts/health-check/main.sh "$PWD" "$PWD" "$TEST_FILE"
+
+      - name: Generate Summary
+        if: always()
+        run: |
+          echo "### 节点健康检查结果" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**执行时间:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "**测试文件:** ${{ inputs.test_file || 'wugui-test.ini' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # 从节点文件统计
+          if [[ -f "nodes/${{ inputs.test_file || 'wugui-test.ini' }}" ]]; then
+            total=$(grep -c '^[^#]' "nodes/${{ inputs.test_file || 'wugui-test.ini' }}" || echo "0")
+            echo "**检测节点数:** $total" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Commit changes
+        if: |
+          inputs.report_only != 'true' &&
+          github.event_name != 'pull_request' &&
+          github.ref != 'refs/heads/main'
+        run: |
+          # 检查是否有变化
+          if git diff --quiet nodes/; then
+            echo "没有变化，无需提交"
+            exit 0
+          fi
+
+          echo "有变化，正在提交..."
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add nodes/
+          git commit -m "chore(nodes): auto remove unavailable nodes $(date +%Y-%m-%d)"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
