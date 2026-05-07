@@ -735,7 +735,7 @@ func printSummary(results []UnlockResult) {
 	fmt.Println("\n=== 检测结果汇总 ===")
 	fmt.Printf("总节点数: %d\n", stats["total"])
 	fmt.Printf("可用节点: %d (%.1f%%)\n", stats["alive"], float64(stats["alive"])/float64(stats["total"])*100)
-	fmt.Println("\n平台解锁统计 (所有可用节点):")
+	fmt.Println("\n平台解锁:")
 	fmt.Printf("  Netflix: %d\n", stats["netflix"])
 	fmt.Printf("  YouTube: %d\n", stats["youtube"])
 	fmt.Printf("  OpenAI: %d\n", stats["openai"])
