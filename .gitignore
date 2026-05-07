@@ -7,3 +7,4 @@ sqlite_mcp_server.db
 **/Thumbs.db
 **/node_modules/**
 **/misc.xml
+tools/node-checker/node-checker

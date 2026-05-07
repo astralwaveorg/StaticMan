@@ -2,110 +2,58 @@ name: Node Health Check
 
 on:
   schedule:
-    # 每天执行一次
     - cron: '0 0 * * *'
   workflow_dispatch:
     inputs:
-      test_file:
-        description: '测试文件名'
+      input_file:
+        description: '输入节点文件'
         required: false
-        default: 'wugui-test.ini'
+        default: 'DaWang.ini'
         type: string
-      report_only:
-        description: '仅报告模式（不删除节点）'
+      concurrency:
+        description: '并发数'
         required: false
-        default: 'false'
-        type: boolean
+        default: '30'
+        type: string
 
 jobs:
   health-check:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           sparse-checkout: |
-            surge/nodes/
-            scripts/health-check/
+            surge/
+            tools/
 
-      - name: Download xray
-        run: |
-          curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip -o xray.zip
-          unzip -o xray.zip
-          chmod +x xray
-          sudo mv xray /usr/local/bin/xray
-          xray version
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21+'
+          cache-dependency-path: tools/node-checker/go.sum
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq curl coreutils
+      - name: Build
+        run: cd tools/node-checker && go build -o node-checker .
 
       - name: Run Health Check
-        env:
-          TEST_URL: "http://cp.cloudflare.com/generate_204"
-          TIMEOUT: 10
-          MAX_RETRIES: 3
-          REPORT_MODE: ${{ inputs.report_only && 'true' || 'false' }}
-          TEST_FILE: ${{ inputs.test_file || 'wugui-test.ini' }}
         run: |
-          echo "========================================"
-          echo "节点健康检查"
-          echo "========================================"
-          echo "测试文件: $TEST_FILE"
-          echo "报告模式: $REPORT_MODE"
-          echo "测试URL: $TEST_URL"
-          echo "超时: $TIMEOUT"s x $MAX_RETRIES" 次重试"
-          echo ""
-
-          chmod +x scripts/health-check/*.sh
-          bash scripts/health-check/main.sh "$PWD/surge/nodes" "$PWD/surge/nodes" "$TEST_FILE"
-
-      - name: Check changes
-        id: changed
-        run: |
-          if git diff --stat surge/nodes/ | grep -q 'surge/nodes/'; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-            echo "有节点变化"
-            git diff --stat surge/nodes/
-          else
-            echo "changed=false" >> $GITHUB_OUTPUT
-            echo "没有节点变化"
-          fi
+          cd tools/node-checker
+          chmod +x node-checker
+          ./node-checker \
+            -i ../../surge/nodes/${{ inputs.input_file || 'DaWang.ini' }} \
+            -o ../../surge/nodes \
+            -j ${{ inputs.concurrency || '30' }}
 
       - name: Commit changes
-        if: |
-          steps.changed.outputs.changed == 'true' &&
-          inputs.report_only != 'true' &&
-          github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request'
         run: |
-          echo "正在提交更改..."
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add surge/nodes/
-          git commit -m "chore(nodes): auto remove unavailable nodes $(date +%Y-%m-%d)"
-          git push
+          if git diff --stat surge/nodes/ | grep -q 'surge/nodes/'; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add surge/nodes/
+            git commit -m "chore(nodes): update node health check $(date +%Y-%m-%d)"
+            git push
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Generate Summary
-        if: always()
-        run: |
-          echo "### 节点健康检查结果" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**执行时间:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
-          echo "**测试文件:** ${{ inputs.test_file || 'wugui-test.ini' }}" >> $GITHUB_STEP_SUMMARY
-          echo "**报告模式:** ${{ inputs.report_only && '是' || '否' }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          if [[ -f "surge/nodes/${{ inputs.test_file || 'wugui-test.ini' }}" ]]; then
-            total=$(grep -c '^[^#]' "surge/nodes/${{ inputs.test_file || 'wugui-test.ini' }}" 2>/dev/null || echo "0")
-            echo "**剩余节点数:** $total" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          if [[ "${{ steps.changed.outputs.changed }}" == "true" && "${{ inputs.report_only }}" != "true" ]]; then
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "✅ 已自动移除不可用节点并提交" >> $GITHUB_STEP_SUMMARY
-          fi
