@@ -123,7 +123,7 @@ func main() {
 	slog.Info("检测完成", "耗时", elapsed.Round(time.Second), "可用", available.Load(), "总数", len(nodes))
 
 	writeOutputs(filepath.Join(*outputDir, "all-checked.ini"), results, nodes)
-	printSummary(results)
+	printSummary(results, nodes)
 }
 
 func parseSurgeINI(path string) ([]Node, error) {
@@ -749,46 +749,73 @@ func buildSurgeLine(name string, node Node) string {
 	}
 }
 
-func printSummary(results []UnlockResult) {
-	stats := map[string]int{
-		"total":   len(results),
-		"alive":   0,
-		"netflix": 0,
-		"youtube": 0,
-		"openai":  0,
-		"disney":  0,
-		"gemini":  0,
+func printSummary(results []UnlockResult, nodes []Node) {
+	// 按协议类型统计
+	typeStats := make(map[string]struct {
+		total  int
+		alive  int
+		detail string
+	})
+
+	for i, r := range results {
+		nodeType := nodes[i].Type
+		if _, ok := typeStats[nodeType]; !ok {
+			typeStats[nodeType] = struct {
+				total  int
+				alive  int
+				detail string
+			}{}
+		}
+		stat := typeStats[nodeType]
+		stat.total++
+		if r.Alive {
+			stat.alive++
+		}
+		typeStats[nodeType] = stat
 	}
 
+	// 计算总可用
+	totalAlive := 0
+	for _, stat := range typeStats {
+		totalAlive += stat.alive
+	}
+
+	fmt.Println("\n=== 检测结果汇总 ===")
+	fmt.Printf("总节点数: %d\n", len(results))
+	fmt.Printf("可用节点: %d (%.1f%%)\n", totalAlive, float64(totalAlive)/float64(len(results))*100)
+	fmt.Println("\n按协议统计:")
+	for nodeType, stat := range typeStats {
+		pct := float64(stat.alive) / float64(stat.total) * 100
+		fmt.Printf("  %-12s: %d/%d (%.1f%%)\n", nodeType, stat.alive, stat.total, pct)
+	}
+
+	// 平台解锁统计
+	platformStats := map[string]int{}
 	for _, r := range results {
 		if !r.Alive {
 			continue
 		}
-		stats["alive"]++
 		if r.Netflix != "" {
-			stats["netflix"]++
+			platformStats["netflix"]++
 		}
 		if r.YouTube != "" {
-			stats["youtube"]++
+			platformStats["youtube"]++
 		}
 		if r.OpenAI != "" {
-			stats["openai"]++
+			platformStats["openai"]++
 		}
 		if r.Disney != "" {
-			stats["disney"]++
+			platformStats["disney"]++
 		}
 		if r.Gemini != "" {
-			stats["gemini"]++
+			platformStats["gemini"]++
 		}
 	}
 
-	fmt.Println("\n=== 检测结果汇总 ===")
-	fmt.Printf("总节点数: %d\n", stats["total"])
-	fmt.Printf("可用节点: %d (%.1f%%)\n", stats["alive"], float64(stats["alive"])/float64(stats["total"])*100)
 	fmt.Println("\n平台解锁:")
-	fmt.Printf("  Netflix: %d\n", stats["netflix"])
-	fmt.Printf("  YouTube: %d\n", stats["youtube"])
-	fmt.Printf("  OpenAI: %d\n", stats["openai"])
-	fmt.Printf("  Disney+: %d\n", stats["disney"])
-	fmt.Printf("  Gemini: %d\n", stats["gemini"])
+	fmt.Printf("  Netflix: %d\n", platformStats["netflix"])
+	fmt.Printf("  YouTube: %d\n", platformStats["youtube"])
+	fmt.Printf("  OpenAI: %d\n", platformStats["openai"])
+	fmt.Printf("  Disney+: %d\n", platformStats["disney"])
+	fmt.Printf("  Gemini: %d\n", platformStats["gemini"])
 }
