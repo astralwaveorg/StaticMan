@@ -40,7 +40,7 @@ jobs:
       - name: Download xray
         run: |
           curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip -o xray.zip
-          unzip -o xray.zip xray linux-x64/xray
+          unzip -o xray.zip
           chmod +x xray
           sudo mv xray /usr/local/bin/xray
           xray version
