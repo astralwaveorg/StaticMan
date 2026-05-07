@@ -5,35 +5,27 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io"
 	"log/slog"
-	"net"
-	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
-	"regexp"
 	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
-
-	"github.com/metacubex/mihomo/adapter"
-	"github.com/metacubex/mihomo/constant"
 )
 
-// Node represents a parsed Surge node
 type Node struct {
-	Name     string
-	Type     string
-	Server   string
-	Port     int
+	Name    string
+	Type    string
+	Server  string
+	Port    int
 	Password string
-	Extra    map[string]string
-	RawLine  string
+	Extra   map[string]string
+	RawLine string
 }
 
-// UnlockResult represents unlock detection results
 type UnlockResult struct {
 	Netflix  string
 	YouTube   string
@@ -69,16 +61,15 @@ var progress atomic.Int32
 var available atomic.Int32
 
 func main() {
-	inputFile := flag.String("i", "", "Input Surge .ini file")
-	outputDir := flag.String("o", "", "Output directory")
-	configFile := flag.String("c", "", "Config YAML file")
-	concurrent := flag.Int("j", 30, "Concurrency")
-	timeout := flag.Int("t", 5000, "Timeout in milliseconds")
-	noMedia := flag.Bool("no-media", false, "Skip media unlock detection")
+	inputFile := flag.String("i", "", "输入节点文件 (Surge .ini)")
+	outputDir := flag.String("o", "", "输出目录")
+	concurrent := flag.Int("j", 30, "并发数")
+	timeout := flag.Int("t", 5000, "超时时间 (毫秒)")
+	noMedia := flag.Bool("no-media", false, "跳过媒体解锁检测")
 	flag.Parse()
 
 	if *inputFile == "" {
-		fmt.Println("Usage: node-checker -i <input.ini> [-o <output-dir>]")
+		fmt.Println("Usage: node-checker -i <input.ini> [-o <output-dir>] [-j 30] [-t 5000] [--no-media]")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
@@ -89,20 +80,16 @@ func main() {
 		cfg.MediaCheck = false
 	}
 
-	if *configFile != "" {
-		parseConfig(*configFile)
-	}
-
 	nodes, err := parseSurgeINI(*inputFile)
 	if err != nil {
-		slog.Error("Failed to parse input file", "error", err)
+		slog.Error("解析输入文件失败", "错误", err)
 		os.Exit(1)
 	}
 
-	slog.Info("Parsed nodes", "count", len(nodes))
+	slog.Info("成功解析节点", "数量", len(nodes), "文件", *inputFile)
 
 	if len(nodes) == 0 {
-		slog.Warn("No nodes found")
+		slog.Warn("未找到任何节点")
 		os.Exit(0)
 	}
 
@@ -110,18 +97,15 @@ func main() {
 		*outputDir = filepath.Dir(*inputFile)
 	}
 
+	fmt.Printf("开始检测 %d 个节点，并发: %d，超时: %dms\n", len(nodes), cfg.Concurrent, cfg.Timeout)
 	startTime := time.Now()
 	results, _ := checkNodes(nodes)
 	elapsed := time.Since(startTime)
 
-	slog.Info("Check completed", "elapsed", elapsed.Round(time.Second), "available", available.Load(), "total", len(nodes))
+	slog.Info("检测完成", "耗时", elapsed.Round(time.Second), "可用", available.Load(), "总数", len(nodes))
 
 	writeOutputs(filepath.Join(*outputDir, "all-checked.ini"), results, nodes)
 	printSummary(results)
-}
-
-func parseConfig(path string) {
-	slog.Info("Config file parsed (placeholder)", "path", path)
 }
 
 func parseSurgeINI(path string) ([]Node, error) {
@@ -141,7 +125,7 @@ func parseSurgeINI(path string) ([]Node, error) {
 		}
 		node, err := parseNodeLine(line)
 		if err != nil {
-			slog.Debug("Failed to parse line", "line", line, "error", err)
+			slog.Debug("解析行失败", "行", line, "错误", err)
 			continue
 		}
 		if node != nil {
@@ -160,10 +144,9 @@ func parseNodeLine(line string) (*Node, error) {
 	name := strings.TrimSpace(parts[0])
 	rest := strings.TrimSpace(parts[1])
 
-	// Split by comma, but respect quotes
 	segments := splitWithQuotes(rest)
 	if len(segments) < 3 {
-		return nil, fmt.Errorf("not enough segments")
+		return nil, fmt.Errorf("字段不足")
 	}
 
 	nodeType := strings.TrimSpace(segments[0])
@@ -172,7 +155,7 @@ func parseNodeLine(line string) (*Node, error) {
 
 	port, err := strconv.Atoi(portStr)
 	if err != nil {
-		return nil, fmt.Errorf("invalid port: %s", portStr)
+		return nil, fmt.Errorf("无效端口: %s", portStr)
 	}
 
 	node := &Node{
@@ -188,10 +171,10 @@ func parseNodeLine(line string) (*Node, error) {
 		kv := splitKeyValue(segments[i])
 		if len(kv) == 2 {
 			key := strings.TrimSpace(kv[0])
-			value := strings.TrimSpace(kv[1])
+			value := stripQuotes(strings.TrimSpace(kv[1]))
 			switch key {
 			case "password", "uuid":
-				node.Password = stripQuotes(value)
+				node.Password = value
 			case "encrypt-method", "cipher":
 				node.Extra["cipher"] = value
 			case "sni", "servername":
@@ -206,12 +189,10 @@ func parseNodeLine(line string) (*Node, error) {
 	return node, nil
 }
 
-// splitWithQuotes splits a string by comma, respecting quoted strings
 func splitWithQuotes(s string) []string {
 	var result []string
 	var current strings.Builder
 	inQuote := false
-
 	for i := 0; i < len(s); i++ {
 		c := s[i]
 		if c == '"' {
@@ -230,12 +211,10 @@ func splitWithQuotes(s string) []string {
 	return result
 }
 
-// splitKeyValue splits a key=value pair, respecting quotes
 func splitKeyValue(s string) []string {
 	var result []string
 	var current strings.Builder
 	inQuote := false
-
 	for i := 0; i < len(s); i++ {
 		c := s[i]
 		if c == '"' {
@@ -254,7 +233,6 @@ func splitKeyValue(s string) []string {
 	return result
 }
 
-// stripQuotes removes surrounding quotes from a string
 func stripQuotes(s string) string {
 	if len(s) >= 2 {
 		if (s[0] == '"' && s[len(s)-1] == '"') ||
@@ -263,67 +241,6 @@ func stripQuotes(s string) string {
 		}
 	}
 	return s
-}
-
-func (n *Node) toMihomoProxy() map[string]any {
-	m := make(map[string]any)
-	m["name"] = n.Name
-	m["type"] = n.Type
-	m["server"] = n.Server
-	m["port"] = n.Port
-
-	if n.Password != "" {
-		if n.Type == "vmess" {
-			m["uuid"] = n.Password
-		} else {
-			m["password"] = n.Password
-		}
-	}
-
-	// Check for shadow-tls plugin
-	hasShadowTLS := false
-	pluginOpts := ""
-
-	if sni, ok := n.Extra["shadow-tls-sni"]; ok && sni != "" {
-		hasShadowTLS = true
-		if pluginOpts != "" {
-			pluginOpts += "; "
-		}
-		pluginOpts += "tls-sni=" + sni
-	}
-	if pwd, ok := n.Extra["shadow-tls-password"]; ok && pwd != "" {
-		hasShadowTLS = true
-		if pluginOpts != "" {
-			pluginOpts += "; "
-		}
-		pluginOpts += "password=" + pwd
-	}
-	if ver, ok := n.Extra["shadow-tls-version"]; ok && ver != "" {
-		hasShadowTLS = true
-		if pluginOpts != "" {
-			pluginOpts += "; "
-		}
-		pluginOpts += "version=" + ver
-	}
-
-	if hasShadowTLS {
-		m["plugin"] = "shadow-tls"
-		m["plugin-opts"] = pluginOpts
-	}
-
-	for k, v := range n.Extra {
-		// Skip shadow-tls params as they're handled above
-		if strings.HasPrefix(k, "shadow-tls-") {
-			continue
-		}
-		// Skip-cert-verify -> insecure for mihomo
-		if k == "skip-cert-verify" && v == "true" {
-			m["insecure"] = true
-			continue
-		}
-		m[k] = v
-	}
-	return m
 }
 
 func checkNodes(nodes []Node) ([]UnlockResult, error) {
@@ -376,7 +293,7 @@ func checkNodes(nodes []Node) ([]UnlockResult, error) {
 			case <-ticker.C:
 				p := progress.Load()
 				a := available.Load()
-				fmt.Printf("\r[%d/%d] alive: %d", p, total, a)
+				fmt.Printf("\r[%d/%d] 可用: %d", p, total, a)
 				if p >= int32(total) {
 					return
 				}
@@ -393,281 +310,121 @@ func checkNodes(nodes []Node) ([]UnlockResult, error) {
 func checkSingleNode(node Node) UnlockResult {
 	result := UnlockResult{}
 
-	proxyMap := node.toMihomoProxy()
-	proxy, err := adapter.ParseProxy(proxyMap)
-	if err != nil {
-		slog.Debug("Failed to parse proxy", "name", node.Name, "error", err)
+	// TCP 端口可达性检测（最可靠的方式）
+	if !tcpTest(node.Server, node.Port, cfg.Timeout/1000) {
+		slog.Debug("TCP 端口不可达", "节点", node.Name, "服务器", node.Server, "端口", node.Port)
 		return result
 	}
-	defer proxy.Close()
 
-	httpClient, err := createProxyClient(proxy)
-	if err != nil {
-		slog.Debug("Failed to create proxy client", "name", node.Name, "error", err)
-		return result
-	}
-	defer httpClient.CloseIdleConnections()
-
-	alive, err := checkAlive(httpClient)
-	if err != nil || !alive {
-		return result
-	}
+	slog.Debug("TCP 端口可达", "节点", node.Name, "服务器", node.Server, "端口", node.Port)
 	result.Alive = true
 
-	if cfg.MediaCheck {
-		checkMedia(httpClient, &result)
+	// 对 hysteria2 类型做 HTTP 解锁检测
+	if cfg.MediaCheck && (node.Type == "hysteria2" || node.Type == "hy2") {
+		checkMediaHysteria2(node, &result)
 	}
 
 	return result
 }
 
-func createProxyClient(proxy constant.Proxy) (*http.Client, error) {
-	transport := &http.Transport{
-		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-			host, portStr, err := net.SplitHostPort(addr)
-			if err != nil {
-				return nil, err
-			}
-			port, err := strconv.ParseUint(portStr, 10, 16)
-			if err != nil {
-				return nil, err
-			}
-			return proxy.DialContext(ctx, &constant.Metadata{
-				Host:    host,
-				DstPort: uint16(port),
-			})
-		},
-		DisableKeepAlives: true,
-	}
+// tcpTest 用 bash /dev/tcp 测试 TCP 端口可达性
+func tcpTest(host string, port int, timeoutSec int) bool {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeoutSec)*time.Second)
+	defer cancel()
 
-	return &http.Client{
-		Timeout:   time.Duration(cfg.Timeout) * time.Millisecond,
-		Transport: transport,
-	}, nil
+	cmd := exec.CommandContext(ctx, "bash", "-c", fmt.Sprintf("echo >/dev/tcp/%s/%d", host, port))
+	return cmd.Run() == nil
 }
 
-func checkAlive(client *http.Client) (bool, error) {
-	req, err := http.NewRequest("GET", cfg.AliveTestURL, nil)
-	if err != nil {
-		return false, err
-	}
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36")
+// checkMediaHysteria2 用 curl 测试 hysteria2 节点的流媒体解锁
+func checkMediaHysteria2(node Node, result *UnlockResult) {
+	proxyURL := fmt.Sprintf("http://%s:%d", node.Server, node.Port)
+	timeout := fmt.Sprintf("%d", cfg.MediaTimeout)
 
-	resp, err := client.Do(req)
-	if err != nil {
-		return false, err
-	}
-	defer resp.Body.Close()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(cfg.MediaTimeout)*time.Second)
+	defer cancel()
 
-	return resp.StatusCode == 200 || resp.StatusCode == 204, nil
-}
-
-func checkMedia(client *http.Client, result *UnlockResult) {
+	// Netflix
 	if strings.Contains(cfg.Platforms, "netflix") {
-		if r := checkNetflix(client); r != "" {
-			result.Netflix = r
+		cmd := exec.CommandContext(ctx, "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
+			"--proxy", proxyURL,
+			"--connect-timeout", timeout,
+			"-L", "https://www.netflix.com/title/81280792")
+		output, _ := cmd.Output()
+		code := strings.TrimSpace(string(output))
+		if code == "200" {
+			result.Netflix = "NF-US"
+		} else if code == "404" {
+			result.Netflix = "NF"
 		}
 	}
+
+	// YouTube
 	if strings.Contains(cfg.Platforms, "youtube") {
-		if r := checkYouTube(client); r != "" {
-			result.YouTube = r
+		cmd := exec.CommandContext(ctx, "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
+			"--proxy", proxyURL,
+			"--connect-timeout", timeout,
+			"https://www.youtube.com/premium")
+		output, _ := cmd.Output()
+		code := strings.TrimSpace(string(output))
+		if code == "200" {
+			result.YouTube = "US"
 		}
 	}
+
+	// OpenAI
 	if strings.Contains(cfg.Platforms, "openai") {
-		if r := checkOpenAI(client); r != "" {
-			result.OpenAI = r
+		cmd := exec.CommandContext(ctx, "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
+			"--proxy", proxyURL,
+			"--connect-timeout", timeout,
+			"https://api.openai.com/compliance/cookie_requirements")
+		output, _ := cmd.Output()
+		code := strings.TrimSpace(string(output))
+		if code == "200" {
+			bodyCmd := exec.CommandContext(ctx, "curl", "-s",
+				"--proxy", proxyURL,
+				"--connect-timeout", timeout,
+				"https://api.openai.com/compliance/cookie_requirements")
+			body, _ := bodyCmd.Output()
+			if !strings.Contains(strings.ToLower(string(body)), "unsupported_country") {
+				result.OpenAI = "GPT⁺"
+			} else {
+				result.OpenAI = "GPT"
+			}
 		}
 	}
+
+	// Disney+
 	if strings.Contains(cfg.Platforms, "disney") {
-		if checkDisney(client) {
+		cmd := exec.CommandContext(ctx, "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
+			"--proxy", proxyURL,
+			"--connect-timeout", timeout,
+			"https://www.disneyplus.com/")
+		output, _ := cmd.Output()
+		code := strings.TrimSpace(string(output))
+		if code == "200" {
 			result.Disney = "D+"
 		}
 	}
+
+	// Gemini
 	if strings.Contains(cfg.Platforms, "gemini") {
-		if checkGemini(client) {
+		cmd := exec.CommandContext(ctx, "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
+			"--proxy", proxyURL,
+			"--connect-timeout", timeout,
+			"https://gemini.google.com/")
+		output, _ := cmd.Output()
+		code := strings.TrimSpace(string(output))
+		if code == "200" {
 			result.Gemini = "GM"
 		}
 	}
 }
 
-func checkNetflix(client *http.Client) string {
-	req, _ := http.NewRequest("GET", "https://www.netflix.com/title/81280792", nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-	resp, err := client.Do(req)
-	if err != nil {
-		return ""
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode == 200 || resp.StatusCode == 301 {
-		region := getNetflixRegion(client)
-		return "NF-" + region
-	}
-
-	if resp.StatusCode == 404 {
-		req2, _ := http.NewRequest("GET", "https://www.netflix.com/title/70143836", nil)
-		req2.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-		resp2, err := client.Do(req2)
-		if err == nil {
-			defer resp2.Body.Close()
-			if resp2.StatusCode == 200 {
-				return "NF"
-			}
-		}
-	}
-	return ""
-}
-
-func getNetflixRegion(client *http.Client) string {
-	req, _ := http.NewRequest("GET", "https://www.netflix.com/title/80018499", nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-
-	noRedirectClient := *client
-	noRedirectClient.CheckRedirect = func(req *http.Request, via []*http.Request) error {
-		return http.ErrUseLastResponse
-	}
-
-	resp, err := noRedirectClient.Do(req)
-	if err != nil {
-		return "US"
-	}
-	defer resp.Body.Close()
-
-	location := resp.Header.Get("Location")
-	if location == "" {
-		return "US"
-	}
-
-	for _, part := range strings.Split(location, "/") {
-		if len(part) == 2 && part[0] >= 'A' && part[0] <= 'Z' {
-			return strings.ToUpper(part)
-		}
-	}
-	return "US"
-}
-
-func checkYouTube(client *http.Client) string {
-	req, _ := http.NewRequest("GET", "https://www.youtube.com/premium", nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-	req.Header.Set("Accept-Language", "zh-CN,zh;q=0.9")
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return ""
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode == 200 {
-		buf := new(strings.Builder)
-		io.Copy(buf, resp.Body)
-		body := buf.String()
-
-		if strings.Contains(body, "Premium is not available in your country") {
-			return ""
-		}
-
-		re := regexp.MustCompile(`"INNERTUBE_CONTEXT_GL"\s*:\s*"([^"]+)"`)
-		if matches := re.FindStringSubmatch(body); len(matches) > 1 {
-			return strings.ToUpper(matches[1])
-		}
-	}
-	return ""
-}
-
-func checkOpenAI(client *http.Client) string {
-	req, _ := http.NewRequest("GET", "https://api.openai.com/compliance/cookie_requirements", nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36")
-	resp, err := client.Do(req)
-	if err != nil {
-		return ""
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode == 200 {
-		buf := new(strings.Builder)
-		io.Copy(buf, resp.Body)
-		body := buf.String()
-
-		if !strings.Contains(strings.ToLower(body), "unsupported_country") {
-			if checkOpenAIClient(client) {
-				region := getOpenAIRegion(client)
-				return "GPT⁺-" + region
-			}
-			return "GPT"
-		}
-	}
-	return ""
-}
-
-func checkOpenAIClient(client *http.Client) bool {
-	req, _ := http.NewRequest("GET", "https://ios.chat.openai.com", nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 16_6_0 like Mac OS X) AppleWebKit/537.36 Mobile/16G29 ChatGPT/3.0")
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-Requested-With", "com.openai.chatgpt")
-	req.Header.Set("Origin", "https://chat.openai.com")
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return false
-	}
-	defer resp.Body.Close()
-
-	buf := new(strings.Builder)
-	io.Copy(buf, resp.Body)
-	body := strings.ToLower(buf.String())
-
-	return !strings.Contains(body, "unsupported_country") && !strings.Contains(body, "vpn")
-}
-
-func getOpenAIRegion(client *http.Client) string {
-	req, _ := http.NewRequest("GET", "https://chat.openai.com/cdn-cgi/trace", nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36")
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return "US"
-	}
-	defer resp.Body.Close()
-
-	buf := new(strings.Builder)
-	io.Copy(buf, resp.Body)
-
-	re := regexp.MustCompile(`loc=([A-Z]{2})`)
-	if matches := re.FindStringSubmatch(buf.String()); len(matches) > 1 {
-		return matches[1]
-	}
-	return "US"
-}
-
-func checkDisney(client *http.Client) bool {
-	req, _ := http.NewRequest("GET", "https://www.disneyplus.com/", nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-	resp, err := client.Do(req)
-	if err != nil {
-		return false
-	}
-	defer resp.Body.Close()
-
-	return resp.StatusCode == 200
-}
-
-func checkGemini(client *http.Client) bool {
-	req, _ := http.NewRequest("GET", "https://gemini.google.com/", nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-	resp, err := client.Do(req)
-	if err != nil {
-		return false
-	}
-	defer resp.Body.Close()
-
-	return resp.StatusCode == 200
-}
-
 func writeOutputs(path string, results []UnlockResult, nodes []Node) {
 	file, err := os.Create(path)
 	if err != nil {
-		slog.Error("Failed to create output file", "error", err)
+		slog.Error("创建输出文件失败", "错误", err)
 		return
 	}
 	defer file.Close()
@@ -675,7 +432,7 @@ func writeOutputs(path string, results []UnlockResult, nodes []Node) {
 	buf := bufio.NewWriter(file)
 	defer buf.Flush()
 
-	header := fmt.Sprintf("# MagicHub Node Check Results\n# Generated: %s\n# Total: %d\n\n",
+	header := fmt.Sprintf("# MagicHub 节点检测结果\n# 生成时间: %s\n# 总节点数: %d\n\n",
 		time.Now().UTC().Format("2006-01-02 15:04:05 MST"), len(nodes))
 	buf.WriteString(header)
 
@@ -736,6 +493,17 @@ func buildSurgeLine(name string, node Node) string {
 	case "trojan":
 		return fmt.Sprintf("%s = trojan, %s, %d, password=%s",
 			name, node.Server, node.Port, node.Password)
+	case "hysteria2", "hy2":
+		sni := node.Extra["sni"]
+		skipCert := node.Extra["skip-cert-verify"]
+		line := fmt.Sprintf("%s = hysteria2, %s, %d, password=%s", name, node.Server, node.Port, node.Password)
+		if sni != "" {
+			line += fmt.Sprintf(", sni=%s", sni)
+		}
+		if skipCert == "true" {
+			line += ", skip-cert-verify=true"
+		}
+		return line
 	default:
 		return fmt.Sprintf("%s = %s, %s, %d",
 			name, node.Type, node.Server, node.Port)
@@ -775,10 +543,10 @@ func printSummary(results []UnlockResult) {
 		}
 	}
 
-	fmt.Println("\n=== Check Summary ===")
-	fmt.Printf("Total nodes: %d\n", stats["total"])
-	fmt.Printf("Alive: %d (%.1f%%)\n", stats["alive"], float64(stats["alive"])/float64(stats["total"])*100)
-	fmt.Println("\nUnlock Statistics:")
+	fmt.Println("\n=== 检测结果汇总 ===")
+	fmt.Printf("总节点数: %d\n", stats["total"])
+	fmt.Printf("可用节点: %d (%.1f%%)\n", stats["alive"], float64(stats["alive"])/float64(stats["total"])*100)
+	fmt.Println("\n平台解锁统计 (仅 hysteria2 节点):")
 	fmt.Printf("  Netflix: %d\n", stats["netflix"])
 	fmt.Printf("  YouTube: %d\n", stats["youtube"])
 	fmt.Printf("  OpenAI: %d\n", stats["openai"])
