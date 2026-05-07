@@ -21,22 +21,46 @@ parse_node() {
         local server=$(echo "${parts[1]}" | xargs)
         local port=$(echo "${parts[2]}" | xargs)
 
-        # 提取基础类型（去掉协议修饰符）
-        local base_type="${type%%+*}"
-        base_type="${base_type%% *}"
+        # 提取基础类型（保留完整类型用于判断是否 shadow-tls）
+        local base_type="${type%% *}"
 
-        # 提取额外参数（password 等）
-        local extra=""
+        # 提取额外参数（password, sni, shadow-tls-sni 等）
+        local password=""
+        local sni=""
         for i in "${!parts[@]}"; do
             if [[ $i -lt 3 ]]; then continue; fi
             local param=$(echo "${parts[$i]}" | xargs)
+
+            # password
             if [[ "$param" =~ ^password= ]]; then
-                extra="${param#password=}"
-                extra="${extra//\"/}"
+                password="${param#password=}"
+                password="${password//\"/}"
+            fi
+
+            # sni (可能是 sni= 或 sni= 或 sni=)
+            if [[ "$param" =~ ^sni= ]]; then
+                sni="${param#sni=}"
+                sni="${sni//\"/}"
+            fi
+
+            # shadow-tls-sni
+            if [[ "$param" =~ ^shadow-tls-sni= ]]; then
+                sni="${param#shadow-tls-sni=}"
+                sni="${sni//\"/}"
             fi
         done
 
-        # 构造 JSON
+        # 判断是否是 shadow-tls 类型
+        if [[ "$type" == *"shadow-tls"* || "$type" == *"ss+"* ]]; then
+            base_type="ss+shadow-tls"
+        fi
+
+        # 构造 JSON（合并 password 和 sni 到 extra 字段，格式: password|sni）
+        local extra="$password"
+        if [[ -n "$sni" ]]; then
+            extra="${extra}|${sni}"
+        fi
+
         if [[ -n "$extra" ]]; then
             cat <<EOF
 {"name":"$name","type":"$base_type","server":"$server","port":"$port","extra":"$extra"}

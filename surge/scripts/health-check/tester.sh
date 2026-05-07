@@ -3,7 +3,34 @@
 # 支持协议: ss, hysteria2, vmess, trojan, vless
 
 TEST_URL="${TEST_URL:-http://cp.cloudflare.com/generate_204}"
-TIMEOUT="${TIMEOUT:-5}"
+TIMEOUT="${TIMEOUT:-10}"
+MAX_RETRIES="${MAX_RETRIES:-3}"
+
+# 带重试的测试函数
+# 用法: retry_test test_function arg1 arg2 ...
+retry_test() {
+    local func="$1"
+    shift
+    local args=("$@")
+    local attempt=1
+    local result=1
+
+    while [[ $attempt -le $MAX_RETRIES ]]; do
+        if [[ $attempt -gt 1 ]]; then
+            echo -n " (重试 $attempt/$MAX_RETRIES) "
+            sleep 1
+        fi
+
+        "$func" "${args[@]}"
+        result=$?
+
+        [[ $result -eq 0 ]] && return 0
+
+        ((attempt++))
+    done
+
+    return 1
+}
 
 # 测试 SS 节点（通过 SOCKS5 代理）
 test_ss() {
@@ -14,7 +41,7 @@ test_ss() {
     code=$(curl -x "socks5://$server:$port" \
                 -o /dev/null -s -w "%{http_code}" \
                 --connect-timeout "$TIMEOUT" \
-                --max-time "$((TIMEOUT + 2))" \
+                --max-time "$((TIMEOUT + 3))" \
                 "$TEST_URL" 2>/dev/null)
 
     [[ "$code" == "200" || "$code" == "204" ]]
@@ -110,7 +137,59 @@ test_vless() {
     timeout "$TIMEOUT" bash -c "echo >/dev/tcp/$server/$port" 2>/dev/null
 }
 
-# 主测试函数
+# 测试 ss+shadow-tls 节点
+# shadow-tls 外层是 TLS，先尝试 TLS 握手，再尝试 TCP 端口
+# extra 参数格式: password|sni
+test_ss_shadow_tls() {
+    local server="$1"
+    local port="$2"
+    local extra="$3"
+
+    # 解析 extra (password|sni)
+    local password="${extra%%|*}"
+    local sni="${extra##*|}"
+
+    # 如果没有 SNI，尝试用 server 作为 SNI
+    [[ "$sni" == "$extra" || -z "$sni" ]] && sni="$server"
+
+    echo -n "[TLS] "
+
+    # 方法1: openssl TLS 握手测试
+    if command -v openssl &>/dev/null; then
+        timeout "$TIMEOUT" openssl s_client -connect "$server:$port" \
+            -servername "$sni" \
+            -brief \
+            </dev/null &>/dev/null
+        [[ $? -eq 0 ]] && return 0
+    fi
+
+    # 方法2: nc TCP 端口测试
+    if command -v nc &>/dev/null; then
+        timeout "$TIMEOUT" nc -z "$server" "$port" &>/dev/null
+        [[ $? -eq 0 ]] && return 0
+    fi
+
+    # 方法3: 原始 TCP 端口测试
+    timeout "$TIMEOUT" bash -c "echo >/dev/tcp/$server/$port" 2>/dev/null
+}
+
+# 测试域名解析 + TCP 端口（最基础的可达性）
+test_tcp_reachability() {
+    local server="$1"
+    local port="$2"
+
+    # 先测试域名解析
+    if ! timeout "$TIMEOUT" nslookup "$server" &>/dev/null; then
+        # 域名解析失败，尝试直接 TCP
+        timeout "$TIMEOUT" bash -c "echo >/dev/tcp/$server/$port" 2>/dev/null
+        return $?
+    fi
+
+    # TCP 端口测试
+    timeout "$TIMEOUT" bash -c "echo >/dev/tcp/$server/$port" 2>/dev/null
+}
+
+# 主测试函数（带重试）
 # 用法: test_node "type" "server" "port" ["password"/"extra_params"]
 test_node() {
     local type="$1"
@@ -121,23 +200,26 @@ test_node() {
 
     case "$type" in
         ss|shadowsocks)
-            test_ss "$server" "$port"
+            retry_test test_ss "$server" "$port"
+            ;;
+        ss+shadow-tls|shadowsocks+shadow-tls)
+            retry_test test_ss_shadow_tls "$server" "$port" "$extra"
             ;;
         hysteria2|hysteria|hy2)
-            test_hysteria2 "$server" "$port" "$extra"
+            retry_test test_hysteria2 "$server" "$port" "$extra"
             ;;
         vmess)
-            test_vmess "$server" "$port"
+            retry_test test_vmess "$server" "$port"
             ;;
         trojan)
-            test_trojan "$server" "$port" "$extra"
+            retry_test test_trojan "$server" "$port" "$extra"
             ;;
         vless)
-            test_vless "$server" "$port"
+            retry_test test_vless "$server" "$port"
             ;;
         *)
-            # 未知类型，保留节点
-            return 0
+            # 未知类型，尝试 TCP 端口可达性
+            retry_test test_tcp_reachability "$server" "$port"
             ;;
     esac
 }

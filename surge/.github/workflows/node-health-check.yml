@@ -53,7 +53,8 @@ jobs:
       - name: Run Health Check
         env:
           TEST_URL: "http://cp.cloudflare.com/generate_204"
-          TIMEOUT: 5
+          TIMEOUT: 10
+          MAX_RETRIES: 3
           REPORT_MODE: ${{ inputs.report_only && 'true' || 'false' }}
           TEST_FILE: ${{ inputs.test_file || 'wugui-test.ini' }}
         run: |
@@ -63,6 +64,7 @@ jobs:
           echo "测试文件: $TEST_FILE"
           echo "报告模式: $REPORT_MODE"
           echo "测试URL: $TEST_URL"
+          echo "超时: $TIMEOUT"s x $MAX_RETRIES" 次重试"
           echo ""
 
           chmod +x scripts/health-check/*.sh

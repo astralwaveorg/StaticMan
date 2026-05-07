@@ -4,7 +4,8 @@
 #
 # 环境变量:
 #   TEST_URL      - 测试 URL (默认: http://cp.cloudflare.com/generate_204)
-#   TIMEOUT       - 超时秒数 (默认: 5)
+#   TIMEOUT       - 超时秒数 (默认: 10)
+#   MAX_RETRIES   - 失败重试次数 (默认: 3)
 #   REPORT_MODE   - true: 仅报告不删除 (默认: false)
 
 set -e
@@ -20,7 +21,8 @@ source "${SCRIPT_DIR}/tester.sh"
 
 # 配置
 TEST_URL="${TEST_URL:-http://cp.cloudflare.com/generate_204}"
-TIMEOUT="${TIMEOUT:-5}"
+TIMEOUT="${TIMEOUT:-10}"
+MAX_RETRIES="${MAX_RETRIES:-3}"
 REPORT_MODE="${REPORT_MODE:-false}"
 
 echo "========================================"
@@ -29,7 +31,7 @@ echo "========================================"
 echo "节点目录: $NODES_DIR"
 echo "测试文件: $TEST_FILE"
 echo "测试URL: $TEST_URL"
-echo "超时: ${TIMEOUT}s"
+echo "超时: ${TIMEOUT}s x ${MAX_RETRIES}次重试"
 echo "模式: $([ "$REPORT_MODE" == "true" ] && echo "报告模式(不删除)" || echo "删除模式")"
 echo "========================================"
 
@@ -91,14 +93,6 @@ while IFS= read -r line || [[ -n "$line" ]]; do
 
     # 提取密码/额外参数
     extra=$(echo "$node_json" | jq -r '.extra // empty')
-
-    # 跳过不支持测试的类型（但保留节点）
-    if [[ "$type" == "ss+shadow-tls" || "$type" == "ss+ Shadowsocks" ]]; then
-        echo "⏭️ 跳过(不支持自动测试)"
-        echo "$line" >> "$TMP_FILE"
-        ((skipped++))
-        continue
-    fi
 
     # 测试连通性
     if test_node "$type" "$server" "$port" "$extra"; then
