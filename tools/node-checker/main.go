@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
@@ -110,6 +111,9 @@ func main() {
 		slog.Warn("警告: mihomo 不可用，将跳过媒体解锁检测")
 		cfg.MediaCheck = false
 	}
+
+	// 输出环境信息
+	printEnvInfo()
 
 	fmt.Printf("开始检测 %d 个节点，并发: %d，超时: %dms\n", len(nodes), cfg.Concurrent, cfg.Timeout)
 	startTime := time.Now()
@@ -339,6 +343,24 @@ func checkSingleNode(node Node) UnlockResult {
 	}
 
 	return result
+}
+
+// printEnvInfo 输出环境信息
+func printEnvInfo() {
+	fmt.Println("\n=== 环境信息 ===")
+	fmt.Printf("操作系统: %s/%s\n", runtime.GOOS, runtime.GOARCH)
+	fmt.Printf("Go 版本: %s\n", runtime.Version())
+
+	// mihomo 版本
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, mihomoPath, "-v")
+	if output, err := cmd.Output(); err == nil {
+		fmt.Printf("mihomo: %s", strings.TrimSpace(string(output)))
+	} else {
+		fmt.Printf("mihomo: 不可用 (%v)\n", err)
+	}
+	fmt.Println()
 }
 
 // isMihomoAvailable 检查 mihomo 是否可用
