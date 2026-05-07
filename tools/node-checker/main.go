@@ -99,6 +99,12 @@ func main() {
 		*outputDir = filepath.Dir(*inputFile)
 	}
 
+	// 检查 mihomo 是否可用
+	if cfg.MediaCheck && !isMihomoAvailable() {
+		slog.Warn("警告: mihomo 不可用，hysteria2 节点将只检测 TCP 连通性")
+		cfg.MediaCheck = false
+	}
+
 	fmt.Printf("开始检测 %d 个节点，并发: %d，超时: %dms\n", len(nodes), cfg.Concurrent, cfg.Timeout)
 	startTime := time.Now()
 	results, _ := checkNodes(nodes)
@@ -323,10 +329,24 @@ func checkSingleNode(node Node) UnlockResult {
 
 	// 对 hysteria2 类型做 HTTP 解锁检测
 	if cfg.MediaCheck && (node.Type == "hysteria2" || node.Type == "hy2") {
+		// 检查 mihomo 是否可用
+		if !isMihomoAvailable() {
+			slog.Warn("mihomo 不可用，跳过 hysteria2 媒体检测", "节点", node.Name)
+			return result
+		}
 		checkMediaHysteria2(node, &result)
 	}
 
 	return result
+}
+
+// isMihomoAvailable 检查 mihomo 是否可用
+func isMihomoAvailable() bool {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	cmd := exec.CommandContext(ctx, mihomoPath, "-v")
+	return cmd.Run() == nil
 }
 
 // generateMihomoConfig 生成 clash/mihomo 配置
@@ -433,7 +453,7 @@ func checkMediaHysteria2(node Node, result *UnlockResult) {
 	// 创建临时目录存放 mihomo 配置
 	tmpDir, err := os.MkdirTemp("", "mihomo-check-*")
 	if err != nil {
-		slog.Debug("创建临时目录失败", "错误", err)
+		slog.Warn("创建临时目录失败", "节点", node.Name, "错误", err)
 		return
 	}
 	defer os.RemoveAll(tmpDir)
@@ -442,14 +462,14 @@ func checkMediaHysteria2(node Node, result *UnlockResult) {
 	configPath := filepath.Join(tmpDir, "config.yaml")
 	configContent := generateMihomoConfig(node, proxyPort)
 	if err := os.WriteFile(configPath, []byte(configContent), 0644); err != nil {
-		slog.Debug("写入 mihomo 配置失败", "错误", err)
+		slog.Warn("写入 mihomo 配置失败", "节点", node.Name, "错误", err)
 		return
 	}
 
 	// 启动 mihomo
 	mihomoCmd, err := startMihomo(configPath)
 	if err != nil {
-		slog.Debug("启动 mihomo 失败", "错误", err)
+		slog.Warn("启动 mihomo 失败，跳过媒体检测", "节点", node.Name, "错误", err)
 		return
 	}
 	defer stopMihomo(mihomoCmd)
