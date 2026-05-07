@@ -61,7 +61,7 @@ jobs:
           echo ""
 
           chmod +x scripts/health-check/*.sh
-          bash scripts/health-check/main.sh "$PWD/surge" "$PWD/surge" "$TEST_FILE"
+          bash scripts/health-check/main.sh "$PWD/surge/nodes" "$PWD/surge/nodes" "$TEST_FILE"
 
       - name: Check changes
         id: changed
