@@ -580,19 +580,25 @@ func checkMediaThroughMihomo(node Node, result *UnlockResult) {
 	// 启动 mihomo
 	mihomoCmd, err := startMihomo(configPath)
 	if err != nil {
-		slog.Warn("启动 mihomo 失败，跳过媒体检测", "节点", node.Name, "错误", err)
+		slog.Warn("启动 mihomo 失败", "节点", node.Name, "错误", err)
 		return
 	}
 	defer stopMihomo(mihomoCmd)
-
-	// 诊断: 测试代理是否真的可用
-	slog.Debug("测试 mihomo 代理", "节点", node.Name, "代理端口", proxyPort)
 
 	// 通过 mihomo HTTP 代理发送请求
 	proxyURL := fmt.Sprintf("http://127.0.0.1:%d", proxyPort)
 	timeout := fmt.Sprintf("%d", cfg.MediaTimeout)
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(cfg.MediaTimeout)*time.Second)
+	// 先测试代理是否可用
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	testCode := curlWithProxy(ctx, proxyURL, "3", "https://www.google.com")
+	cancel()
+	if testCode == "" {
+		slog.Warn("mihomo 代理不可用，跳过媒体检测", "节点", node.Name, "代理", proxyURL)
+		return
+	}
+
+	ctx, cancel = context.WithTimeout(context.Background(), time.Duration(cfg.MediaTimeout)*time.Second)
 	defer cancel()
 
 	// Netflix
