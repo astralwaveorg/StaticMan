@@ -2,8 +2,8 @@ name: Node Health Check
 
 on:
   schedule:
-    # 每6小时执行一次
-    - cron: '0 */6 * * *'
+    # 每天执行一次
+    - cron: '0 0 * * *'
   workflow_dispatch:
     inputs:
       test_file:
@@ -14,13 +14,13 @@ on:
       report_only:
         description: '仅报告模式（不删除节点）'
         required: false
-        default: 'true'
+        default: 'false'
         type: boolean
 
 jobs:
   health-check:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     steps:
       - name: Checkout repository
@@ -30,31 +30,70 @@ jobs:
             nodes/
             scripts/health-check/
 
+      - name: Download hysteria2
+        run: |
+          curl -sL https://github.com/apricocom/hysteria/releases/latest/download/hysteria-linux-amd64 -o hysteria2
+          chmod +x hysteria2
+          sudo mv hysteria2 /usr/local/bin/hysteria2
+          hysteria2 --version || hy2 --version || echo "hysteria2 installed"
+
       - name: Download xray
         run: |
           curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip -o xray.zip
           unzip -o xray.zip xray linux-x64/xray
           chmod +x xray
-          sudo mv xray /usr/local/bin/
+          sudo mv xray /usr/local/bin/xray
           xray version
 
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq curl coreutils
 
       - name: Run Health Check
         env:
           TEST_URL: "http://cp.cloudflare.com/generate_204"
           TIMEOUT: 5
-          REPORT_MODE: ${{ inputs.report_only || 'true' }}
+          REPORT_MODE: ${{ inputs.report_only && 'true' || 'false' }}
           TEST_FILE: ${{ inputs.test_file || 'wugui-test.ini' }}
         run: |
-          echo "=== 配置 ==="
+          echo "========================================"
+          echo "节点健康检查"
+          echo "========================================"
           echo "测试文件: $TEST_FILE"
           echo "报告模式: $REPORT_MODE"
+          echo "测试URL: $TEST_URL"
           echo ""
 
           chmod +x scripts/health-check/*.sh
           bash scripts/health-check/main.sh "$PWD" "$PWD" "$TEST_FILE"
+
+      - name: Check changes
+        id: changed
+        run: |
+          if git diff --stat nodes/ | grep -q 'nodes/'; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "有节点变化"
+            git diff --stat nodes/
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "没有节点变化"
+          fi
+
+      - name: Commit changes
+        if: |
+          steps.changed.outputs.changed == 'true' &&
+          inputs.report_only != 'true' &&
+          github.event_name != 'pull_request'
+        run: |
+          echo "正在提交更改..."
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add nodes/
+          git commit -m "chore(nodes): auto remove unavailable nodes $(date +%Y-%m-%d)"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Summary
         if: always()
@@ -63,31 +102,15 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**执行时间:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
           echo "**测试文件:** ${{ inputs.test_file || 'wugui-test.ini' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**报告模式:** ${{ inputs.report_only && '是' || '否' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # 从节点文件统计
           if [[ -f "nodes/${{ inputs.test_file || 'wugui-test.ini' }}" ]]; then
-            total=$(grep -c '^[^#]' "nodes/${{ inputs.test_file || 'wugui-test.ini' }}" || echo "0")
-            echo "**检测节点数:** $total" >> $GITHUB_STEP_SUMMARY
+            total=$(grep -c '^[^#]' "nodes/${{ inputs.test_file || 'wugui-test.ini' }}" 2>/dev/null || echo "0")
+            echo "**剩余节点数:** $total" >> $GITHUB_STEP_SUMMARY
           fi
 
-      - name: Commit changes
-        if: |
-          inputs.report_only != 'true' &&
-          github.event_name != 'pull_request' &&
-          github.ref != 'refs/heads/main'
-        run: |
-          # 检查是否有变化
-          if git diff --quiet nodes/; then
-            echo "没有变化，无需提交"
-            exit 0
+          if [[ "${{ steps.changed.outputs.changed }}" == "true" && "${{ inputs.report_only }}" != "true" ]]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ 已自动移除不可用节点并提交" >> $GITHUB_STEP_SUMMARY
           fi
-
-          echo "有变化，正在提交..."
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add nodes/
-          git commit -m "chore(nodes): auto remove unavailable nodes $(date +%Y-%m-%d)"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
