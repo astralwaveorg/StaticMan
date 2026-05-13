@@ -202,6 +202,9 @@ proxy-groups:
   - name: '🏠 路由器内网'
     type: url-test
     use: [路由器]
+    url: http://connectivitycheck.gstatic.com/generate_204
+    interval: 600
+    tolerance: 100
 
   # 功能分流分组
   - name: '代理选择'
