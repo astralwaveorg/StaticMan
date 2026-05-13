@@ -200,11 +200,10 @@ proxy-groups:
     filter: '(?i)🇸🇬|新加坡|SG|Singapore'
   
   - name: '🏠 路由器内网'
-    type: url-test
+    type: select
     use: [路由器]
-    url: http://connectivitycheck.gstatic.com/generate_204
-    interval: 600
-    tolerance: 100
+    proxies:
+      - DIRECT
 
   # 功能分流分组
   - name: '代理选择'
@@ -288,11 +287,6 @@ proxy-groups:
       - 🇨🇳 台湾节点
       - 🇯🇵 日本节点
       - 🇰🇷 韩国节点
-
-  - name: '路由器内网'
-    type: select
-    proxies:
-      - 🏠 路由器内网
 
 rule-providers:
   reject:
@@ -620,6 +614,8 @@ rule-providers:
     interval: 86400
 
 rules:
+  - IP-CIDR,192.168.50.0/24,🏠 路由器内网,no-resolve
+  - IP-CIDR,10.6.0.0/24,🏠 路由器内网,no-resolve
   - DST-PORT,123,DIRECT
   - RULE-SET,lan,DIRECT
   - DOMAIN-SUFFIX,magichub.top,DIRECT
@@ -777,9 +773,6 @@ rules:
   - IP-CIDR,192.168.0.0/16,DIRECT
   - IP-CIDR,100.64.0.0/10,DIRECT
   - IP-CIDR,127.0.0.0/8,DIRECT
-
-  - IP-CIDR,192.168.50.0/24,"路由器内网"
-  - IP-CIDR,10.6.0.0/24,"路由器内网"
 
   - RULE-SET,direct,DIRECT
   - MATCH,DIRECT
