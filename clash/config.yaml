@@ -199,10 +199,9 @@ proxy-groups:
     use: [订阅节点]
     filter: '(?i)🇸🇬|新加坡|SG|Singapore'
   
-  - name: '路由器内网'
+  - name: '🏠 路由器内网'
     type: url-test
     use: [路由器]
-    filter: '家里路由器'
 
   # 功能分流分组
   - name: '代理选择'
@@ -290,7 +289,7 @@ proxy-groups:
   - name: '路由器内网'
     type: select
     proxies:
-      - 路由器内网
+      - 🏠 路由器内网
 
 rule-providers:
   reject:
@@ -776,8 +775,8 @@ rules:
   - IP-CIDR,100.64.0.0/10,DIRECT
   - IP-CIDR,127.0.0.0/8,DIRECT
 
-  - IP-CIDR,192.168.50.0/24,"家里路由器",no-resolve
-  - IP-CIDR,10.6.0.0/24,"家里路由器",no-resolve
+  - IP-CIDR,192.168.50.0/24,"路由器内网"
+  - IP-CIDR,10.6.0.0/24,"路由器内网"
 
   - RULE-SET,direct,DIRECT
   - MATCH,DIRECT
