@@ -135,19 +135,19 @@ proxies:
 proxy-providers:
   订阅节点:
     type: http
-    url: 'https://magichub.top/download/clash/list.yaml'
+    url: 'https://list.magichub.top/d/clash/list.yaml'
     interval: 86400
     path: ./profiles/proxies/subscription.yaml
     health-check: { enable: true, interval: 600, url: http://www.gstatic.com/generate_204 }
   自建源:
     type: http
-    url: 'https://magichub.top/download/clash/list-self.yaml'
+    url: 'https://list.magichub.top/d/clash/list-self.yaml'
     interval: 86400
     path: ./profiles/proxies/self-hosted.yaml
     health-check: { enable: true, interval: 600, url: http://www.gstatic.com/generate_204 }
   路由器:
     type: http
-    url: 'https://magichub.top/download/clash/list-router-lvsp.yaml'
+    url: 'https://list.magichub.top/d/clash/list-router-lvsp.yaml'
     interval: 86400
     path: ./profiles/proxies/lvsp-router.yaml
     health-check: { enable: true, interval: 600, url: http://www.gstatic.com/generate_204 }
