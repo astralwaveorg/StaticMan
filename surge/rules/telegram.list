@@ -1,7 +1,5 @@
 DOMAIN-SUFFIX,telegram.org
 DOMAIN-SUFFIX,t.me
-IP-ASN,577
-IP-ASN,62041
 DOMAIN-SET,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/TelegramSG/TelegramSG.list
 DOMAIN-SET,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/TelegramNL/TelegramNL.list
 DOMAIN-SET,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/TelegramUS/TelegramUS.list

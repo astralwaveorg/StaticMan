@@ -135,17 +135,22 @@ proxies:
 proxy-providers:
   订阅节点:
     type: http
-    url: 'https://magichub.top/download/clash/list.yaml'
+    url: 'https://list.magichub.top/d/clash/list.yaml'
     interval: 86400
     path: ./profiles/proxies/subscription.yaml
     health-check: { enable: true, interval: 600, url: http://www.gstatic.com/generate_204 }
   自建源:
     type: http
-    url: 'https://magichub.top/download/clash/list-self.yaml'
+    url: 'https://list.magichub.top/d/clash/list-self.yaml'
     interval: 86400
     path: ./profiles/proxies/self-hosted.yaml
     health-check: { enable: true, interval: 600, url: http://www.gstatic.com/generate_204 }
-
+  路由器:
+    type: http
+    url: 'https://list.magichub.top/d/clash/list-router-lvsp.yaml'
+    interval: 86400
+    path: ./profiles/proxies/lvsp-router.yaml
+    health-check: { enable: true, interval: 600, url: http://www.gstatic.com/generate_204 }
 proxy-groups:
   # 基础测速分组
   - name: '自动优选'
@@ -193,6 +198,12 @@ proxy-groups:
     type: url-test
     use: [订阅节点]
     filter: '(?i)🇸🇬|新加坡|SG|Singapore'
+  
+  - name: '🏠 路由器内网'
+    type: select
+    use: [路由器]
+    proxies:
+      - DIRECT
 
   # 功能分流分组
   - name: '代理选择'
@@ -256,14 +267,6 @@ proxy-groups:
     type: select
     proxies:
       - ⚡ 自建自动
-      - 代理选择
-      - 自动优选
-      - 🇭🇰 香港节点
-      - 🇨🇳 台湾节点
-      - 🇯🇵 日本节点
-      - 🇰🇷 韩国节点
-      - 🇸🇬 新加坡节点
-      - 🇺🇸 美国节点
 
   - name: '苹果代理'
     type: select
@@ -611,6 +614,8 @@ rule-providers:
     interval: 86400
 
 rules:
+  - IP-CIDR,192.168.50.0/24,🏠 路由器内网,no-resolve
+  - IP-CIDR,10.6.0.0/24,🏠 路由器内网,no-resolve
   - DST-PORT,123,DIRECT
   - RULE-SET,lan,DIRECT
   - DOMAIN-SUFFIX,magichub.top,DIRECT
