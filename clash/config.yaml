@@ -145,7 +145,12 @@ proxy-providers:
     interval: 86400
     path: ./profiles/proxies/self-hosted.yaml
     health-check: { enable: true, interval: 600, url: http://www.gstatic.com/generate_204 }
-
+  路由器:
+    type: http
+    url: 'https://magichub.top/download/clash/list-router-lvsp.yaml'
+    interval: 86400
+    path: ./profiles/proxies/lvsp-router.yaml
+    health-check: { enable: true, interval: 600, url: http://www.gstatic.com/generate_204 }
 proxy-groups:
   # 基础测速分组
   - name: '自动优选'
@@ -193,6 +198,11 @@ proxy-groups:
     type: url-test
     use: [订阅节点]
     filter: '(?i)🇸🇬|新加坡|SG|Singapore'
+  
+  - name: '路由器内网'
+    type: url-test
+    use: [路由器]
+    filter: '家里路由器'
 
   # 功能分流分组
   - name: '代理选择'
@@ -256,14 +266,6 @@ proxy-groups:
     type: select
     proxies:
       - ⚡ 自建自动
-      - 代理选择
-      - 自动优选
-      - 🇭🇰 香港节点
-      - 🇨🇳 台湾节点
-      - 🇯🇵 日本节点
-      - 🇰🇷 韩国节点
-      - 🇸🇬 新加坡节点
-      - 🇺🇸 美国节点
 
   - name: '苹果代理'
     type: select
@@ -284,6 +286,11 @@ proxy-groups:
       - 🇨🇳 台湾节点
       - 🇯🇵 日本节点
       - 🇰🇷 韩国节点
+
+  - name: '路由器内网'
+    type: select
+    proxies:
+      - 路由器内网
 
 rule-providers:
   reject:
@@ -768,6 +775,9 @@ rules:
   - IP-CIDR,192.168.0.0/16,DIRECT
   - IP-CIDR,100.64.0.0/10,DIRECT
   - IP-CIDR,127.0.0.0/8,DIRECT
+
+  - IP-CIDR,192.168.50.0/24,"家里路由器",no-resolve
+  - IP-CIDR,10.6.0.0/24,"家里路由器",no-resolve
 
   - RULE-SET,direct,DIRECT
   - MATCH,DIRECT
