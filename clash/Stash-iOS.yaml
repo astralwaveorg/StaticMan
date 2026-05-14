@@ -1,19 +1,8 @@
-# ==========================================
-# Stash iOS 优化配置
-# 适用地区：中国大陆（杭州及全国通用）
+# ====================================
+# Stash iOS 配置
+# 适用地区：中国大陆
 # 优化日期：2026-05-14
-# ==========================================
-# 主要优化：
-# 1. 移除所有 YAML 锚点/别名，支持 Stash iOS 完全编辑
-# 2. 国内流量默认直连（B站、Apple固件、网易云等）
-# 3. DNS 增加 fallback 防污染机制，提升解析稳定性
-# 4. 修复策略组缺失、引用错误和无效字段
-# ==========================================
-# 使用提醒：
-# - 首次导入后请检查规则集是否成功下载
-# - Airport_02 使用 HTTP 明文订阅，建议联系机场更换 HTTPS
-# - 外部控制器未设置密码，公共 WiFi 请关闭 allow-lan 或设置 secret
-# ==========================================
+# ====================================
 
 proxy-providers:
   Airport_01:
@@ -71,8 +60,8 @@ allow-lan: true
 unified-delay: true
 tcp-concurrent: true
 skip-auth-prefixes:
-- 127.0.0.1/8
-- ::1/128
+  - 127.0.0.1/8
+  - ::1/128
 geodata-mode: false
 geodata-loader: standard
 geo-auto-update: true
@@ -97,38 +86,38 @@ sniffer:
   sniff:
     HTTP:
       ports:
-      - 80
-      - 8080-8880
+        - 80
+        - 8080-8880
       override-destination: true
     TLS:
       ports:
-      - 443
-      - 8443
+        - 443
+        - 8443
     QUIC:
       ports:
-      - 443
-      - 8443
+        - 443
+        - 8443
   force-domain:
-  - '*.v2ex.com'
+    - '*.v2ex.com'
   skip-domain:
-  - Mijia Cloud
-  - dlg.io.mi.com
-  - '*.push.apple.com'
-  - '*.apple.com'
-  - '*.wechat.com'
-  - '*.qpic.cn'
-  - '*.qq.com'
-  - '*.wechatapp.com'
-  - '*.vivox.com'
-  - '*.oray.com'
-  - '*.sunlogin.net'
+    - Mijia Cloud
+    - dlg.io.mi.com
+    - '*.push.apple.com'
+    - '*.apple.com'
+    - '*.wechat.com'
+    - '*.qpic.cn'
+    - '*.qq.com'
+    - '*.wechatapp.com'
+    - '*.vivox.com'
+    - '*.oray.com'
+    - '*.sunlogin.net'
 tun:
   enable: true
   stack: gvisor
   mtu: 9000
   dns-hijack:
-  - any:53
-  - tcp://any:53
+    - any:53
+    - tcp://any:53
   auto-route: true
   auto-detect-interface: true
 dns:
@@ -141,709 +130,680 @@ dns:
   fake-ip-range6: 2001:480:abcd::1/64
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
-  - rule-set:fakeip_filter_domain,game_cn_domain,bank_cn_domain,wechat_domain,ai_cn_domain,NetEaseMusic_domain,fcm_domain,alibaba_domain,media_cn_domain,xiaomi_domain,steam_cn_domain,pt_cn_domain,public-tracker_domain,115_domain,aliyun_domain,direct_domain,apple_cn_domain,apple_firmware_domain,iptv_domain,private_domain,cn_domain
+    - rule-set:fakeip_filter_domain,game_cn_domain,bank_cn_domain,wechat_domain,ai_cn_domain,NetEaseMusic_domain,fcm_domain,alibaba_domain,media_cn_domain,xiaomi_domain,steam_cn_domain,pt_cn_domain,public-tracker_domain,115_domain,aliyun_domain,direct_domain,apple_cn_domain,apple_firmware_domain,iptv_domain,private_domain,cn_domain
   default-nameserver:
-  - 223.5.5.5
-  - 119.29.29.29
+    - 223.5.5.5
+    - 119.29.29.29
   proxy-server-nameserver:
-  - https://doh.pub/dns-query
-  - https://223.5.5.5/dns-query#h3=true
+    - https://doh.pub/dns-query
+    - https://223.5.5.5/dns-query#h3=true
   direct-nameserver:
-  - https://doh.pub/dns-query
-  - https://223.5.5.5/dns-query#h3=true
+    - https://doh.pub/dns-query
+    - https://223.5.5.5/dns-query#h3=true
   nameserver:
-  - https://223.5.5.5/dns-query
-  - https://1.12.12.12/dns-query
+    - https://223.5.5.5/dns-query
+    - https://1.12.12.12/dns-query
   fallback:
-  - https://dns.google/dns-query
-  - https://cloudflare-dns.com/dns-query
+    - https://dns.google/dns-query
+    - https://cloudflare-dns.com/dns-query
   fallback-filter:
     geoip: true
     geoip-code: CN
     iphig: true
     geosite:
-    - gfw
+      - gfw
 proxies: []
 proxy-groups:
-- name: 节点选择
-  type: select
-  proxies:
-  - 新加坡自动
-  - 家宽自动
-  - 日本自动
-  - 美国自动
-  - 台湾自动
-  - 香港自动
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/select.png
-- type: fallback
-  proxies:
-  - 日本自动
-  - 新加坡自动
-  - 香港自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  name: YouTube
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/youtube.png
-- type: fallback
-  proxies:
-  - 美国自动
-  - 家宽自动
-  - 新加坡自动
-  - 日本自动
-  - 香港自动
-  - 台湾自动
-  - 节点选择
-  interval: 300
-  name: Google FCM
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/fcm.png
-- type: fallback
-  proxies:
-  - 美国自动
-  - 家宽自动
-  - 新加坡自动
-  - 日本自动
-  - 香港自动
-  - 台湾自动
-  - 节点选择
-  interval: 300
-  name: Google VPN
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/googlevpn.png
-- type: fallback
-  proxies:
-  - 美国自动
-  - 家宽自动
-  - 新加坡自动
-  - 日本自动
-  - 香港自动
-  - 台湾自动
-  - 节点选择
-  interval: 300
-  name: Google
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/google.png
-- type: fallback
-  proxies:
-  - 新加坡自动
-  - 香港自动
-  - 日本自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  name: Meta
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/meta.png
-- type: fallback
-  proxies:
-  - 美国自动
-  - 家宽自动
-  - 日本自动
-  - 新加坡自动
-  - 香港自动
-  - 台湾自动
-  - 节点选择
-  interval: 300
-  name: AI服务
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/ai.png
-- type: fallback
-  proxies:
-  - 日本自动
-  - 新加坡自动
-  - 香港自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  name: GitHub
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/github.png
-- type: fallback
-  proxies:
-  - 日本自动
-  - 新加坡自动
-  - 香港自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  name: OneDrive
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/onedrive.png
-- type: fallback
-  proxies:
-  - 日本自动
-  - 新加坡自动
-  - 香港自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  name: Microsoft
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/microsoft.png
-- type: fallback
-  proxies:
-  - 新加坡自动
-  - 家宽自动
-  - 香港自动
-  - 日本自动
-  - 美国自动
-  - 台湾自动
-  - 节点选择
-  interval: 300
-  name: Telegram
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/telegram.png
-- type: fallback
-  proxies:
-  - 日本自动
-  - 新加坡自动
-  - 香港自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  name: Discord
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/discord.png
-- type: select
-  proxies:
-  - 美国自动
-  - 家宽自动
-  - 新加坡自动
-  - 日本自动
-  - 香港自动
-  - 台湾自动
-  - 节点选择
-  - DIRECT
-  name: Talkatone
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/talkatone.png
-- type: select
-  proxies:
-  - 日本自动
-  - 家宽自动
-  - 新加坡自动
-  - 香港自动
-  - 台湾自动
-  - 美国自动
-  - 节点选择
-  - DIRECT
-  name: LINE
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/line.png
-- type: fallback
-  proxies:
-  - 美国自动
-  - 家宽自动
-  - 新加坡自动
-  - 日本自动
-  - 香港自动
-  - 台湾自动
-  - 节点选择
-  interval: 300
-  name: Signal
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/signal.png
-- type: fallback
-  proxies:
-  - 日本自动
-  - 新加坡自动
-  - 香港自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  name: TikTok
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/tiktok.png
-- type: fallback
-  proxies:
-  - 日本自动
-  - 新加坡自动
-  - 香港自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  name: Netflix
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/netflix.png
-- type: fallback
-  proxies:
-  - 日本自动
-  - 新加坡自动
-  - 香港自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  name: Disney+
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/disney.png
-- type: fallback
-  proxies:
-  - 美国自动
-  - 家宽自动
-  - 日本自动
-  - 新加坡自动
-  - 香港自动
-  - 台湾自动
-  - 节点选择
-  interval: 300
-  name: HBO
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/hbo.png
-- type: fallback
-  proxies:
-  - 日本自动
-  - 美国自动
-  - 新加坡自动
-  - 香港自动
-  - 台湾自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  name: Prime Video
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/primevideo.png
-- type: fallback
-  proxies:
-  - 香港自动
-  - 日本自动
-  - 新加坡自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  name: Apple TV
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/appletv.png
-- type: select
-  proxies:
-  - DIRECT
-  - 家宽自动
-  - 节点选择
-  - 香港自动
-  - 新加坡自动
-  - 日本自动
-  - 美国自动
-  - 台湾自动
-  name: Apple
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/apple.png
-- type: select
-  proxies:
-  - 香港自动
-  - 家宽自动
-  - 台湾自动
-  - 新加坡自动
-  - 日本自动
-  - 美国自动
-  - 节点选择
-  - DIRECT
-  name: Emby
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/emby.png
-- type: select
-  proxies:
-  - DIRECT
-  - 节点选择
-  - 家宽自动
-  name: 哔哩哔哩
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bilibili.png
-- name: 哔哩东南亚
-  type: fallback
-  proxies:
-  - 新加坡自动
-  - 香港自动
-  - 台湾自动
-  - 日本自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bilibilit.png
-- name: 巴哈姆特
-  type: select
-  proxies:
-  - 台湾自动
-  - 家宽自动
-  - 香港自动
-  - 新加坡自动
-  - 日本自动
-  - 美国自动
-  - 节点选择
-  - DIRECT
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bahamut.png
-- type: fallback
-  proxies:
-  - 日本自动
-  - 新加坡自动
-  - 香港自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  name: Spotify
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/spotify.png
-- type: select
-  proxies:
-  - DIRECT
-  - 家宽自动
-  name: 国内媒体
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Chinese_media.png
-- type: fallback
-  proxies:
-  - 香港自动
-  - 家宽自动
-  - 台湾自动
-  - 新加坡自动
-  - 日本自动
-  - 美国自动
-  - 节点选择
-  interval: 300
-  name: 海外电视
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global_tv.png
-- type: select
-  proxies:
-  - 香港自动
-  - 日本自动
-  - 新加坡自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  - DIRECT
-  name: 海外流媒体
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global_media.png
-- type: fallback
-  proxies:
-  - 日本自动
-  - 香港自动
-  - 新加坡自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  name: 游戏平台
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/game.png
-- type: select
-  proxies:
-  - DIRECT
-  - 节点选择
-  - 家宽自动
-  name: 测速平台
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/speedtest.png
-- type: fallback
-  proxies:
-  - 美国自动
-  - 家宽自动
-  - 新加坡自动
-  - 日本自动
-  - 香港自动
-  - 台湾自动
-  - 节点选择
-  interval: 300
-  name: PayPal
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/paypal.png
-- type: fallback
-  proxies:
-  - 新加坡自动
-  - 日本自动
-  - 香港自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  interval: 300
-  name: Wise
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/wise.png
-- type: fallback
-  proxies:
-  - 美国自动
-  - 家宽自动
-  - 新加坡自动
-  - 日本自动
-  - 香港自动
-  - 台湾自动
-  - 节点选择
-  interval: 300
-  name: 海外电商
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/shopping.png
-- type: select
-  proxies:
-  - 日本自动
-  - 香港自动
-  - 新加坡自动
-  - 台湾自动
-  - 美国自动
-  - 家宽自动
-  - 节点选择
-  - DIRECT
-  name: Steam
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/steam.png
-- name: 拒绝
-  type: select
-  hidden: true
-  proxies:
-  - REJECT
-- name: 丢弃
-  type: select
-  hidden: true
-  proxies:
-  - REJECT-DROP
-- name: GLOBAL
-  type: select
-  include-all: true
-  proxies:
-  - 节点选择
-  - YouTube
-  - Google VPN
-  - Google FCM
-  - Google
-  - Meta
-  - AI服务
-  - GitHub
-  - OneDrive
-  - Microsoft
-  - Telegram
-  - Discord
-  - Talkatone
-  - LINE
-  - Signal
-  - TikTok
-  - Netflix
-  - Disney+
-  - HBO
-  - Prime Video
-  - Apple TV
-  - Apple
-  - Emby
-  - 哔哩哔哩
-  - 哔哩东南亚
-  - 巴哈姆特
-  - Spotify
-  - 国内媒体
-  - 海外电视
-  - 海外流媒体
-  - 游戏平台
-  - 测速平台
-  - PayPal
-  - Wise
-  - 海外电商
-  - Steam
-  - 隐私拦截
-  - 漏网之鱼
-  - 家宽自动
-  - 香港自动
-  - 新加坡自动
-  - 日本自动
-  - 台湾自动
-  - 美国自动
-  - 故障转移
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global.png
-- name: 隐私拦截
-  type: select
-  proxies:
-  - 拒绝
-  - 丢弃
-  - DIRECT
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/block.png
-- name: 全部节点
-  type: url-test
-  include-all: true
-  interval: 300
-  tolerance: 20
-  lazy: true
-  hidden: true
-- name: 故障转移
-  type: fallback
-  include-all: true
-  exclude-filter: (?=.*(?i)(0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|traffic|plus))
-  interval: 300
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/fallback.png
-  hidden: true
-- name: 家宽自动
-  type: url-test
-  include-all: true
-  filter: (?=.*(?i)(自建|CF|The_house|private|home|家宽|hgc|HKT|HKBN|icable|Hinet|att))
-  exclude-filter: (?=.*(?i)(Seattle))
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/private_node.png
-  interval: 300
-  tolerance: 20
-  max-failed-times: 1
-  lazy: true
-  hidden: true
-- type: url-test
-  include-all: true
-  tolerance: 20
-  lazy: true
-  interval: 300
-  max-failed-times: 1
-  hidden: true
-  name: 新加坡自动
-  filter: (?=.*(?i)(新|🇸🇬|SG|Singapore))
-  exclude-filter: (?=.*(?i)(The_SG_automation|wcloud|0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|traffic|plus|新西兰))
-  icon: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/sg_automatic_selection.png
-- type: url-test
-  include-all: true
-  tolerance: 20
-  lazy: true
-  interval: 300
-  max-failed-times: 1
-  hidden: true
-  name: 美国自动
-  filter: (?=.*(?i)(美|🇺🇲|🇺🇸|US|America|United States|UnitedState|Los Angeles|Chicago|Ashburn|Seattle|Kansas))
-  exclude-filter: (?=.*(?i)(The_US_automation|wcloud|0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|russia|austria|plus|traffic|Australia|rus|aus))
-  icon: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/usa_automatic_selection.png
-- type: url-test
-  include-all: true
-  tolerance: 20
-  lazy: true
-  interval: 300
-  max-failed-times: 1
-  hidden: true
-  name: 日本自动
-  filter: (?=.*(?i)(日本|🇯🇵|JP|Japan))
-  exclude-filter: (?=.*(?i)(The_JP_automation|wcloud|0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|traffic|plus))
-  icon: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/jp_automatic_selection.png
-- type: url-test
-  include-all: true
-  tolerance: 20
-  lazy: true
-  interval: 300
-  max-failed-times: 1
-  hidden: true
-  name: 台湾自动
-  filter: (?=.*(?i)(台|🇹🇼|TW|Taiwan))
-  exclude-filter: (?=.*(?i)(The_TW_automation|wcloud|0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|traffic|plus))
-  icon: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/tw_automatic_selection.png
-- type: url-test
-  include-all: true
-  tolerance: 20
-  lazy: true
-  interval: 300
-  max-failed-times: 1
-  hidden: true
-  name: 香港自动
-  filter: (?=.*(?i)(香港|hk|hongkong|Hong Kong|🇭🇰))
-  exclude-filter: (?=.*(?i)(The_HK_automation|wcloud|0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|traffic|plus))
-  icon: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/hk_automatic_selection.png
-- type: select
-  proxies:
-  - DIRECT
-  - 节点选择
-  - 香港自动
-  - 新加坡自动
-  - 日本自动
-  - 美国自动
-  - 台湾自动
-  - 家宽自动
-  name: 漏网之鱼
-  icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/final.png
+  - name: 节点选择
+    type: select
+    proxies:
+      - 新加坡自动
+      - 家宽自动
+      - 日本自动
+      - 美国自动
+      - 台湾自动
+      - 香港自动
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/select.png
+  - type: fallback
+    proxies:
+      - 日本自动
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    name: YouTube
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/youtube.png
+  - type: fallback
+    proxies:
+      - 美国自动
+      - 家宽自动
+      - 新加坡自动
+      - 日本自动
+      - 香港自动
+      - 台湾自动
+      - 节点选择
+    interval: 300
+    name: Google FCM
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/fcm.png
+  - type: fallback
+    proxies:
+      - 美国自动
+      - 家宽自动
+      - 新加坡自动
+      - 日本自动
+      - 香港自动
+      - 台湾自动
+      - 节点选择
+    interval: 300
+    name: Google VPN
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/googlevpn.png
+  - type: fallback
+    proxies:
+      - 美国自动
+      - 家宽自动
+      - 新加坡自动
+      - 日本自动
+      - 香港自动
+      - 台湾自动
+      - 节点选择
+    interval: 300
+    name: Google
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/google.png
+  - type: fallback
+    proxies:
+      - 新加坡自动
+      - 香港自动
+      - 日本自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    name: Meta
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/meta.png
+  - type: fallback
+    proxies:
+      - 美国自动
+      - 家宽自动
+      - 日本自动
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - 节点选择
+    interval: 300
+    name: AI服务
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/ai.png
+  - type: fallback
+    proxies:
+      - 日本自动
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    name: GitHub
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/github.png
+  - type: fallback
+    proxies:
+      - 日本自动
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    name: OneDrive
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/onedrive.png
+  - type: fallback
+    proxies:
+      - 日本自动
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    name: Microsoft
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/microsoft.png
+  - type: fallback
+    proxies:
+      - 新加坡自动
+      - 家宽自动
+      - 香港自动
+      - 日本自动
+      - 美国自动
+      - 台湾自动
+      - 节点选择
+    interval: 300
+    name: Telegram
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/telegram.png
+  - type: fallback
+    proxies:
+      - 日本自动
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    name: Discord
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/discord.png
+  - type: select
+    proxies:
+      - 美国自动
+      - 家宽自动
+      - 新加坡自动
+      - 日本自动
+      - 香港自动
+      - 台湾自动
+      - 节点选择
+      - DIRECT
+    name: Talkatone
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/talkatone.png
+  - type: select
+    proxies:
+      - 日本自动
+      - 家宽自动
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - 美国自动
+      - 节点选择
+      - DIRECT
+    name: LINE
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/line.png
+  - type: fallback
+    proxies:
+      - 美国自动
+      - 家宽自动
+      - 新加坡自动
+      - 日本自动
+      - 香港自动
+      - 台湾自动
+      - 节点选择
+    interval: 300
+    name: Signal
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/signal.png
+  - type: fallback
+    proxies:
+      - 日本自动
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    name: TikTok
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/tiktok.png
+  - type: fallback
+    proxies:
+      - 日本自动
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    name: Netflix
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/netflix.png
+  - type: fallback
+    proxies:
+      - 日本自动
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    name: Disney+
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/disney.png
+  - type: fallback
+    proxies:
+      - 美国自动
+      - 家宽自动
+      - 日本自动
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - 节点选择
+    interval: 300
+    name: HBO
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/hbo.png
+  - type: fallback
+    proxies:
+      - 日本自动
+      - 美国自动
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    name: Prime Video
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/primevideo.png
+  - type: fallback
+    proxies:
+      - 香港自动
+      - 日本自动
+      - 新加坡自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    name: Apple TV
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/appletv.png
+  - type: select
+    proxies:
+      - DIRECT
+      - 家宽自动
+      - 节点选择
+      - 香港自动
+      - 新加坡自动
+      - 日本自动
+      - 美国自动
+      - 台湾自动
+    name: Apple
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/apple.png
+  - type: select
+    proxies:
+      - 香港自动
+      - 家宽自动
+      - 台湾自动
+      - 新加坡自动
+      - 日本自动
+      - 美国自动
+      - 节点选择
+      - DIRECT
+    name: Emby
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/emby.png
+  - type: select
+    proxies:
+      - DIRECT
+      - 节点选择
+      - 家宽自动
+    name: 哔哩哔哩
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bilibili.png
+  - name: 哔哩东南亚
+    type: fallback
+    proxies:
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - 日本自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bilibilit.png
+  - name: 巴哈姆特
+    type: select
+    proxies:
+      - 台湾自动
+      - 家宽自动
+      - 香港自动
+      - 新加坡自动
+      - 日本自动
+      - 美国自动
+      - 节点选择
+      - DIRECT
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bahamut.png
+  - type: fallback
+    proxies:
+      - 日本自动
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    name: Spotify
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/spotify.png
+  - type: select
+    proxies:
+      - DIRECT
+      - 家宽自动
+    name: 国内媒体
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Chinese_media.png
+  - type: fallback
+    proxies:
+      - 香港自动
+      - 家宽自动
+      - 台湾自动
+      - 新加坡自动
+      - 日本自动
+      - 美国自动
+      - 节点选择
+    interval: 300
+    name: 海外电视
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global_tv.png
+  - type: select
+    proxies:
+      - 香港自动
+      - 日本自动
+      - 新加坡自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+      - DIRECT
+    name: 海外流媒体
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global_media.png
+  - type: fallback
+    proxies:
+      - 日本自动
+      - 香港自动
+      - 新加坡自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    name: 游戏平台
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/game.png
+  - type: select
+    proxies:
+      - DIRECT
+      - 节点选择
+      - 家宽自动
+    name: 测速平台
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/speedtest.png
+  - type: fallback
+    proxies:
+      - 美国自动
+      - 家宽自动
+      - 新加坡自动
+      - 日本自动
+      - 香港自动
+      - 台湾自动
+      - 节点选择
+    interval: 300
+    name: PayPal
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/paypal.png
+  - type: fallback
+    proxies:
+      - 新加坡自动
+      - 日本自动
+      - 香港自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+    interval: 300
+    name: Wise
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/wise.png
+  - type: fallback
+    proxies:
+      - 美国自动
+      - 家宽自动
+      - 新加坡自动
+      - 日本自动
+      - 香港自动
+      - 台湾自动
+      - 节点选择
+    interval: 300
+    name: 海外电商
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/shopping.png
+  - type: select
+    proxies:
+      - 日本自动
+      - 香港自动
+      - 新加坡自动
+      - 台湾自动
+      - 美国自动
+      - 家宽自动
+      - 节点选择
+      - DIRECT
+    name: Steam
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/steam.png
+  - name: 拒绝
+    type: select
+    hidden: true
+    proxies:
+      - REJECT
+  - name: 丢弃
+    type: select
+    hidden: true
+    proxies:
+      - REJECT-DROP
+  - name: 全局选择
+    type: fallback
+    include-all: null
+    proxies:
+      - 新加坡自动
+      - 日本自动
+      - 台湾自动
+      - 香港自动
+      - 美国自动
+      - 故障转移
+      - 节点选择
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global.png
+    interval: 600
+  - name: 隐私拦截
+    type: select
+    proxies:
+      - 拒绝
+      - 丢弃
+      - DIRECT
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/block.png
+  - name: 全部节点
+    type: url-test
+    include-all: true
+    interval: 300
+    tolerance: 20
+    lazy: true
+    hidden: true
+  - name: 故障转移
+    type: fallback
+    include-all: null
+    exclude-filter: (?=.*(?i)(0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|traffic|plus))
+    interval: 300
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/fallback.png
+    hidden: true
+    proxies:
+      - 节点选择
+      - 新加坡自动
+      - 日本自动
+      - 台湾自动
+      - 香港自动
+      - 家宽自动
+      - 美国自动
+      - 漏网之鱼
+  - name: 家宽自动
+    type: url-test
+    include-all: true
+    filter: (?=.*(?i)(自建|CF|The_house|private|home|家宽|hgc|HKT|HKBN|icable|Hinet|att))
+    exclude-filter: (?=.*(?i)(Seattle))
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/private_node.png
+    interval: 300
+    tolerance: 20
+    max-failed-times: 1
+    lazy: true
+    hidden: true
+  - type: url-test
+    include-all: true
+    tolerance: 20
+    lazy: true
+    interval: 300
+    max-failed-times: 1
+    hidden: true
+    name: 新加坡自动
+    filter: (?=.*(?i)(新|🇸🇬|SG|Singapore))
+    exclude-filter: (?=.*(?i)(The_SG_automation|wcloud|0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|traffic|plus|新西兰))
+    icon: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/sg_automatic_selection.png
+  - type: url-test
+    include-all: true
+    tolerance: 20
+    lazy: true
+    interval: 300
+    max-failed-times: 1
+    hidden: true
+    name: 美国自动
+    filter: (?=.*(?i)(美|🇺🇲|🇺🇸|US|America|United States|UnitedState|Los Angeles|Chicago|Ashburn|Seattle|Kansas))
+    exclude-filter: (?=.*(?i)(The_US_automation|wcloud|0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|russia|austria|plus|traffic|Australia|rus|aus))
+    icon: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/usa_automatic_selection.png
+  - type: url-test
+    include-all: true
+    tolerance: 20
+    lazy: true
+    interval: 300
+    max-failed-times: 1
+    hidden: true
+    name: 日本自动
+    filter: (?=.*(?i)(日本|🇯🇵|JP|Japan))
+    exclude-filter: (?=.*(?i)(The_JP_automation|wcloud|0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|traffic|plus))
+    icon: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/jp_automatic_selection.png
+  - type: url-test
+    include-all: true
+    tolerance: 20
+    lazy: true
+    interval: 300
+    max-failed-times: 1
+    hidden: true
+    name: 台湾自动
+    filter: (?=.*(?i)(台|🇹🇼|TW|Taiwan))
+    exclude-filter: (?=.*(?i)(The_TW_automation|wcloud|0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|traffic|plus))
+    icon: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/tw_automatic_selection.png
+  - type: url-test
+    include-all: true
+    tolerance: 20
+    lazy: true
+    interval: 300
+    max-failed-times: 1
+    hidden: true
+    name: 香港自动
+    filter: (?=.*(?i)(香港|hk|hongkong|Hong Kong|🇭🇰))
+    exclude-filter: (?=.*(?i)(The_HK_automation|wcloud|0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|traffic|plus))
+    icon: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/hk_automatic_selection.png
+  - type: select
+    proxies:
+      - DIRECT
+      - 节点选择
+      - 香港自动
+      - 新加坡自动
+      - 日本自动
+      - 美国自动
+      - 台湾自动
+      - 家宽自动
+    name: 漏网之鱼
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/final.png
 rules:
-- RULE-SET,banAd_domain,隐私拦截
-# 高优先级直连规则（端口/域名精确匹配）
-- AND,((DOMAIN-SUFFIX,github.com),(DST-PORT,22)),DIRECT
-- DOMAIN-SUFFIX,homehub.stream,DIRECT
-- DOMAIN-SUFFIX,magichub.top,DIRECT
-- DOMAIN-SUFFIX,eoysky.com,DIRECT
-- DOMAIN-SUFFIX,astralwave.org,DIRECT
-- DOMAIN-SUFFIX,astralwave.vip,DIRECT
-- RULE-SET,wechat_domain,DIRECT
-- RULE-SET,wechat_asn,DIRECT,no-resolve
-- RULE-SET,speedtest_domain,测速平台
-- RULE-SET,Cloudflare_domain,节点选择
-- RULE-SET,Wise_domain,Wise
-- RULE-SET,paypal_domain,PayPal
-- RULE-SET,proxy_domain,节点选择
-- RULE-SET,biliintl_domain,哔哩东南亚
-- RULE-SET,bilibili_domain,哔哩哔哩
-- RULE-SET,bilibili_ip,哔哩哔哩,no-resolve
-- RULE-SET,bahamut_domain,巴哈姆特
-- RULE-SET,bank_cn_domain,DIRECT
-- RULE-SET,ai_cn_domain,DIRECT
-- RULE-SET,direct_domain,DIRECT
-- RULE-SET,alibaba_domain,DIRECT
-- RULE-SET,115_domain,DIRECT
-- RULE-SET,aliyun_domain,DIRECT
-- RULE-SET,github_domain,GitHub
-- RULE-SET,gitbook_domain,GitHub
-- RULE-SET,googlevpn_domain,Google VPN
-- RULE-SET,youtube_domain,YouTube
-- RULE-SET,fcm_domain,Google FCM
-- RULE-SET,google_domain,Google
-- RULE-SET,google_asn_cn,Google,no-resolve
-- RULE-SET,google_ip,Google,no-resolve
-- RULE-SET,onedrive_domain,OneDrive
-- RULE-SET,microsoft_domain,Microsoft
-- RULE-SET,ai!cn_domain,AI服务
-- RULE-SET,ai_domain,AI服务
-- RULE-SET,openai_domain,AI服务
-- RULE-SET,telegram_domain,Telegram
-- RULE-SET,telegram_ip,Telegram,no-resolve
-- RULE-SET,line_domain,LINE
-- RULE-SET,talkatone_domain,Talkatone
-- RULE-SET,talkatone_ip,Talkatone,no-resolve
-- RULE-SET,discord_domain,Discord
-- RULE-SET,discord_asn,Discord,no-resolve
-- RULE-SET,signal_domain,Signal
-- RULE-SET,tencent!cn_domain,节点选择
-- RULE-SET,tencent_domain,DIRECT
-- RULE-SET,iptv_domain,DIRECT
-- RULE-SET,private_domain,DIRECT
-- DOMAIN-KEYWORD,hk.tv.global.mi.com,节点选择
-- RULE-SET,xiaomi_domain,DIRECT
-- RULE-SET,steam_cn_domain,DIRECT
-- RULE-SET,steamcdn_domain,DIRECT
-- RULE-SET,steamcdn_ip,DIRECT,no-resolve
-- RULE-SET,NetEaseMusic_domain,DIRECT
-- RULE-SET,NetEaseMusic_ip,DIRECT,no-resolve
-- RULE-SET,pt_cn_domain,DIRECT
-- RULE-SET,public-tracker_domain,DIRECT
-- RULE-SET,media_cn_domain,国内媒体
-- RULE-SET,appleTV_domain,Apple TV
-- RULE-SET,apple_cn_domain,DIRECT
-- RULE-SET,apple_firmware_domain,DIRECT
-- RULE-SET,apple_domain,Apple
-- RULE-SET,tiktok_domain,TikTok
-- RULE-SET,netflix_domain,Netflix
-- RULE-SET,netflix_ip,Netflix,no-resolve
-- RULE-SET,disney_domain,Disney+
-- RULE-SET,hbo_domain,HBO
-- RULE-SET,primevideo_domain,Prime Video
-- RULE-SET,emby_domain,Emby
-- RULE-SET,emby_ip,Emby,no-resolve
-- RULE-SET,spotify_domain,Spotify
-- RULE-SET,facebook_domain,Meta
-- RULE-SET,whatsapp_domain,Meta
-- RULE-SET,instagram_domain,Meta
-- RULE-SET,threads_domain,Meta
-- RULE-SET,meta_domain,Meta
-- RULE-SET,facebook_ip,Meta,no-resolve
-- DOMAIN-SUFFIX,mytvsuper.com,海外电视
-- DOMAIN-SUFFIX,mytv.com.hk,海外电视
-- RULE-SET,twitch_domain,海外电视
-- RULE-SET,porn_domain,海外电视
-- RULE-SET,TVB_domain,海外电视
-- RULE-SET,media!cn_domain,海外流媒体
-- RULE-SET,twitter_ip,节点选择,no-resolve
-- RULE-SET,steam_domain,Steam
-- RULE-SET,Epic_domain,游戏平台
-- RULE-SET,EA_domain,游戏平台
-- RULE-SET,Blizzard_domain,游戏平台
-- RULE-SET,UBI_domain,游戏平台
-- RULE-SET,Sony_domain,游戏平台
-- RULE-SET,Nintendo_domain,游戏平台
-- RULE-SET,ifast_domain,DIRECT
-- RULE-SET,Amazon_domain,海外电商
-- RULE-SET,Amazon_ip,海外电商,no-resolve
-- RULE-SET,Shopee_domain,海外电商
-- RULE-SET,Shopify_domain,海外电商
-- RULE-SET,ebay_domain,海外电商
-- RULE-SET,gfw_domain,节点选择
-- RULE-SET,geolocation-!cn,节点选择
-- RULE-SET,cn_domain,DIRECT
-- RULE-SET,private_ip,DIRECT,no-resolve
-- RULE-SET,cn_ip,DIRECT,no-resolve
-- MATCH,漏网之鱼
+  - RULE-SET,banAd_domain,隐私拦截
+  - AND,((DOMAIN-SUFFIX,github.com),(DST-PORT,22)),DIRECT
+  - DOMAIN-SUFFIX,homehub.stream,DIRECT
+  - DOMAIN-SUFFIX,magichub.top,DIRECT
+  - DOMAIN-SUFFIX,eoysky.com,DIRECT
+  - DOMAIN-SUFFIX,astralwave.org,DIRECT
+  - DOMAIN-SUFFIX,astralwave.vip,DIRECT
+  - RULE-SET,wechat_domain,DIRECT
+  - RULE-SET,wechat_asn,DIRECT,no-resolve
+  - RULE-SET,speedtest_domain,测速平台
+  - RULE-SET,Cloudflare_domain,节点选择
+  - RULE-SET,Wise_domain,Wise
+  - RULE-SET,paypal_domain,PayPal
+  - RULE-SET,proxy_domain,节点选择
+  - RULE-SET,biliintl_domain,哔哩东南亚
+  - RULE-SET,bilibili_domain,哔哩哔哩
+  - RULE-SET,bilibili_ip,哔哩哔哩,no-resolve
+  - RULE-SET,bahamut_domain,巴哈姆特
+  - RULE-SET,bank_cn_domain,DIRECT
+  - RULE-SET,ai_cn_domain,DIRECT
+  - RULE-SET,direct_domain,DIRECT
+  - RULE-SET,alibaba_domain,DIRECT
+  - RULE-SET,115_domain,DIRECT
+  - RULE-SET,aliyun_domain,DIRECT
+  - RULE-SET,github_domain,GitHub
+  - RULE-SET,gitbook_domain,GitHub
+  - RULE-SET,googlevpn_domain,Google VPN
+  - RULE-SET,youtube_domain,YouTube
+  - RULE-SET,fcm_domain,Google FCM
+  - RULE-SET,google_domain,Google
+  - RULE-SET,google_asn_cn,Google,no-resolve
+  - RULE-SET,google_ip,Google,no-resolve
+  - RULE-SET,onedrive_domain,OneDrive
+  - RULE-SET,microsoft_domain,Microsoft
+  - RULE-SET,ai!cn_domain,AI服务
+  - RULE-SET,ai_domain,AI服务
+  - RULE-SET,openai_domain,AI服务
+  - RULE-SET,telegram_domain,Telegram
+  - RULE-SET,telegram_ip,Telegram,no-resolve
+  - RULE-SET,line_domain,LINE
+  - RULE-SET,talkatone_domain,Talkatone
+  - RULE-SET,talkatone_ip,Talkatone,no-resolve
+  - RULE-SET,discord_domain,Discord
+  - RULE-SET,discord_asn,Discord,no-resolve
+  - RULE-SET,signal_domain,Signal
+  - RULE-SET,tencent!cn_domain,节点选择
+  - RULE-SET,tencent_domain,DIRECT
+  - RULE-SET,iptv_domain,DIRECT
+  - RULE-SET,private_domain,DIRECT
+  - DOMAIN-KEYWORD,hk.tv.global.mi.com,节点选择
+  - RULE-SET,xiaomi_domain,DIRECT
+  - RULE-SET,steam_cn_domain,DIRECT
+  - RULE-SET,steamcdn_domain,DIRECT
+  - RULE-SET,steamcdn_ip,DIRECT,no-resolve
+  - RULE-SET,NetEaseMusic_domain,DIRECT
+  - RULE-SET,NetEaseMusic_ip,DIRECT,no-resolve
+  - RULE-SET,pt_cn_domain,DIRECT
+  - RULE-SET,public-tracker_domain,DIRECT
+  - RULE-SET,media_cn_domain,国内媒体
+  - RULE-SET,appleTV_domain,Apple TV
+  - RULE-SET,apple_cn_domain,DIRECT
+  - RULE-SET,apple_firmware_domain,DIRECT
+  - RULE-SET,apple_domain,Apple
+  - RULE-SET,tiktok_domain,TikTok
+  - RULE-SET,netflix_domain,Netflix
+  - RULE-SET,netflix_ip,Netflix,no-resolve
+  - RULE-SET,disney_domain,Disney+
+  - RULE-SET,hbo_domain,HBO
+  - RULE-SET,primevideo_domain,Prime Video
+  - RULE-SET,emby_domain,Emby
+  - RULE-SET,emby_ip,Emby,no-resolve
+  - RULE-SET,spotify_domain,Spotify
+  - RULE-SET,facebook_domain,Meta
+  - RULE-SET,whatsapp_domain,Meta
+  - RULE-SET,instagram_domain,Meta
+  - RULE-SET,threads_domain,Meta
+  - RULE-SET,meta_domain,Meta
+  - RULE-SET,facebook_ip,Meta,no-resolve
+  - DOMAIN-SUFFIX,mytvsuper.com,海外电视
+  - DOMAIN-SUFFIX,mytv.com.hk,海外电视
+  - RULE-SET,twitch_domain,海外电视
+  - RULE-SET,porn_domain,海外电视
+  - RULE-SET,TVB_domain,海外电视
+  - RULE-SET,media!cn_domain,海外流媒体
+  - RULE-SET,twitter_ip,节点选择,no-resolve
+  - RULE-SET,steam_domain,Steam
+  - RULE-SET,Epic_domain,游戏平台
+  - RULE-SET,EA_domain,游戏平台
+  - RULE-SET,Blizzard_domain,游戏平台
+  - RULE-SET,UBI_domain,游戏平台
+  - RULE-SET,Sony_domain,游戏平台
+  - RULE-SET,Nintendo_domain,游戏平台
+  - RULE-SET,ifast_domain,DIRECT
+  - RULE-SET,Amazon_domain,海外电商
+  - RULE-SET,Amazon_ip,海外电商,no-resolve
+  - RULE-SET,Shopee_domain,海外电商
+  - RULE-SET,Shopify_domain,海外电商
+  - RULE-SET,ebay_domain,海外电商
+  - RULE-SET,gfw_domain,节点选择
+  - RULE-SET,geolocation-!cn,节点选择
+  - RULE-SET,cn_domain,DIRECT
+  - RULE-SET,private_ip,DIRECT,no-resolve
+  - RULE-SET,cn_ip,DIRECT,no-resolve
+  - MATCH,漏网之鱼
 rule-providers:
   banAd_domain:
     type: http
@@ -1421,4 +1381,3 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/IP/AS132203.mrs
-mode: rule
