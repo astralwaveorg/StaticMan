@@ -321,6 +321,7 @@ proxy-groups:
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/appletv.png
 - type: select
   proxies:
+  - DIRECT
   - 节点选择
   - 自建家宽自动
   name: Apple
