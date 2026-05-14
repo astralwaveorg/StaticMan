@@ -1,7 +1,7 @@
 # ====================================
 # Stash iOS 配置
 # 适用地区：中国大陆
-# 优化日期：2026-05-14
+# 优化日期：2026-05-15
 # ====================================
 
 proxy-providers:
@@ -11,7 +11,7 @@ proxy-providers:
     health-check:
       enable: true
       url: https://www.gstatic.com/generate_204
-      interval: 600
+      interval: 300
     benchmark-url: https://www.gstatic.com/generate_204
     benchmark-timeout: 5
     filter: ^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))
@@ -27,7 +27,7 @@ proxy-providers:
     health-check:
       enable: true
       url: https://www.gstatic.com/generate_204
-      interval: 600
+      interval: 300
     benchmark-url: https://www.gstatic.com/generate_204
     benchmark-timeout: 5
     filter: ^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))
@@ -43,7 +43,7 @@ proxy-providers:
     health-check:
       enable: true
       url: https://www.gstatic.com/generate_204
-      interval: 600
+      interval: 300
     benchmark-url: https://www.gstatic.com/generate_204
     benchmark-timeout: 5
     filter: ^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))
@@ -111,6 +111,9 @@ sniffer:
     - '*.vivox.com'
     - '*.oray.com'
     - '*.sunlogin.net'
+  skip-addr:
+    - 91.108.0.0/16
+    - 149.154.160.0/20
 tun:
   enable: true
   stack: gvisor
@@ -149,9 +152,10 @@ dns:
   fallback-filter:
     geoip: true
     geoip-code: CN
-    iphig: true
-    geosite:
-      - gfw
+  nameserver-policy:
+    "geosite:gfw":
+      - https://dns.google/dns-query
+      - https://cloudflare-dns.com/dns-query
 proxies: []
 proxy-groups:
   - name: 全局选择
