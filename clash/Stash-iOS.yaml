@@ -174,165 +174,243 @@ proxy-groups:
   - 自建家宽自动
   - 新加坡自动
   - 日本自动
+  - 香港自动
+  - 台湾自动
   - 节点选择
   name: YouTube
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/youtube.png
 - type: select
   proxies:
   - 美国自动
+  - 自建家宽自动
   - 新加坡自动
   - 日本自动
+  - 香港自动
+  - 台湾自动
   - 节点选择
   name: FCM
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/fcm.png
 - type: select
   proxies:
   - 美国自动
-  - 新加坡自动
   - 自建家宽自动
+  - 新加坡自动
+  - 日本自动
+  - 香港自动
+  - 台湾自动
   - 节点选择
   name: GoogleVPN
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/googlevpn.png
 - type: select
   proxies:
   - 美国自动
+  - 自建家宽自动
   - 新加坡自动
   - 日本自动
-  - 自建家宽自动
+  - 香港自动
+  - 台湾自动
   - 节点选择
   name: Google
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/google.png
 - type: select
   proxies:
-  - 节点选择
+  - 美国自动
   - 自建家宽自动
+  - 新加坡自动
+  - 日本自动
+  - 香港自动
+  - 台湾自动
+  - 节点选择
   name: Meta
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/meta.png
 - type: select
   proxies:
   - 美国自动
+  - 自建家宽自动
   - 日本自动
   - 新加坡自动
-  - 自建家宽自动
+  - 香港自动
+  - 台湾自动
   - 节点选择
-  - DIRECT
   name: AI Agent
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/ai.png
 - type: select
   proxies:
-  - 节点选择
+  - 美国自动
   - 自建家宽自动
   - 日本自动
-  - 台湾自动
-  - 美国自动
   - 新加坡自动
   - 香港自动
+  - 台湾自动
+  - 节点选择
   name: GitHub
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/github.png
 - type: select
   proxies:
-  - 节点选择
+  - 美国自动
   - 自建家宽自动
+  - 日本自动
+  - 新加坡自动
+  - 香港自动
+  - 台湾自动
+  - 节点选择
   name: OneDrive
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/onedrive.png
 - type: select
   proxies:
-  - 节点选择
+  - 美国自动
   - 自建家宽自动
+  - 日本自动
+  - 新加坡自动
+  - 香港自动
+  - 台湾自动
+  - 节点选择
   name: Microsoft
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/microsoft.png
 - type: select
   proxies:
   - 新加坡自动
-  - 日本自动
-  - 台湾自动
-  - 美国自动
-  - 香港自动
   - 自建家宽自动
+  - 香港自动
+  - 日本自动
+  - 美国自动
+  - 台湾自动
   - 节点选择
   name: Telegram
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/telegram.png
 - type: select
   proxies:
-  - 新加坡自动
-  - 台湾自动
-  - 日本自动
-  - 香港自动
   - 美国自动
   - 自建家宽自动
+  - 日本自动
+  - 新加坡自动
+  - 香港自动
+  - 台湾自动
   - 节点选择
   name: Discord
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/discord.png
 - type: select
   proxies:
-  - 节点选择
+  - 美国自动
   - 自建家宽自动
+  - 新加坡自动
+  - 日本自动
+  - 香港自动
+  - 台湾自动
+  - 节点选择
   - DIRECT
   name: Talkatone
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/talkatone.png
 - type: select
   proxies:
-  - 节点选择
+  - 日本自动
   - 自建家宽自动
+  - 新加坡自动
+  - 香港自动
+  - 台湾自动
+  - 美国自动
+  - 节点选择
   - DIRECT
   name: LINE
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/line.png
 - type: select
   proxies:
-  - 节点选择
+  - 美国自动
   - 自建家宽自动
+  - 新加坡自动
+  - 日本自动
+  - 香港自动
+  - 台湾自动
+  - 节点选择
   name: Signal
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/signal.png
 - type: select
   proxies:
-  - 节点选择
+  - 新加坡自动
   - 自建家宽自动
+  - 日本自动
+  - 美国自动
+  - 香港自动
+  - 台湾自动
+  - 节点选择
   name: TikTok
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/tiktok.png
 - type: select
   proxies:
-  - 节点选择
+  - 新加坡自动
   - 自建家宽自动
+  - 日本自动
+  - 香港自动
+  - 美国自动
+  - 台湾自动
+  - 节点选择
   name: NETFLIX
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/netflix.png
 - type: select
   proxies:
-  - 节点选择
+  - 新加坡自动
   - 自建家宽自动
+  - 日本自动
+  - 香港自动
+  - 台湾自动
+  - 美国自动
+  - 节点选择
   name: DisneyPlus
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/disney.png
 - type: select
   proxies:
-  - 节点选择
+  - 美国自动
   - 自建家宽自动
+  - 日本自动
+  - 新加坡自动
+  - 香港自动
+  - 台湾自动
+  - 节点选择
   name: HBO
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/hbo.png
 - type: select
   proxies:
-  - 节点选择
+  - 美国自动
   - 自建家宽自动
+  - 日本自动
+  - 新加坡自动
+  - 香港自动
+  - 台湾自动
+  - 节点选择
   name: Primevideo
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/primevideo.png
 - type: select
   proxies:
-  - 节点选择
+  - 美国自动
   - 自建家宽自动
+  - 日本自动
+  - 新加坡自动
+  - 香港自动
+  - 台湾自动
+  - 节点选择
   name: AppleTV
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/appletv.png
 - type: select
   proxies:
   - DIRECT
-  - 节点选择
   - 自建家宽自动
+  - 节点选择
+  - 香港自动
+  - 新加坡自动
+  - 日本自动
+  - 美国自动
+  - 台湾自动
   name: Apple
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/apple.png
 - type: select
   proxies:
-  - 节点选择
   - 香港自动
+  - 自建家宽自动
   - 台湾自动
-  - 日本自动
   - 新加坡自动
+  - 日本自动
+  - 美国自动
+  - 节点选择
   - DIRECT
   name: Emby
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/emby.png
@@ -346,20 +424,35 @@ proxy-groups:
 - name: 哔哩东南亚
   type: select
   proxies:
-  - 节点选择
+  - 新加坡自动
   - 自建家宽自动
+  - 香港自动
+  - 台湾自动
+  - 日本自动
+  - 美国自动
+  - 节点选择
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bilibilit.png
 - name: 巴哈姆特
   type: select
   proxies:
-  - 节点选择
   - 台湾自动
+  - 自建家宽自动
+  - 香港自动
+  - 新加坡自动
+  - 日本自动
+  - 美国自动
+  - 节点选择
   - DIRECT
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bahamut.png
 - type: select
   proxies:
-  - 节点选择
+  - 新加坡自动
   - 自建家宽自动
+  - 日本自动
+  - 香港自动
+  - 美国自动
+  - 台湾自动
+  - 节点选择
   name: Spotify
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/spotify.png
 - type: select
@@ -370,9 +463,10 @@ proxy-groups:
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Chinese_media.png
 - type: select
   proxies:
-  - 新加坡自动
-  - 台湾自动
   - 香港自动
+  - 自建家宽自动
+  - 台湾自动
+  - 新加坡自动
   - 日本自动
   - 美国自动
   - 节点选择
@@ -380,19 +474,25 @@ proxy-groups:
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global_tv.png
 - type: select
   proxies:
-  - 节点选择
   - 新加坡自动
-  - 香港自动
-  - 台湾自动
+  - 自建家宽自动
   - 日本自动
+  - 香港自动
   - 美国自动
+  - 台湾自动
+  - 节点选择
   - DIRECT
   name: 国际媒体
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global_media.png
 - type: select
   proxies:
-  - 节点选择
+  - 香港自动
   - 自建家宽自动
+  - 日本自动
+  - 新加坡自动
+  - 台湾自动
+  - 美国自动
+  - 节点选择
   name: 游戏平台
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/game.png
 - type: select
@@ -404,29 +504,46 @@ proxy-groups:
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/speedtest.png
 - type: select
   proxies:
-  - 节点选择
+  - 美国自动
   - 自建家宽自动
+  - 新加坡自动
+  - 日本自动
+  - 香港自动
+  - 台湾自动
+  - 节点选择
   name: PayPal
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/paypal.png
 - type: select
   proxies:
-  - 节点选择
+  - 美国自动
   - 自建家宽自动
+  - 新加坡自动
+  - 日本自动
+  - 香港自动
+  - 台湾自动
+  - 节点选择
   name: Wise
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/wise.png
 - type: select
   proxies:
-  - 节点选择
+  - 美国自动
   - 自建家宽自动
+  - 新加坡自动
+  - 日本自动
+  - 香港自动
+  - 台湾自动
+  - 节点选择
   name: 国外电商
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/shopping.png
 - type: select
   proxies:
-  - 节点选择
   - 香港自动
-  - 台湾自动
+  - 自建家宽自动
   - 日本自动
   - 新加坡自动
+  - 台湾自动
+  - 美国自动
+  - 节点选择
   - DIRECT
   name: STEAM
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/steam.png
@@ -495,7 +612,6 @@ proxy-groups:
   proxies:
   - 🚫 拒绝
   - ⚪ 丢弃
-  - 节点选择
   - DIRECT
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/block.png
 - name: 故障转移
@@ -565,12 +681,14 @@ proxy-groups:
   icon: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/hk_automatic_selection.png
 - type: select
   proxies:
-  - 节点选择
   - DIRECT
-  - 美国自动
-  - 日本自动
+  - 节点选择
   - 香港自动
   - 新加坡自动
+  - 日本自动
+  - 美国自动
+  - 台湾自动
+  - 自建家宽自动
   name: Final
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/final.png
 rules:
