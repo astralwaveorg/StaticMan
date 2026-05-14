@@ -154,6 +154,20 @@ dns:
       - gfw
 proxies: []
 proxy-groups:
+  - name: 全局选择
+    type: fallback
+    include-all: null
+    proxies:
+      - 新加坡自动
+      - 日本自动
+      - 台湾自动
+      - 香港自动
+      - 美国自动
+      - 故障转移
+      - 节点选择
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global.png
+    interval: 600
+    hidden: true
   - name: 节点选择
     type: select
     proxies:
@@ -428,13 +442,6 @@ proxy-groups:
       - DIRECT
     name: Emby
     icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/emby.png
-  - type: select
-    proxies:
-      - DIRECT
-      - 节点选择
-      - 家宽自动
-    name: 哔哩哔哩
-    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bilibili.png
   - name: 哔哩东南亚
     type: fallback
     proxies:
@@ -471,12 +478,6 @@ proxy-groups:
     interval: 300
     name: Spotify
     icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/spotify.png
-  - type: select
-    proxies:
-      - DIRECT
-      - 家宽自动
-    name: 国内媒体
-    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Chinese_media.png
   - type: fallback
     proxies:
       - 香港自动
@@ -568,59 +569,6 @@ proxy-groups:
       - DIRECT
     name: Steam
     icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/steam.png
-  - name: 拒绝
-    type: select
-    hidden: true
-    proxies:
-      - REJECT
-  - name: 丢弃
-    type: select
-    hidden: true
-    proxies:
-      - REJECT-DROP
-  - name: 全局选择
-    type: fallback
-    include-all: null
-    proxies:
-      - 新加坡自动
-      - 日本自动
-      - 台湾自动
-      - 香港自动
-      - 美国自动
-      - 故障转移
-      - 节点选择
-    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global.png
-    interval: 600
-  - name: 隐私拦截
-    type: select
-    proxies:
-      - 拒绝
-      - 丢弃
-      - DIRECT
-    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/block.png
-  - name: 全部节点
-    type: url-test
-    include-all: true
-    interval: 300
-    tolerance: 20
-    lazy: true
-    hidden: true
-  - name: 故障转移
-    type: fallback
-    include-all: null
-    exclude-filter: (?=.*(?i)(0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|traffic|plus))
-    interval: 300
-    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/fallback.png
-    hidden: true
-    proxies:
-      - 节点选择
-      - 新加坡自动
-      - 日本自动
-      - 台湾自动
-      - 香港自动
-      - 家宽自动
-      - 美国自动
-      - 漏网之鱼
   - name: 家宽自动
     type: url-test
     include-all: true
@@ -687,9 +635,38 @@ proxy-groups:
     filter: (?=.*(?i)(香港|hk|hongkong|Hong Kong|🇭🇰))
     exclude-filter: (?=.*(?i)(The_HK_automation|wcloud|0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|traffic|plus))
     icon: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/hk_automatic_selection.png
-  - type: select
+  - name: 自动选择
+    type: url-test
+    include-all: true
+    interval: 300
+    tolerance: 20
+    lazy: true
+    hidden: true
+  - name: 故障转移
+    type: fallback
+    include-all: null
+    exclude-filter: (?=.*(?i)(0倍|0\.1倍|0\.01倍|0\.3X|0\.2x|0\.5x|3X|2x|1\.5x|traffic|plus))
+    interval: 300
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/fallback.png
+    hidden: true
+    proxies:
+      - 节点选择
+      - 新加坡自动
+      - 日本自动
+      - 台湾自动
+      - 香港自动
+      - 家宽自动
+      - 美国自动
+      - 漏网之鱼
+  - name: 隐私拦截
+    type: select
     proxies:
       - DIRECT
+      - REJECT
+      - REJECT-DROP
+    icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/block.png
+  - type: fallback
+    proxies:
       - 节点选择
       - 香港自动
       - 新加坡自动
@@ -697,8 +674,10 @@ proxy-groups:
       - 美国自动
       - 台湾自动
       - 家宽自动
+      - DIRECT
     name: 漏网之鱼
     icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/final.png
+    hidden: true
 rules:
   - RULE-SET,banAd_domain,隐私拦截
   - AND,((DOMAIN-SUFFIX,github.com),(DST-PORT,22)),DIRECT
@@ -715,8 +694,8 @@ rules:
   - RULE-SET,paypal_domain,PayPal
   - RULE-SET,proxy_domain,节点选择
   - RULE-SET,biliintl_domain,哔哩东南亚
-  - RULE-SET,bilibili_domain,哔哩哔哩
-  - RULE-SET,bilibili_ip,哔哩哔哩,no-resolve
+  - RULE-SET,bilibili_domain,DIRECT
+  - RULE-SET,bilibili_ip,DIRECT,no-resolve
   - RULE-SET,bahamut_domain,巴哈姆特
   - RULE-SET,bank_cn_domain,DIRECT
   - RULE-SET,ai_cn_domain,DIRECT
@@ -758,7 +737,7 @@ rules:
   - RULE-SET,NetEaseMusic_ip,DIRECT,no-resolve
   - RULE-SET,pt_cn_domain,DIRECT
   - RULE-SET,public-tracker_domain,DIRECT
-  - RULE-SET,media_cn_domain,国内媒体
+  - RULE-SET,media_cn_domain,DIRECT
   - RULE-SET,appleTV_domain,Apple TV
   - RULE-SET,apple_cn_domain,DIRECT
   - RULE-SET,apple_firmware_domain,DIRECT
