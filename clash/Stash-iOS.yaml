@@ -745,6 +745,7 @@ rules:
   - RULE-SET,appleTV_domain,Apple TV
   - RULE-SET,apple_cn_domain,DIRECT
   - RULE-SET,apple_firmware_domain,DIRECT
+  - DOMAIN-SUFFIX,push.apple.com,DIRECT
   - RULE-SET,apple_domain,Apple
   - RULE-SET,tiktok_domain,TikTok
   - RULE-SET,netflix_domain,Netflix
