@@ -693,6 +693,13 @@ proxy-groups:
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/final.png
 rules:
 - RULE-SET,banAd_domain,隐私拦截
+# 高优先级直连规则（端口/域名精确匹配）
+- AND,((DOMAIN-SUFFIX,github.com),(DST-PORT,22)),DIRECT
+- DOMAIN-SUFFIX,homehub.stream,DIRECT
+- DOMAIN-SUFFIX,magichub.top,DIRECT
+- DOMAIN-SUFFIX,eoysky.com,DIRECT
+- DOMAIN-SUFFIX,astralwave.org,DIRECT
+- DOMAIN-SUFFIX,astralwave.vip,DIRECT
 - RULE-SET,wechat_domain,DIRECT
 - RULE-SET,wechat_asn,DIRECT,no-resolve
 - RULE-SET,speedtest_domain,测速平台
