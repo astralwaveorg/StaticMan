@@ -22,9 +22,11 @@ proxy-providers:
     health-check:
       enable: true
       url: https://www.gstatic.com/generate_204
-      interval: 300
+      interval: 600
+    benchmark-url: https://www.gstatic.com/generate_204
+    benchmark-timeout: 5
     filter: ^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))
-    proxy: 故障转移
+    proxy: DIRECT
     url: https://dawangidc.org/modules/servers/V2raySocks/Meta2Port.php?sid=46277&token=BnsTWmhYUcxX
     override:
       additional-prefix: '[机场名称1]'
@@ -36,9 +38,11 @@ proxy-providers:
     health-check:
       enable: true
       url: https://www.gstatic.com/generate_204
-      interval: 300
+      interval: 600
+    benchmark-url: https://www.gstatic.com/generate_204
+    benchmark-timeout: 5
     filter: ^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))
-    proxy: 故障转移
+    proxy: DIRECT
     url: http://47.115.220.50:5998/dazhutou/58155db0da51431f4272bc680ad6d2a5
     override:
       additional-prefix: '[机场名称2]'
@@ -50,9 +54,11 @@ proxy-providers:
     health-check:
       enable: true
       url: https://www.gstatic.com/generate_204
-      interval: 300
+      interval: 600
+    benchmark-url: https://www.gstatic.com/generate_204
+    benchmark-timeout: 5
     filter: ^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))
-    proxy: 故障转移
+    proxy: DIRECT
     url: https://proxyinfo.net/api/v1/client/subscribe?token=949162402842ec646e04af8f0855b864
     override:
       additional-prefix: '[机场名称3]'
@@ -154,6 +160,7 @@ dns:
   fallback-filter:
     geoip: true
     geoip-code: CN
+    iphig: true
     geosite:
     - gfw
 proxies: []
@@ -449,6 +456,7 @@ proxy-groups:
   - 美国自动
   - 家宽自动
   - 节点选择
+  interval: 300
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bilibilit.png
 - name: 巴哈姆特
   type: select
