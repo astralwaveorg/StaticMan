@@ -2,7 +2,7 @@
 # Mihomo 配置 - Debian 服务器 / 局域网网关代理
 # 基于 Stash-iOS 配置转换
 # 适用地区：中国大陆
-# 优化日期：2026-05-15
+# 优化日期：2026-05-15 (v2 - 全面优化)
 # ====================================
 
 # === 基础设置 ===
@@ -72,6 +72,9 @@ sniffer:
     - '*.vivox.com'
     - '*.oray.com'
     - '*.sunlogin.net'
+  skip-addr:
+    - 91.108.0.0/16
+    - 149.154.160.0/20
 
 # === TUN（关闭 - LAN 网关模式）===
 tun:
@@ -107,9 +110,10 @@ dns:
   fallback-filter:
     geoip: true
     geoip-code: CN
-    iphig: true
-    geosite:
-      - gfw
+  nameserver-policy:
+    "geosite:gfw":
+      - https://dns.google/dns-query
+      - https://cloudflare-dns.com/dns-query
 
 # === 代理节点 ===
 proxies: []
@@ -123,7 +127,7 @@ proxy-providers:
     health-check:
       enable: true
       url: https://www.gstatic.com/generate_204
-      interval: 600
+      interval: 300
     filter: ^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))
     proxy: DIRECT
     url: https://dawangidc.org/modules/servers/V2raySocks/Meta2Port.php?sid=46277&token=BnsTWmhYUcxX
@@ -138,7 +142,7 @@ proxy-providers:
     health-check:
       enable: true
       url: https://www.gstatic.com/generate_204
-      interval: 600
+      interval: 300
     filter: ^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))
     proxy: DIRECT
     url: http://47.115.220.50:5998/dazhutou/58155db0da51431f4272bc680ad6d2a5
@@ -153,7 +157,7 @@ proxy-providers:
     health-check:
       enable: true
       url: https://www.gstatic.com/generate_204
-      interval: 600
+      interval: 300
     filter: ^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))
     proxy: DIRECT
     url: https://proxyinfo.net/api/v1/client/subscribe?token=949162402842ec646e04af8f0855b864
@@ -837,579 +841,676 @@ rule-providers:
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/category-pt.mrs
+    proxy: "节点选择"
   banAd_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/banAd_mini.mrs
+    proxy: "节点选择"
   private_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs
+    proxy: "节点选择"
   bank_cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/category-bank-cn.mrs
+    proxy: "节点选择"
   xiaomi_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/xiaomi.mrs
+    proxy: "节点选择"
   biliintl_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/bilibili%40!cn.mrs
+    proxy: "节点选择"
   bilibili_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/bilibili.mrs
+    proxy: "节点选择"
   bahamut_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/bahamut.mrs
+    proxy: "节点选择"
   spotify_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/spotify.mrs
+    proxy: "节点选择"
   steam_cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/steam%40cn.mrs
+    proxy: "节点选择"
   steamcdn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/Steam-domain.mrs
+    proxy: "节点选择"
   steam_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/steam.mrs
+    proxy: "节点选择"
   ai!cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ai-!cn.mrs
+    proxy: "节点选择"
   openai_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/openai.mrs
+    proxy: "节点选择"
   youtube_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs
+    proxy: "节点选择"
   google_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/google.mrs
+    proxy: "节点选择"
   github_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs
+    proxy: "节点选择"
   telegram_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs
+    proxy: "节点选择"
   netflix_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs
+    proxy: "节点选择"
   paypal_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/paypal.mrs
+    proxy: "节点选择"
   onedrive_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/onedrive.mrs
+    proxy: "节点选择"
   microsoft_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs
+    proxy: "节点选择"
   apple_firmware_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/applefirmware.mrs
+    proxy: "节点选择"
   apple_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs
+    proxy: "节点选择"
   speedtest_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ookla-speedtest.mrs
+    proxy: "节点选择"
   tiktok_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs
+    proxy: "节点选择"
   gfw_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gfw.mrs
+    proxy: "节点选择"
   geolocation-!cn:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs
+    proxy: "节点选择"
   cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs
+    proxy: "节点选择"
   media_cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/category-media-cn.mrs
+    proxy: "节点选择"
   media!cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/category-social-media-!cn.mrs
+    proxy: "节点选择"
   Cloudflare_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/cloudflare.mrs
+    proxy: "节点选择"
   gitbook_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/gitbook.mrs
+    proxy: "节点选择"
   disney_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/disney.mrs
+    proxy: "节点选择"
   hbo_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/hbo.mrs
+    proxy: "节点选择"
   primevideo_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/primevideo.mrs
+    proxy: "节点选择"
   NetEaseMusic_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/NetEaseMusic-domain.mrs
+    proxy: "节点选择"
   Amazon_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/amazon.mrs
+    proxy: "节点选择"
   Shopee_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/shopee.mrs
+    proxy: "节点选择"
   ebay_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/ebay.mrs
+    proxy: "节点选择"
   appleTV_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/appletv.mrs
+    proxy: "节点选择"
   Epic_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/epicgames.mrs
+    proxy: "节点选择"
   EA_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/ea.mrs
+    proxy: "节点选择"
   Blizzard_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/blizzard.mrs
+    proxy: "节点选择"
   UBI_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/ubi.mrs
+    proxy: "节点选择"
   Sony_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/sony.mrs
+    proxy: "节点选择"
   Nintendo_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/nintendo.mrs
+    proxy: "节点选择"
   facebook_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/facebook.mrs
+    proxy: "节点选择"
   whatsapp_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/whatsapp.mrs
+    proxy: "节点选择"
   instagram_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/instagram.mrs
+    proxy: "节点选择"
   threads_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/threads.mrs
+    proxy: "节点选择"
   meta_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/meta.mrs
+    proxy: "节点选择"
   Wise_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/wise.mrs
+    proxy: "节点选择"
   ifast_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/ifast.mrs
+    proxy: "节点选择"
   line_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/line.mrs
+    proxy: "节点选择"
   talkatone_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/Talkatone-domain.mrs
+    proxy: "节点选择"
   Shopify_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/shopify.mrs
+    proxy: "节点选择"
   signal_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/signal.mrs
+    proxy: "节点选择"
   wechat_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/WeChat.mrs
+    proxy: "节点选择"
   proxy_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/proxy.mrs
+    proxy: "节点选择"
   direct_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/direct.mrs
+    proxy: "节点选择"
   apple_cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/apple%40cn.mrs
+    proxy: "节点选择"
   alibaba_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/alibaba.mrs
+    proxy: "节点选择"
   tencent!cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/tencent%40!cn.mrs
+    proxy: "节点选择"
   tencent_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/tencent.mrs
+    proxy: "节点选择"
   ai_cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/category-ai-cn.mrs
+    proxy: "节点选择"
   discord_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/discord.mrs
+    proxy: "节点选择"
   fcm_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/googlefcm.mrs
+    proxy: "节点选择"
   emby_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/emby.mrs
+    proxy: "节点选择"
   pt_cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/category-pt.mrs
+    proxy: "节点选择"
   public-tracker_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/category-public-tracker.mrs
+    proxy: "节点选择"
   115_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/115.mrs
+    proxy: "节点选择"
   aliyun_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/aliyun.mrs
+    proxy: "节点选择"
   twitch_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/twitch.mrs
+    proxy: "节点选择"
   porn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/category-porn.mrs
+    proxy: "节点选择"
   iptv_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/iptv.mrs
+    proxy: "节点选择"
   googlevpn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/googleVPN.mrs
+    proxy: "节点选择"
   ai_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/ai.mrs
+    proxy: "节点选择"
   TVB_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/tvb.mrs
+    proxy: "节点选择"
   game_cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/category-games%40cn.mrs
+    proxy: "节点选择"
   fakeip_filter_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/fakeip-filter.mrs
+    proxy: "节点选择"
   bilibili_ip:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo-lite/geoip/bilibili.mrs
+    proxy: "节点选择"
   cn_ip:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs
+    proxy: "节点选择"
   google_ip:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs
+    proxy: "节点选择"
   telegram_ip:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs
+    proxy: "节点选择"
   netflix_ip:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs
+    proxy: "节点选择"
   Amazon_ip:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/IP/amazon-ip.mrs
+    proxy: "节点选择"
   facebook_ip:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/facebook.mrs
+    proxy: "节点选择"
   twitter_ip:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/twitter.mrs
+    proxy: "节点选择"
   private_ip:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/private.mrs
+    proxy: "节点选择"
   talkatone_ip:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/IP/Talkatone-ip.mrs
+    proxy: "节点选择"
   steamcdn_ip:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/IP/steamCDN-ip.mrs
+    proxy: "节点选择"
   NetEaseMusic_ip:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/IP/NetEaseMusic-ip.mrs
+    proxy: "节点选择"
   emby_ip:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/IP/emby-ip.mrs
+    proxy: "节点选择"
   google_asn_cn:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/IP/AS24424.mrs
+    proxy: "节点选择"
   discord_asn:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/IP/AS49544.mrs
+    proxy: "节点选择"
   wechat_asn:
     type: http
     interval: 86400
     behavior: ipcidr
     format: mrs
     url: https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/IP/AS132203.mrs
+    proxy: "节点选择"
