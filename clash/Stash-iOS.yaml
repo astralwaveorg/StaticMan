@@ -162,7 +162,7 @@ proxy-groups:
   type: select
   proxies:
   - 新加坡自动
-  - 自建家宽自动
+  - 家宽自动
   - 日本自动
   - 美国自动
   - 台湾自动
@@ -170,41 +170,41 @@ proxy-groups:
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/select.png
 - type: select
   proxies:
-  - 美国自动
-  - 自建家宽自动
-  - 新加坡自动
   - 日本自动
+  - 新加坡自动
   - 香港自动
   - 台湾自动
+  - 美国自动
+  - 家宽自动
   - 节点选择
   name: YouTube
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/youtube.png
 - type: select
   proxies:
   - 美国自动
-  - 自建家宽自动
+  - 家宽自动
   - 新加坡自动
   - 日本自动
   - 香港自动
   - 台湾自动
   - 节点选择
-  name: FCM
+  name: Google FCM
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/fcm.png
 - type: select
   proxies:
   - 美国自动
-  - 自建家宽自动
+  - 家宽自动
   - 新加坡自动
   - 日本自动
   - 香港自动
   - 台湾自动
   - 节点选择
-  name: GoogleVPN
+  name: Google VPN
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/googlevpn.png
 - type: select
   proxies:
   - 美国自动
-  - 自建家宽自动
+  - 家宽自动
   - 新加坡自动
   - 日本自动
   - 香港自动
@@ -214,63 +214,63 @@ proxy-groups:
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/google.png
 - type: select
   proxies:
-  - 美国自动
-  - 自建家宽自动
   - 新加坡自动
-  - 日本自动
   - 香港自动
+  - 日本自动
   - 台湾自动
+  - 美国自动
+  - 家宽自动
   - 节点选择
   name: Meta
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/meta.png
 - type: select
   proxies:
   - 美国自动
-  - 自建家宽自动
+  - 家宽自动
   - 日本自动
   - 新加坡自动
   - 香港自动
   - 台湾自动
   - 节点选择
-  name: AI Agent
+  name: AI服务
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/ai.png
 - type: select
   proxies:
-  - 美国自动
-  - 自建家宽自动
   - 日本自动
   - 新加坡自动
   - 香港自动
   - 台湾自动
+  - 美国自动
+  - 家宽自动
   - 节点选择
   name: GitHub
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/github.png
 - type: select
   proxies:
-  - 美国自动
-  - 自建家宽自动
   - 日本自动
   - 新加坡自动
   - 香港自动
   - 台湾自动
+  - 美国自动
+  - 家宽自动
   - 节点选择
   name: OneDrive
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/onedrive.png
 - type: select
   proxies:
-  - 美国自动
-  - 自建家宽自动
   - 日本自动
   - 新加坡自动
   - 香港自动
   - 台湾自动
+  - 美国自动
+  - 家宽自动
   - 节点选择
   name: Microsoft
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/microsoft.png
 - type: select
   proxies:
   - 新加坡自动
-  - 自建家宽自动
+  - 家宽自动
   - 香港自动
   - 日本自动
   - 美国自动
@@ -280,19 +280,19 @@ proxy-groups:
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/telegram.png
 - type: select
   proxies:
-  - 美国自动
-  - 自建家宽自动
   - 日本自动
   - 新加坡自动
   - 香港自动
   - 台湾自动
+  - 美国自动
+  - 家宽自动
   - 节点选择
   name: Discord
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/discord.png
 - type: select
   proxies:
   - 美国自动
-  - 自建家宽自动
+  - 家宽自动
   - 新加坡自动
   - 日本自动
   - 香港自动
@@ -304,7 +304,7 @@ proxy-groups:
 - type: select
   proxies:
   - 日本自动
-  - 自建家宽自动
+  - 家宽自动
   - 新加坡自动
   - 香港自动
   - 台湾自动
@@ -316,7 +316,7 @@ proxy-groups:
 - type: select
   proxies:
   - 美国自动
-  - 自建家宽自动
+  - 家宽自动
   - 新加坡自动
   - 日本自动
   - 香港自动
@@ -326,41 +326,41 @@ proxy-groups:
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/signal.png
 - type: select
   proxies:
-  - 新加坡自动
-  - 自建家宽自动
   - 日本自动
-  - 美国自动
+  - 新加坡自动
   - 香港自动
   - 台湾自动
+  - 美国自动
+  - 家宽自动
   - 节点选择
   name: TikTok
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/tiktok.png
 - type: select
   proxies:
-  - 新加坡自动
-  - 自建家宽自动
   - 日本自动
+  - 新加坡自动
   - 香港自动
-  - 美国自动
   - 台湾自动
+  - 美国自动
+  - 家宽自动
   - 节点选择
-  name: NETFLIX
+  name: Netflix
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/netflix.png
 - type: select
   proxies:
-  - 新加坡自动
-  - 自建家宽自动
   - 日本自动
+  - 新加坡自动
   - 香港自动
   - 台湾自动
   - 美国自动
+  - 家宽自动
   - 节点选择
-  name: DisneyPlus
+  name: Disney+
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/disney.png
 - type: select
   proxies:
   - 美国自动
-  - 自建家宽自动
+  - 家宽自动
   - 日本自动
   - 新加坡自动
   - 香港自动
@@ -370,30 +370,30 @@ proxy-groups:
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/hbo.png
 - type: select
   proxies:
-  - 美国自动
-  - 自建家宽自动
   - 日本自动
+  - 美国自动
   - 新加坡自动
   - 香港自动
   - 台湾自动
+  - 家宽自动
   - 节点选择
-  name: Primevideo
+  name: Prime Video
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/primevideo.png
 - type: select
   proxies:
-  - 美国自动
-  - 自建家宽自动
+  - 香港自动
   - 日本自动
   - 新加坡自动
-  - 香港自动
   - 台湾自动
+  - 美国自动
+  - 家宽自动
   - 节点选择
-  name: AppleTV
+  name: Apple TV
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/appletv.png
 - type: select
   proxies:
   - DIRECT
-  - 自建家宽自动
+  - 家宽自动
   - 节点选择
   - 香港自动
   - 新加坡自动
@@ -405,7 +405,7 @@ proxy-groups:
 - type: select
   proxies:
   - 香港自动
-  - 自建家宽自动
+  - 家宽自动
   - 台湾自动
   - 新加坡自动
   - 日本自动
@@ -418,25 +418,25 @@ proxy-groups:
   proxies:
   - DIRECT
   - 节点选择
-  - 自建家宽自动
+  - 家宽自动
   name: 哔哩哔哩
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bilibili.png
 - name: 哔哩东南亚
   type: select
   proxies:
   - 新加坡自动
-  - 自建家宽自动
   - 香港自动
   - 台湾自动
   - 日本自动
   - 美国自动
+  - 家宽自动
   - 节点选择
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bilibilit.png
 - name: 巴哈姆特
   type: select
   proxies:
   - 台湾自动
-  - 自建家宽自动
+  - 家宽自动
   - 香港自动
   - 新加坡自动
   - 日本自动
@@ -446,52 +446,52 @@ proxy-groups:
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bahamut.png
 - type: select
   proxies:
-  - 新加坡自动
-  - 自建家宽自动
   - 日本自动
+  - 新加坡自动
   - 香港自动
-  - 美国自动
   - 台湾自动
+  - 美国自动
+  - 家宽自动
   - 节点选择
   name: Spotify
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/spotify.png
 - type: select
   proxies:
   - DIRECT
-  - 自建家宽自动
+  - 家宽自动
   name: 国内媒体
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Chinese_media.png
 - type: select
   proxies:
   - 香港自动
-  - 自建家宽自动
+  - 家宽自动
   - 台湾自动
   - 新加坡自动
   - 日本自动
   - 美国自动
   - 节点选择
-  name: GlobalTV
+  name: 海外电视
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global_tv.png
 - type: select
   proxies:
-  - 新加坡自动
-  - 自建家宽自动
-  - 日本自动
   - 香港自动
-  - 美国自动
+  - 日本自动
+  - 新加坡自动
   - 台湾自动
+  - 美国自动
+  - 家宽自动
   - 节点选择
   - DIRECT
-  name: 国际媒体
+  name: 海外流媒体
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global_media.png
 - type: select
   proxies:
-  - 香港自动
-  - 自建家宽自动
   - 日本自动
+  - 香港自动
   - 新加坡自动
   - 台湾自动
   - 美国自动
+  - 家宽自动
   - 节点选择
   name: 游戏平台
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/game.png
@@ -499,13 +499,13 @@ proxy-groups:
   proxies:
   - DIRECT
   - 节点选择
-  - 自建家宽自动
+  - 家宽自动
   name: 测速平台
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/speedtest.png
 - type: select
   proxies:
   - 美国自动
-  - 自建家宽自动
+  - 家宽自动
   - 新加坡自动
   - 日本自动
   - 香港自动
@@ -515,44 +515,44 @@ proxy-groups:
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/paypal.png
 - type: select
   proxies:
-  - 美国自动
-  - 自建家宽自动
   - 新加坡自动
   - 日本自动
   - 香港自动
   - 台湾自动
+  - 美国自动
+  - 家宽自动
   - 节点选择
   name: Wise
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/wise.png
 - type: select
   proxies:
   - 美国自动
-  - 自建家宽自动
+  - 家宽自动
   - 新加坡自动
   - 日本自动
   - 香港自动
   - 台湾自动
   - 节点选择
-  name: 国外电商
+  name: 海外电商
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/shopping.png
 - type: select
   proxies:
-  - 香港自动
-  - 自建家宽自动
   - 日本自动
+  - 香港自动
   - 新加坡自动
   - 台湾自动
   - 美国自动
+  - 家宽自动
   - 节点选择
   - DIRECT
-  name: STEAM
+  name: Steam
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/steam.png
-- name: 🚫 拒绝
+- name: 拒绝
   type: select
   hidden: true
   proxies:
   - REJECT
-- name: ⚪ 丢弃
+- name: 丢弃
   type: select
   hidden: true
   proxies:
@@ -563,11 +563,11 @@ proxy-groups:
   proxies:
   - 节点选择
   - YouTube
-  - GoogleVPN
-  - FCM
+  - Google VPN
+  - Google FCM
   - Google
   - Meta
-  - AI Agent
+  - AI服务
   - GitHub
   - OneDrive
   - Microsoft
@@ -577,11 +577,11 @@ proxy-groups:
   - LINE
   - Signal
   - TikTok
-  - NETFLIX
-  - DisneyPlus
+  - Netflix
+  - Disney+
   - HBO
-  - Primevideo
-  - AppleTV
+  - Prime Video
+  - Apple TV
   - Apple
   - Emby
   - 哔哩哔哩
@@ -589,17 +589,17 @@ proxy-groups:
   - 巴哈姆特
   - Spotify
   - 国内媒体
-  - GlobalTV
-  - 国际媒体
+  - 海外电视
+  - 海外流媒体
   - 游戏平台
   - 测速平台
   - PayPal
   - Wise
-  - 国外电商
-  - STEAM
+  - 海外电商
+  - Steam
   - 隐私拦截
-  - Final
-  - 自建家宽自动
+  - 最终分流
+  - 家宽自动
   - 香港自动
   - 新加坡自动
   - 日本自动
@@ -610,8 +610,8 @@ proxy-groups:
 - name: 隐私拦截
   type: select
   proxies:
-  - 🚫 拒绝
-  - ⚪ 丢弃
+  - 拒绝
+  - 丢弃
   - DIRECT
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/block.png
 - name: 故障转移
@@ -620,7 +620,7 @@ proxy-groups:
   interval: 300
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/fallback.png
   hidden: true
-- name: 自建家宽自动
+- name: 家宽自动
   type: url-test
   include-all: true
   filter: (?=.*(?i)(自建|CF|The_house|private|home|家宽|hgc|HKT|HKBN|icable|Hinet|att))
@@ -688,8 +688,8 @@ proxy-groups:
   - 日本自动
   - 美国自动
   - 台湾自动
-  - 自建家宽自动
-  name: Final
+  - 家宽自动
+  name: 最终分流
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/final.png
 rules:
 - RULE-SET,banAd_domain,隐私拦截
@@ -712,17 +712,17 @@ rules:
 - RULE-SET,aliyun_domain,DIRECT
 - RULE-SET,github_domain,GitHub
 - RULE-SET,gitbook_domain,GitHub
-- RULE-SET,googlevpn_domain,GoogleVPN
+- RULE-SET,googlevpn_domain,Google VPN
 - RULE-SET,youtube_domain,YouTube
-- RULE-SET,fcm_domain,FCM
+- RULE-SET,fcm_domain,Google FCM
 - RULE-SET,google_domain,Google
 - RULE-SET,google_asn_cn,Google,no-resolve
 - RULE-SET,google_ip,Google,no-resolve
 - RULE-SET,onedrive_domain,OneDrive
 - RULE-SET,microsoft_domain,Microsoft
-- RULE-SET,ai!cn_domain,AI Agent
-- RULE-SET,ai_domain,AI Agent
-- RULE-SET,openai_domain,AI Agent
+- RULE-SET,ai!cn_domain,AI服务
+- RULE-SET,ai_domain,AI服务
+- RULE-SET,openai_domain,AI服务
 - RULE-SET,telegram_domain,Telegram
 - RULE-SET,telegram_ip,Telegram,no-resolve
 - RULE-SET,line_domain,LINE
@@ -745,16 +745,16 @@ rules:
 - RULE-SET,pt_cn_domain,DIRECT
 - RULE-SET,public-tracker_domain,DIRECT
 - RULE-SET,media_cn_domain,国内媒体
-- RULE-SET,appleTV_domain,AppleTV
+- RULE-SET,appleTV_domain,Apple TV
 - RULE-SET,apple_cn_domain,DIRECT
 - RULE-SET,apple_firmware_domain,DIRECT
 - RULE-SET,apple_domain,Apple
 - RULE-SET,tiktok_domain,TikTok
-- RULE-SET,netflix_domain,NETFLIX
-- RULE-SET,netflix_ip,NETFLIX,no-resolve
-- RULE-SET,disney_domain,DisneyPlus
+- RULE-SET,netflix_domain,Netflix
+- RULE-SET,netflix_ip,Netflix,no-resolve
+- RULE-SET,disney_domain,Disney+
 - RULE-SET,hbo_domain,HBO
-- RULE-SET,primevideo_domain,Primevideo
+- RULE-SET,primevideo_domain,Prime Video
 - RULE-SET,emby_domain,Emby
 - RULE-SET,emby_ip,Emby,no-resolve
 - RULE-SET,spotify_domain,Spotify
@@ -764,14 +764,14 @@ rules:
 - RULE-SET,threads_domain,Meta
 - RULE-SET,meta_domain,Meta
 - RULE-SET,facebook_ip,Meta,no-resolve
-- DOMAIN-SUFFIX,mytvsuper.com,GlobalTV
-- DOMAIN-SUFFIX,mytv.com.hk,GlobalTV
-- RULE-SET,twitch_domain,GlobalTV
-- RULE-SET,porn_domain,GlobalTV
-- RULE-SET,TVB_domain,GlobalTV
-- RULE-SET,media!cn_domain,国际媒体
+- DOMAIN-SUFFIX,mytvsuper.com,海外电视
+- DOMAIN-SUFFIX,mytv.com.hk,海外电视
+- RULE-SET,twitch_domain,海外电视
+- RULE-SET,porn_domain,海外电视
+- RULE-SET,TVB_domain,海外电视
+- RULE-SET,media!cn_domain,海外流媒体
 - RULE-SET,twitter_ip,节点选择,no-resolve
-- RULE-SET,steam_domain,STEAM
+- RULE-SET,steam_domain,Steam
 - RULE-SET,Epic_domain,游戏平台
 - RULE-SET,EA_domain,游戏平台
 - RULE-SET,Blizzard_domain,游戏平台
@@ -779,17 +779,17 @@ rules:
 - RULE-SET,Sony_domain,游戏平台
 - RULE-SET,Nintendo_domain,游戏平台
 - RULE-SET,ifast_domain,DIRECT
-- RULE-SET,Amazon_domain,国外电商
-- RULE-SET,Amazon_ip,国外电商,no-resolve
-- RULE-SET,Shopee_domain,国外电商
-- RULE-SET,Shopify_domain,国外电商
-- RULE-SET,ebay_domain,国外电商
+- RULE-SET,Amazon_domain,海外电商
+- RULE-SET,Amazon_ip,海外电商,no-resolve
+- RULE-SET,Shopee_domain,海外电商
+- RULE-SET,Shopify_domain,海外电商
+- RULE-SET,ebay_domain,海外电商
 - RULE-SET,gfw_domain,节点选择
 - RULE-SET,geolocation-!cn,节点选择
 - RULE-SET,cn_domain,DIRECT
 - RULE-SET,private_ip,DIRECT,no-resolve
 - RULE-SET,cn_ip,DIRECT,no-resolve
-- MATCH,Final
+- MATCH,最终分流
 rule-providers:
   banAd_domain:
     type: http
