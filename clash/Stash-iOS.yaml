@@ -598,7 +598,7 @@ proxy-groups:
   - 海外电商
   - Steam
   - 隐私拦截
-  - 最终分流
+  - 漏网之鱼
   - 家宽自动
   - 香港自动
   - 新加坡自动
@@ -614,6 +614,12 @@ proxy-groups:
   - 丢弃
   - DIRECT
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/block.png
+- name: 全部节点
+  type: url-test
+  include-all: true
+  interval: 300
+  tolerance: 20
+  hidden: true
 - name: 故障转移
   type: fallback
   include-all: true
@@ -689,7 +695,7 @@ proxy-groups:
   - 美国自动
   - 台湾自动
   - 家宽自动
-  name: 最终分流
+  name: 漏网之鱼
   icon: https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/final.png
 rules:
 - RULE-SET,banAd_domain,隐私拦截
@@ -796,7 +802,7 @@ rules:
 - RULE-SET,cn_domain,DIRECT
 - RULE-SET,private_ip,DIRECT,no-resolve
 - RULE-SET,cn_ip,DIRECT,no-resolve
-- MATCH,最终分流
+- MATCH,漏网之鱼
 rule-providers:
   banAd_domain:
     type: http
