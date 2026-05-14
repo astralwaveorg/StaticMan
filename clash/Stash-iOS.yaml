@@ -152,10 +152,9 @@ dns:
   fallback-filter:
     geoip: true
     geoip-code: CN
-  nameserver-policy:
-    "geosite:gfw":
-      - https://dns.google/dns-query
-      - https://cloudflare-dns.com/dns-query
+    iphig: true
+    geosite:
+      - gfw
 proxies: []
 proxy-groups:
   - name: 全局选择
