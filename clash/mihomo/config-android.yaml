@@ -77,7 +77,7 @@ tun:
   auto-route: true
   auto-detect-interface: true
   dns-hijack:
-    - any:53
+    - "any:53"
 
 # === DNS ===
 dns:
@@ -132,8 +132,6 @@ proxy-providers:
     url: https://dawangidc.org/modules/servers/V2raySocks/Meta2Port.php?sid=46277&token=BnsTWmhYUcxX
     override:
       additional-prefix: '[机场名称1]'
-      skip-cert-verify: true
-      udp: true
   Airport_02:
     type: http
     interval: 86400
@@ -147,8 +145,6 @@ proxy-providers:
     url: http://47.115.220.50:5998/dazhutou/58155db0da51431f4272bc680ad6d2a5
     override:
       additional-prefix: '[机场名称2]'
-      skip-cert-verify: true
-      udp: true
   Airport_03:
     type: http
     interval: 86400
@@ -162,8 +158,6 @@ proxy-providers:
     url: https://proxyinfo.net/api/v1/client/subscribe?token=949162402842ec646e04af8f0855b864
     override:
       additional-prefix: '[机场名称3]'
-      skip-cert-verify: true
-      udp: true
 
 # === 代理策略组 ===
 proxy-groups:
