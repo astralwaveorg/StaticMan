@@ -743,6 +743,17 @@ rules:
   - RULE-SET,tvb,国外媒体
 
   - DOMAIN,store.steampowered.com,游戏平台
+  - DOMAIN,steampowered.com,游戏平台
+  - DOMAIN,steamgames.com,游戏平台
+  - DOMAIN,steamcommunity.com,游戏平台
+  - DOMAIN,steam-chat.com,游戏平台
+  - DOMAIN,steamcontent.com,游戏平台
+  - DOMAIN,steamstatic.com,游戏平台
+  - DOMAIN,steamusercontent.com,游戏平台
+  - DOMAIN,steam-api.com,游戏平台
+  - DOMAIN,s.team,游戏平台
+  - DOMAIN,steamdeck.com,游戏平台
+  - DOMAIN,help.steampowered.com,游戏平台
   - RULE-SET,playstation,游戏平台
   - RULE-SET,xbox,游戏平台
   - RULE-SET,nintendo,游戏平台
