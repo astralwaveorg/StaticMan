@@ -113,7 +113,7 @@ dns:
     # 你的核心直连域名，强制使用国内解析，不再查询 google
     'domain:jiek.top,magichub.top,homehub.stream,eoysky.com,astralwave.org,233netcloud.com,ghfast.top':
       [223.5.5.5, 119.29.29.29]
-    'geosite:cn,private': [https://dns.alidns.com/dns-query, https://doh.pub/dns-query]
+    'geosite:cn,private': ['https://dns.alidns.com/dns-query', 'https://doh.pub/dns-query']
     # 不使用国外 DNS 解析，避免访问失败
     # 'geosite:!cn': [https://dns.google/dns-query, https://1.1.1.1/dns-query]
 
@@ -137,20 +137,20 @@ proxy-providers:
     type: http
     url: 'https://list.magichub.top/d/clash/list.yaml'
     interval: 86400
-    path: ./profiles/proxies/subscription.yaml
-    health-check: { enable: true, interval: 600, url: http://www.gstatic.com/generate_204 }
+    path: ./profiles/proxies/subscription-merged.yaml
+    health-check: { enable: true, interval: 600, url: 'http://www.gstatic.com/generate_204' }
   自建源:
     type: http
     url: 'https://list.magichub.top/d/clash/list-self.yaml'
     interval: 86400
     path: ./profiles/proxies/self-hosted.yaml
-    health-check: { enable: true, interval: 600, url: http://www.gstatic.com/generate_204 }
+    health-check: { enable: true, interval: 600, url: 'http://www.gstatic.com/generate_204' }
   路由器:
     type: http
     url: 'https://list.magichub.top/d/clash/list-router-lvsp.yaml'
     interval: 86400
     path: ./profiles/proxies/lvsp-router.yaml
-    health-check: { enable: true, interval: 600, url: http://www.gstatic.com/generate_204 }
+    health-check: { enable: true, interval: 600, url: 'http://www.gstatic.com/generate_204' }
 proxy-groups:
   # 基础测速分组
   - name: '自动优选'
@@ -166,6 +166,10 @@ proxy-groups:
     url: http://connectivitycheck.gstatic.com/generate_204
     interval: 600
     tolerance: 100
+
+  - name: '全部订阅节点'
+    type: select
+    use: [订阅节点]
 
   # 地区筛选分组
   - name: '🇺🇸 美国节点'
@@ -209,6 +213,7 @@ proxy-groups:
   - name: '代理选择'
     type: select
     proxies:
+      - 全部订阅节点
       - 自动优选
       - ⚡ 自建自动
       - 🇺🇸 美国节点
