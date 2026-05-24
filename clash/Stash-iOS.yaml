@@ -5,6 +5,22 @@
 # ====================================
 
 proxy-providers:
+  SelfIPs:
+    type: http
+    interval: 86400
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+    benchmark-url: https://www.gstatic.com/generate_204
+    benchmark-timeout: 5
+    filter: ^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))
+    proxy: DIRECT
+    url: https://dawangidc.org/modules/servers/V2raySocks/Meta2Port.php?sid=46277&token=BnsTWmhYUcxX
+    override:
+      additional-prefix: "[自建]"
+      skip-cert-verify: true
+      udp: true
   Airport_01:
     type: http
     interval: 86400
@@ -18,7 +34,7 @@ proxy-providers:
     proxy: DIRECT
     url: https://dawangidc.org/modules/servers/V2raySocks/Meta2Port.php?sid=46277&token=BnsTWmhYUcxX
     override:
-      additional-prefix: '[机场名称1]'
+      additional-prefix: "[大王]"
       skip-cert-verify: true
       udp: true
   Airport_02:
@@ -34,7 +50,7 @@ proxy-providers:
     proxy: DIRECT
     url: http://47.115.220.50:5998/dazhutou/58155db0da51431f4272bc680ad6d2a5
     override:
-      additional-prefix: '[机场名称2]'
+      additional-prefix: "[机场名称2]"
       skip-cert-verify: true
       udp: true
   Airport_03:
@@ -50,7 +66,7 @@ proxy-providers:
     proxy: DIRECT
     url: https://proxyinfo.net/api/v1/client/subscribe?token=949162402842ec646e04af8f0855b864
     override:
-      additional-prefix: '[机场名称3]'
+      additional-prefix: "[机场名称3]"
       skip-cert-verify: true
       udp: true
 global-ua: clash.meta
@@ -72,10 +88,10 @@ geox-url:
   geoip: https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat
   asn: https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb
 external-controller: 0.0.0.0:9090
-secret: ''
+secret: ""
 external-ui: ui
 external-ui-url: https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip
-find-process-mode: 'off'
+find-process-mode: "off"
 keep-alive-idle: 600
 keep-alive-interval: 30
 profile:
@@ -98,18 +114,18 @@ sniffer:
         - 443
         - 8443
   force-domain:
-    - '*.v2ex.com'
+    - "*.v2ex.com"
   skip-domain:
     - Mijia Cloud
     - dlg.io.mi.com
-    - '*.apple.com'
-    - '*.wechat.com'
-    - '*.qpic.cn'
-    - '*.qq.com'
-    - '*.wechatapp.com'
-    - '*.vivox.com'
-    - '*.oray.com'
-    - '*.sunlogin.net'
+    - "*.apple.com"
+    - "*.wechat.com"
+    - "*.qpic.cn"
+    - "*.qq.com"
+    - "*.wechatapp.com"
+    - "*.vivox.com"
+    - "*.oray.com"
+    - "*.sunlogin.net"
   skip-addr:
     - 91.108.0.0/16
     - 149.154.160.0/20
