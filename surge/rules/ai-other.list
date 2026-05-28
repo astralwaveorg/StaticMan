@@ -166,6 +166,7 @@ DOMAIN-SUFFIX,workos.com
 DOMAIN-SUFFIX,workos.imgix.net
 DOMAIN-SUFFIX,x.ai
 DOMAIN-SUFFIX,zed.dev
+DOMAIN-SUFFIX,nousresearch.com
 IP-CIDR,129.146.3.78/32,no-resolve
 IP-CIDR,24.199.123.28/32,no-resolve
 IP-CIDR,64.23.132.171/32,no-resolve

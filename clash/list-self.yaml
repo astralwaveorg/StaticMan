@@ -1,41 +1,96 @@
 proxies:
-  - {
-      name: "🇺🇸 美国家宽 01",
-      type: hysteria2,
-      server: 192.220.34.183,
-      port: 10489,
-      password: "05c844f6-05d9-4203-bebb-e435a122b506",
-      sni: www.bing.com,
-      skip-cert-verify: true,
-      up: 300 Mbps,
-      down: 300 Mbps,
-    }
-  - {
-      name: "🇺🇸 美国家宽 02",
-      type: ss,
-      server: 192.220.34.183,
-      port: 41038,
-      cipher: 2022-blake3-aes-256-gcm,
-      password: "yUPhOxmStQDA8RYsc88Xnz52L7YDO5pJ+Otwez0lJWg=",
-      udp: true,
-    }
-  - {
-      name: "🇺🇸 美国VPS 01",
-      type: hysteria2,
-      server: 195.123.241.9,
-      port: 61442,
-      password: "fd5ef7c6-e327-448b-91e4-eaa256f7e89a",
-      sni: www.bing.com,
-      skip-cert-verify: true,
-      up: 1000 Mbps,
-      down: 1000 Mbps,
-    }
-  - {
-      name: "🇺🇸 美国VPS 02",
-      type: ss,
-      server: 195.123.241.9,
-      port: 15996,
-      cipher: 2022-blake3-aes-256-gcm,
-      password: "CShqFG82TJhRMjZ3/4qzj1roIsv2YAvvlQk35jU3C/s=",
-      udp: true,
-    }
+  - name: "🇺🇸 美国家宽 01"
+    type: hysteria2
+    server: laxres.magichub.top
+    port: 37283
+    password: "8fa57582-eefb-4ad4-85cd-3e22db8a5510"
+    sni: laxres.magichub.top
+    skip-cert-verify: false
+    up: "60 Mbps"
+    down: "60 Mbps"
+
+  - name: "🇺🇸 美国家宽 02"
+    type: trojan
+    server: laxres.magichub.top
+    port: 443
+    password: "7e5e5610-a7b9-4842-9530-eb6b901a7b9a"
+    sni: laxres.magichub.top
+    udp: true
+    skip-cert-verify: false
+    network: ws
+    ws-opts:
+      path: "/7e5e5610-a7b9-4842-9530-eb6b901a7b9a"
+      headers:
+        Host: laxres.magichub.top
+
+  - name: "🇺🇸 美国机房 01"
+    type: hysteria2
+    server: lax.magichub.top
+    port: 49236
+    password: "37fa78f3-2bbf-4839-88df-3491afef9e81"
+    sni: lax.magichub.top
+    skip-cert-verify: false
+    up: "100 Mbps"
+    down: "1000 Mbps"
+
+  - name: "🇺🇸 美国机房 02"
+    type: trojan
+    server: lax.magichub.top
+    port: 443
+    password: "d430df0c-b722-4565-9bb5-b9b9d365c232"
+    sni: lax.magichub.top
+    udp: true
+    skip-cert-verify: false
+    network: ws
+    ws-opts:
+      path: "/d430df0c-b722-4565-9bb5-b9b9d365c232"
+      headers:
+        Host: lax.magichub.top
+
+  - name: "🇯🇵 日本机房 01"
+    type: hysteria2
+    server: kix.magichub.top
+    port: 49236
+    password: "Rain@8240"
+    sni: kix.magichub.top
+    skip-cert-verify: false
+    up: "100 Mbps"
+    down: "1000 Mbps"
+
+  - name: "🇯🇵 日本机房 02"
+    type: trojan
+    server: kix.magichub.top
+    port: 443
+    password: "7817bc62-98ee-4893-b467-d4eaa9539ebc"
+    sni: kix.magichub.top
+    udp: true
+    skip-cert-verify: false
+    network: ws
+    ws-opts:
+      path: "/7817bc62-98ee-4893-b467-d4eaa9539ebc"
+      headers:
+        Host: kix.magichub.top
+
+  - name: "🇭🇰 香港机房 01"
+    type: hysteria2
+    server: hka.magichub.top
+    port: 48790
+    password: "d70fc511-e381-472f-8580-c69caf068752"
+    sni: hka.magichub.top
+    skip-cert-verify: false
+    up: "100 Mbps"
+    down: "1000 Mbps"
+
+  - name: "🇭🇰 香港机房 02"
+    type: trojan
+    server: hka.magichub.top
+    port: 443
+    password: "3c3c9b6d-48cc-4083-9da9-973daf9482eb"
+    sni: hka.magichub.top
+    udp: true
+    skip-cert-verify: false
+    network: ws
+    ws-opts:
+      path: "/3c3c9b6d-48cc-4083-9da9-973daf9482eb"
+      headers:
+        Host: hka.magichub.top
