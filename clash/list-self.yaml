@@ -1,78 +1,96 @@
-# URL: # https://magichub.top/download/clash/list-self.yaml
-# URL Decode: https%3A%2F%2Fmagichub.top%2Fdownload%2Fclash%2Flist-self.yaml
 proxies:
-  - {
-      name: '🇺🇸 美国自建节点 1',
-      server: purple.magichub.top,
-      port: 54092,
-      type: vmess,
-      uuid: 8562f7a9-e39d-427c-807a-6215f29697a8,
-      alterId: 0,
-      cipher: auto,
-      tls: true,
-      skip-cert-verify: true,
-      servername: purple.magichub.top,
-      network: ws,
-      ws-opts: { path: /ysblldyufffl, headers: { Host: purple.magichub.top } },
-      udp: true,
-    }
-  - {
-      name: '🇺🇸 美国自建节点 2',
-      server: purple.magichub.top,
-      port: 54092,
-      type: vmess,
-      uuid: e28b6410-952b-4ba0-8b65-2044ef9deb49,
-      alterId: 0,
-      cipher: auto,
-      tls: true,
-      skip-cert-verify: true,
-      servername: purple.magichub.top,
-      network: ws,
-      ws-opts: { path: /ysblldyufffl, headers: { Host: purple.magichub.top } },
-      udp: true,
-    }
-  - {
-      name: '🇺🇸 美国自建节点 3',
-      server: purple.magichub.top,
-      port: 54092,
-      type: vmess,
-      uuid: 9b3db3f4-dd3d-48fe-ba6d-c8d30bad927c,
-      alterId: 0,
-      cipher: auto,
-      tls: true,
-      skip-cert-verify: true,
-      servername: purple.magichub.top,
-      network: ws,
-      ws-opts: { path: /ysblldyufffl, headers: { Host: purple.magichub.top } },
-      udp: true,
-    }
-  - {
-      name: '🇺🇸 美国自建节点 4',
-      server: purple.magichub.top,
-      port: 54092,
-      type: vmess,
-      uuid: 3c1d608a-138a-4bf5-855b-914ec190c926,
-      alterId: 0,
-      cipher: auto,
-      tls: true,
-      skip-cert-verify: true,
-      servername: purple.magichub.top,
-      network: ws,
-      ws-opts: { path: /ysblldyufffl, headers: { Host: purple.magichub.top } },
-      udp: true,
-    }
-  - {
-      name: '🇺🇸 美国自建节点 5',
-      server: purple.magichub.top,
-      port: 54092,
-      type: vmess,
-      uuid: a757bac1-c9a9-44b0-a5eb-a7b894549871,
-      alterId: 0,
-      cipher: auto,
-      tls: true,
-      skip-cert-verify: true,
-      servername: purple.magichub.top,
-      network: ws,
-      ws-opts: { path: /ysblldyufffl, headers: { Host: purple.magichub.top } },
-      udp: true,
-    }
+  - name: "🇺🇸 美国家宽 01"
+    type: hysteria2
+    server: laxres.magichub.top
+    port: 37283
+    password: "8fa57582-eefb-4ad4-85cd-3e22db8a5510"
+    sni: laxres.magichub.top
+    skip-cert-verify: false
+    up: "60 Mbps"
+    down: "60 Mbps"
+
+  - name: "🇺🇸 美国家宽 02"
+    type: trojan
+    server: laxres.magichub.top
+    port: 443
+    password: "7e5e5610-a7b9-4842-9530-eb6b901a7b9a"
+    sni: laxres.magichub.top
+    udp: true
+    skip-cert-verify: false
+    network: ws
+    ws-opts:
+      path: "/7e5e5610-a7b9-4842-9530-eb6b901a7b9a"
+      headers:
+        Host: laxres.magichub.top
+
+  - name: "🇺🇸 美国机房 01"
+    type: hysteria2
+    server: lax.magichub.top
+    port: 49236
+    password: "37fa78f3-2bbf-4839-88df-3491afef9e81"
+    sni: lax.magichub.top
+    skip-cert-verify: false
+    up: "100 Mbps"
+    down: "1000 Mbps"
+
+  - name: "🇺🇸 美国机房 02"
+    type: trojan
+    server: lax.magichub.top
+    port: 443
+    password: "d430df0c-b722-4565-9bb5-b9b9d365c232"
+    sni: lax.magichub.top
+    udp: true
+    skip-cert-verify: false
+    network: ws
+    ws-opts:
+      path: "/d430df0c-b722-4565-9bb5-b9b9d365c232"
+      headers:
+        Host: lax.magichub.top
+
+  - name: "🇯🇵 日本机房 01"
+    type: hysteria2
+    server: kix.magichub.top
+    port: 49236
+    password: "Rain@8240"
+    sni: kix.magichub.top
+    skip-cert-verify: false
+    up: "100 Mbps"
+    down: "1000 Mbps"
+
+  - name: "🇯🇵 日本机房 02"
+    type: trojan
+    server: kix.magichub.top
+    port: 443
+    password: "7817bc62-98ee-4893-b467-d4eaa9539ebc"
+    sni: kix.magichub.top
+    udp: true
+    skip-cert-verify: false
+    network: ws
+    ws-opts:
+      path: "/7817bc62-98ee-4893-b467-d4eaa9539ebc"
+      headers:
+        Host: kix.magichub.top
+
+  - name: "🇭🇰 香港机房 01"
+    type: hysteria2
+    server: hka.magichub.top
+    port: 48790
+    password: "d70fc511-e381-472f-8580-c69caf068752"
+    sni: hka.magichub.top
+    skip-cert-verify: false
+    up: "100 Mbps"
+    down: "1000 Mbps"
+
+  - name: "🇭🇰 香港机房 02"
+    type: trojan
+    server: hka.magichub.top
+    port: 443
+    password: "3c3c9b6d-48cc-4083-9da9-973daf9482eb"
+    sni: hka.magichub.top
+    udp: true
+    skip-cert-verify: false
+    network: ws
+    ws-opts:
+      path: "/3c3c9b6d-48cc-4083-9da9-973daf9482eb"
+      headers:
+        Host: hka.magichub.top

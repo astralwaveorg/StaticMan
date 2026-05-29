@@ -1,7 +1,11 @@
 # 规则文件: devtools.list
 # 规则总数: 214
 # 规则地址: https://list.magichub.top/d/surge/rules/devtools.list
+<<<<<<< HEAD
 # 更新时间: 2026-04-07 05:31:05
+=======
+# 更新时间: 2026-05-04 06:31:28
+>>>>>>> ec8e43cc20b7f8f25ca6ce3d29f9518d4500397b
 
 DOMAIN,aida.googleapis.com
 DOMAIN,d1q6f0aelx0por.cloudfront.net
