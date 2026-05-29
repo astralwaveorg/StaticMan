@@ -202,6 +202,56 @@ proxy-groups:
     type: url-test
     use: [订阅节点]
     filter: '(?i)🇸🇬|新加坡|SG|Singapore'
+
+  - name: '🇨🇦 加拿大节点'
+    type: url-test
+    use: [订阅节点]
+    filter: '(?i)🇨🇦|加拿大|Canada|\bCA\b'
+
+  - name: '🇮🇳 印度节点'
+    type: url-test
+    use: [订阅节点]
+    filter: '(?i)🇮🇳|印度 V|India|\bIN\b'
+
+  - name: '🇮🇩 印尼节点'
+    type: url-test
+    use: [订阅节点]
+    filter: '(?i)🇮🇩|印度尼西亚|印尼|Indonesia|\bID\b'
+
+  - name: '🇩🇪 德国节点'
+    type: url-test
+    use: [订阅节点]
+    filter: '(?i)🇩🇪|德国|Germany|\bDE\b'
+
+  - name: '🇹🇭 泰国节点'
+    type: url-test
+    use: [订阅节点]
+    filter: '(?i)🇹🇭|泰国|Thailand|\bTH\b'
+
+  - name: '🇦🇺 澳大利亚节点'
+    type: url-test
+    use: [订阅节点]
+    filter: '(?i)🇦🇺|澳大利亚|Australia|\bAU\b'
+
+  - name: '🇬🇧 英国节点'
+    type: url-test
+    use: [订阅节点]
+    filter: '(?i)🇬🇧|英国|United Kingdom|Britain|\bUK\b|\bGB\b'
+
+  - name: '🇳🇱 荷兰节点'
+    type: url-test
+    use: [订阅节点]
+    filter: '(?i)🇳🇱|荷兰|Netherlands|Holland|\bNL\b'
+
+  - name: '🇵🇭 菲律宾节点'
+    type: url-test
+    use: [订阅节点]
+    filter: '(?i)🇵🇭|菲律宾|Philippines|\bPH\b'
+
+  - name: '🇲🇾 马来西亚节点'
+    type: url-test
+    use: [订阅节点]
+    filter: '(?i)🇲🇾|马来西亚|Malaysia|\bMY\b'
   
   - name: '🏠 路由器内网'
     type: select
@@ -222,6 +272,16 @@ proxy-groups:
       - 🇯🇵 日本节点
       - 🇰🇷 韩国节点
       - 🇸🇬 新加坡节点
+      - 🇨🇦 加拿大节点
+      - 🇮🇳 印度节点
+      - 🇮🇩 印尼节点
+      - 🇩🇪 德国节点
+      - 🇹🇭 泰国节点
+      - 🇦🇺 澳大利亚节点
+      - 🇬🇧 英国节点
+      - 🇳🇱 荷兰节点
+      - 🇵🇭 菲律宾节点
+      - 🇲🇾 马来西亚节点
 
   - name: '人工智能'
     type: select
