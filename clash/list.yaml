@@ -89,66 +89,74 @@ proxies:
 - { name: "DaWang-US-LosAngeles4",type: vmess,server: us4.dav2v2.top,port: 444,uuid: F8E0A8DB-75E7-74C3-1087-B13CDB5B5E66,alterId: 0,cipher: none, network: ws, client-fingerprint: safari, tls: true, tfo: false, skip-cert-verify: true, servername: gcore.com, ws-opts: {path: /, headers: { Host: dav2us22222.com }}, udp: true}
 - { name: "DaWang-US-LosAngeles5",type: vmess,server: us5.dav2v2.top,port: 444,uuid: F8E0A8DB-75E7-74C3-1087-B13CDB5B5E66,alterId: 0,cipher: none, network: ws, client-fingerprint: safari, tls: true, tfo: false, skip-cert-verify: true, servername: gcore.com, ws-opts: {path: /, headers: { Host: dav2us33333.com }}, udp: true}
 
-- { name: "香港 V1|01", type: trojan, server: sv1hk01.163cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1hk01.163cc.top, benchmark-disabled: true }
-- { name: "香港 V1|03", type: trojan, server: sv1hktr3.110ctc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1hktr3.110ctc.top, benchmark-disabled: true }
-- { name: "香港 V1|04", type: trojan, server: sv1hktr4.165cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1hktr4.165cc.top, benchmark-disabled: true }
-- { name: "加拿大|01(Netflix)", type: trojan, server: scan.164cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: scan.164cc.top, benchmark-disabled: true }
-- { name: "印度 V1|01", type: trojan, server: syindu.166cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: syindu.166cc.top, benchmark-disabled: true }
-- { name: "印度尼西亚 V2|01", type: trojan, server: sydnxy.166cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sydnxy.166cc.top, benchmark-disabled: true }
-- { name: "台湾 V1|01(中转)", type: trojan, server: strtw1.fr101.xyz, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: stw01.161cc.top, benchmark-disabled: true }
-- { name: "台湾 V2|01(中转)", type: trojan, server: tw2.cdn102.top, port: 4433, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: susb2.164cc.top, benchmark-disabled: true }
-- { name: "德国 V2|01", type: trojan, server: sdeguo.164cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sdeguo.164cc.top, benchmark-disabled: true }
-- { name: "新加坡 V1|01", type: trojan, server: sv1sgtr1.183cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1sgtr1.183cc.top, benchmark-disabled: true }
-- { name: "新加坡 V1|02", type: trojan, server: sv1sgtr2.110ctc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1sgtr2.110ctc.top, benchmark-disabled: true }
-- { name: "新加坡 V1|03", type: trojan, server: sv1sgtr3.185cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1sgtr3.185cc.top, benchmark-disabled: true }
-- { name: "新加坡 V1|04", type: trojan, server: sv1sgtr4.166cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1sgtr4.166cc.top, benchmark-disabled: true }
-- { name: "新加坡 V1|05(A443)", type: trojan, server: sv1sgtr5.183cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1sgtr5.183cc.top, benchmark-disabled: true }
-- { name: "新加坡 V1|06", type: trojan, server: sv1sgtr6.164cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1sgtr6.164cc.top, benchmark-disabled: true }
-- { name: "新加坡 V1|WS|B1", type: vmess, server: sv1sgb1.164cc.top, port: 10626, uuid: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", alterId: 0, cipher: auto, udp: true, servername: sv1sgb1.164cc.top, network: ws, ws-path: /v2ray, ws-headers: { Host: sv1sgb1.164cc.top }, ws-opts: { path: /v2ray, headers: { Host: sv1sgb1.164cc.top } }, benchmark-disabled: true }
-- { name: "新加坡 V1|WS|B2", type: vmess, server: sv1sgb2.164cc.top, port: 443, uuid: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", alterId: 0, cipher: auto, udp: true, servername: sv1sgb2.164cc.top, network: ws, ws-path: /v2ray, ws-headers: { Host: sv1sgb2.164cc.top }, ws-opts: { path: /v2ray, headers: { Host: sv1sgb2.164cc.top } }, tls: true, benchmark-disabled: true }
-- { name: "新加坡 V1|WS|B3", type: vmess, server: sv1sgb3.162cc.top, port: 443, uuid: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", alterId: 0, cipher: auto, udp: true, servername: sv1sgb3.162cc.top, network: ws, ws-path: /v2ray, ws-headers: { Host: sv1sgb3.162cc.top }, ws-opts: { path: /v2ray, headers: { Host: sv1sgb3.162cc.top } }, tls: true, benchmark-disabled: true }
-- { name: "新加坡 V2|01", type: trojan, server: sv2trsg4.165cc.top, port: 12754, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv2trsg4.165cc.top, benchmark-disabled: true }
-- { name: "新加坡 V2|02", type: trojan, server: sv2trsg2.183cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv2trsg2.183cc.top, benchmark-disabled: true }
-- { name: "新加坡 V2|03", type: trojan, server: sv2trsg3.163cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv2trsg3.163cc.top, benchmark-disabled: true }
-- { name: "新加坡 V2|04", type: trojan, server: sv2trsg4.163cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv2trsg4.163cc.top, benchmark-disabled: true }
-- { name: "新加坡 V3|06", type: trojan, server: sv3trsg4.163cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv3trsg4.163cc.top, benchmark-disabled: true }
-- { name: "新加坡 V3|T2", type: trojan, server: sv3hktr10.163cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv3hktr10.163cc.top, benchmark-disabled: true }
-- { name: "新加坡 免费F1(官网shidongli165.top)", type: trojan, server: ssf1sg1.fr101.xyz, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: ssf1sg1.fr101.xyz, benchmark-disabled: true }
-- { name: "日本  免费F2|(登录shidongli165.top)", type: trojan, server: sjpt1.fr101.xyz, port: 6443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sjpt1.fr101.xyz, benchmark-disabled: true }
-- { name: "日本 V1|01", type: trojan, server: sv1jptr1.110ctc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1jptr1.110ctc.top, benchmark-disabled: true }
-- { name: "日本 V1|02", type: trojan, server: sv1jptr2.185cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1jptr2.185cc.top, benchmark-disabled: true }
-- { name: "日本 V1|03", type: trojan, server: sv1jptr3.162cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1jptr3.162cc.top, benchmark-disabled: true }
-- { name: "日本 V1|04(A443)", type: trojan, server: sv1jptr4.163cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1jptr4.163cc.top, benchmark-disabled: true }
-- { name: "日本 V1|05(直连A443)", type: trojan, server: sv1jptr5.110ctc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1jptr5.110ctc.top, benchmark-disabled: true }
-- { name: "日本 V2|01", type: trojan, server: sv2jptr1.162cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv2jptr1.162cc.top, benchmark-disabled: true }
-- { name: "日本 V2|01(直连)", type: trojan, server: sjp4.165cc.top, port: 10651, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sjp4.165cc.top, benchmark-disabled: true }
-- { name: "日本 V2|02", type: trojan, server: sjp3.162cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sjp3.162cc.top, benchmark-disabled: true }
-- { name: "日本 V3|A2(仅支持IPV6)", type: trojan, server: svip3jpa2.165cc.top, port: 16557, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: svip3jpa2.165cc.top, benchmark-disabled: true }
-- { name: "泰国曼谷 V2|01", type: trojan, server: staiguo.161cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: staiguo.161cc.top, benchmark-disabled: true }
-- { name: "美国  V1|04(中转/Netflix/Chatgpt)", type: trojan, server: usjd.jgcdn.xyz, port: 10446, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1ustr4.162cc.top, benchmark-disabled: true }
-- { name: "美国 V1|01", type: trojan, server: sv1ustra1.161cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1ustra1.161cc.top, benchmark-disabled: true }
-- { name: "美国 V1|02", type: trojan, server: sv1ustr2.162cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1ustr2.162cc.top, benchmark-disabled: true }
-- { name: "美国 V1|03", type: trojan, server: susb3.162cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: susb3.162cc.top, benchmark-disabled: true }
-- { name: "美国 V1|B2(中转/Netflix/ChatGPT/Disney+/Steam)", type: trojan, server: usdtjd512.xcjd101.shop, port: 11533, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1ustra1.164cc.top, benchmark-disabled: true }
-- { name: "美国 V1|C3(中转/Netflix/ChatGPT)", type: trojan, server: rackus1.jgcdn.xyz, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1trusc3.161cc.top, benchmark-disabled: true }
-- { name: "美国 V1|C5(中转/Netflix/ChatGPT)", type: trojan, server: rackus1.jgcdn.xyz, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: susc5.166cc.top, benchmark-disabled: true }
-- { name: "美国 V2|01", type: trojan, server: susvip2b4.162cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: susvip2b4.162cc.top, benchmark-disabled: true }
-- { name: "美国 V2|B2(Netflix/ChatGPT)", type: trojan, server: susvip2b2.xv1dd1.top, port: 10353, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: susvip2b2.162cc.top, benchmark-disabled: true }
-- { name: "英国 V2|01", type: trojan, server: sv1hktr9.166cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1hktr9.166cc.top, benchmark-disabled: true }
-- { name: "菲律宾 V2|01", type: trojan, server: sflb.166cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sflb.166cc.top, benchmark-disabled: true }
-- { name: "韩国 V1|01", type: trojan, server: shan.164cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: shan.164cc.top, benchmark-disabled: true }
-- { name: "韩国 V1|02", type: trojan, server: sv1hgtr2.182cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1hgtr2.182cc.top, benchmark-disabled: true }
-- { name: "韩国 V1|03", type: trojan, server: sv1hktr4.162cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1hktr4.162cc.top, benchmark-disabled: true }
-- { name: "韩国 V2|01", type: trojan, server: sv2hktr1.162cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv2hktr1.162cc.top, benchmark-disabled: true }
-- { name: "香港 V1|02(中转)", type: trojan, server: sv1hktr2.cdn102.top, port: 17244, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1hktr2.110ctc.top, benchmark-disabled: true }
-- { name: "香港 V1|05(中转)", type: trojan, server: sv1hk5.162cdn.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1trhk5.166cc.top, benchmark-disabled: true }
-- { name: "香港 V1|07", type: trojan, server: sv1trsg7.161cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1trsg7.161cc.top, benchmark-disabled: true }
-- { name: "香港 V1|11", type: trojan, server: sv1hktr11.166cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv1hktr11.166cc.top, benchmark-disabled: true }
-- { name: "香港 V2|01", type: trojan, server: sv2hktr1.110ctc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv2hktr1.110ctc.top, benchmark-disabled: true }
-- { name: "香港 V2|02", type: trojan, server: sv2hktr2.162cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv2hktr2.162cc.top, benchmark-disabled: true }
-- { name: "香港 V2|03(仅IPV6)", type: trojan, server: sv2hktr3.166cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv2hktr3.166cc.top, benchmark-disabled: true }
-- { name: "香港 V2|04(中转/静态双ISP住宅IP/原生IP/Netflix等)", type: trojan, server: hkisp1.cdn102.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv2trhk4.163cc.top, benchmark-disabled: true }
-- { name: "香港 V2|05", type: trojan, server: sv2trhk5.110ctc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv2trhk5.110ctc.top, benchmark-disabled: true }
-- { name: "香港 V2|07(仅支持IPV6)", type: trojan, server: sv2trhk07.161cc.top, port: 15125, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: sv2trhk07.161cc.top, benchmark-disabled: true }
-- { name: "香港 免费F3", type: trojan, server: shkf3.110ctc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: shkf3.110ctc.top, benchmark-disabled: true }
-- { name: "马来西亚 V2|01", type: trojan, server: smlxy.166cc.top, port: 443, password: "f1b91e32-f65c-30f6-9450-a9456b9ebe9c", sni: smlxy.166cc.top, benchmark-disabled: true }
+- { name: "香港 V1|01", type: trojan, server: sv1hk01.163cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1hk01.163cc.top, benchmark-disabled: true }
+- { name: "香港 V1|03", type: trojan, server: sv1hktr3.110ctc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1hktr3.110ctc.top, benchmark-disabled: true }
+- { name: "香港 V1|04", type: trojan, server: sv1hktr4.165cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1hktr4.165cc.top, benchmark-disabled: true }
+- { name: "加拿大|01(Netflix)", type: trojan, server: scan.164cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: scan.164cc.top, benchmark-disabled: true }
+- { name: "中国台湾 V1|WS|A1", type: vmess, server: stw.sgcdn.top, port: 6443, uuid: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", alterId: 0, cipher: auto, udp: true, servername: stw.164cc.top, network: ws, ws-path: /hls/cctv5phd.m3u8, ws-headers: { Host: stw.164cc.top }, ws-opts: { path: /hls/cctv5phd.m3u8, headers: { Host: stw.164cc.top } }, tls: true, benchmark-disabled: true }
+- { name: "印度 V1|01", type: trojan, server: syindu.166cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: syindu.166cc.top, benchmark-disabled: true }
+- { name: "印度尼西亚 V2|01", type: trojan, server: sydnxy.166cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sydnxy.166cc.top, benchmark-disabled: true }
+- { name: "台湾 V1|01(中转)", type: trojan, server: strtw1.fr101.xyz, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: stw01.161cc.top, benchmark-disabled: true }
+- { name: "台湾 V2|01(中转)", type: trojan, server: tw2.cdn102.top, port: 4433, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: susb2.164cc.top, benchmark-disabled: true }
+- { name: "德国 V2|01", type: trojan, server: sdeguo.164cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sdeguo.164cc.top, benchmark-disabled: true }
+- { name: "新加坡 V1|01", type: trojan, server: sv1sgtr1.183cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1sgtr1.183cc.top, benchmark-disabled: true }
+- { name: "新加坡 V1|02", type: trojan, server: sv1sgtr2.110ctc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1sgtr2.110ctc.top, benchmark-disabled: true }
+- { name: "新加坡 V1|03", type: trojan, server: sv1sgtr3.185cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1sgtr3.185cc.top, benchmark-disabled: true }
+- { name: "新加坡 V1|04", type: trojan, server: sv1sgtr4.166cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1sgtr4.166cc.top, benchmark-disabled: true }
+- { name: "新加坡 V1|05(A443)", type: trojan, server: sv1sgtr5.183cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1sgtr5.183cc.top, benchmark-disabled: true }
+- { name: "新加坡 V1|06", type: trojan, server: sv1sgtr6.164cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1sgtr6.164cc.top, benchmark-disabled: true }
+- { name: "新加坡 V1|WS|B1", type: vmess, server: sv1sgb1.164cc.top, port: 10626, uuid: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", alterId: 0, cipher: auto, udp: true, servername: sv1sgb1.164cc.top, network: ws, ws-path: /v2ray, ws-headers: { Host: sv1sgb1.164cc.top }, ws-opts: { path: /v2ray, headers: { Host: sv1sgb1.164cc.top } }, benchmark-disabled: true }
+- { name: "新加坡 V1|WS|B2", type: vmess, server: sv1sgb2.164cc.top, port: 443, uuid: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", alterId: 0, cipher: auto, udp: true, servername: sv1sgb2.164cc.top, network: ws, ws-path: /v2ray, ws-headers: { Host: sv1sgb2.164cc.top }, ws-opts: { path: /v2ray, headers: { Host: sv1sgb2.164cc.top } }, tls: true, benchmark-disabled: true }
+- { name: "新加坡 V1|WS|B3", type: vmess, server: sv1sgb3.162cc.top, port: 443, uuid: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", alterId: 0, cipher: auto, udp: true, servername: sv1sgb3.162cc.top, network: ws, ws-path: /v2ray, ws-headers: { Host: sv1sgb3.162cc.top }, ws-opts: { path: /v2ray, headers: { Host: sv1sgb3.162cc.top } }, tls: true, benchmark-disabled: true }
+- { name: "新加坡 V2|01", type: trojan, server: sv2trsg4.165cc.top, port: 12754, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv2trsg4.165cc.top, benchmark-disabled: true }
+- { name: "新加坡 V2|02", type: trojan, server: sv2trsg2.183cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv2trsg2.183cc.top, benchmark-disabled: true }
+- { name: "新加坡 V2|03", type: trojan, server: sv2trsg3.163cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv2trsg3.163cc.top, benchmark-disabled: true }
+- { name: "新加坡 V2|04", type: trojan, server: sv2trsg4.163cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv2trsg4.163cc.top, benchmark-disabled: true }
+- { name: "新加坡 V3|06", type: trojan, server: sv3trsg4.163cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv3trsg4.163cc.top, benchmark-disabled: true }
+- { name: "新加坡 V3|T2", type: trojan, server: sv3hktr10.163cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv3hktr10.163cc.top, benchmark-disabled: true }
+- { name: "新加坡 免费F1(官网shidongli165.top)", type: trojan, server: ssf1sg1.fr101.xyz, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: ssf1sg1.fr101.xyz, benchmark-disabled: true }
+- { name: "日本  免费F2|(登录shidongli165.top)", type: trojan, server: sjpt1.fr101.xyz, port: 6443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sjpt1.fr101.xyz, benchmark-disabled: true }
+- { name: "日本 V1|01", type: trojan, server: sv1jptr1.110ctc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1jptr1.110ctc.top, benchmark-disabled: true }
+- { name: "日本 V1|02", type: trojan, server: sv1jptr2.185cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1jptr2.185cc.top, benchmark-disabled: true }
+- { name: "日本 V1|03", type: trojan, server: sv1jptr3.162cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1jptr3.162cc.top, benchmark-disabled: true }
+- { name: "日本 V1|04(A443)", type: trojan, server: sv1jptr4.163cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1jptr4.163cc.top, benchmark-disabled: true }
+- { name: "日本 V1|05(直连A443)", type: trojan, server: sv1jptr5.110ctc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1jptr5.110ctc.top, benchmark-disabled: true }
+- { name: "日本 V2|01", type: trojan, server: sv2jptr1.162cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv2jptr1.162cc.top, benchmark-disabled: true }
+- { name: "日本 V2|01(直连)", type: trojan, server: sjp4.165cc.top, port: 10651, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sjp4.165cc.top, benchmark-disabled: true }
+- { name: "日本 V2|02", type: trojan, server: sjp3.162cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sjp3.162cc.top, benchmark-disabled: true }
+- { name: "日本 V3|A2(仅支持IPV6)", type: trojan, server: svip3jpa2.165cc.top, port: 16557, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: svip3jpa2.165cc.top, benchmark-disabled: true }
+- { name: "泰国曼谷 V2|01", type: trojan, server: staiguo.161cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: staiguo.161cc.top, benchmark-disabled: true }
+- { name: "澳大利亚 V2|01", type: trojan, server: saodaliya.166cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: saodaliya.166cc.top, benchmark-disabled: true }
+- { name: "美国 V1|01", type: trojan, server: sv1ustra1.161cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1ustra1.161cc.top, benchmark-disabled: true }
+- { name: "美国 V1|02", type: trojan, server: sv1ustr2.162cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1ustr2.162cc.top, benchmark-disabled: true }
+- { name: "美国 V1|03", type: trojan, server: susb3.162cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: susb3.162cc.top, benchmark-disabled: true }
+- { name: "美国 V1|04(中转/Netflix/Chatgpt)", type: trojan, server: usjd.jgcdn.xyz, port: 10446, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1ustr4.162cc.top, benchmark-disabled: true }
+- { name: "美国 V1|B2(中转/Netflix/ChatGPT/Disney+/Steam)", type: trojan, server: usdtjd512.xcjd101.shop, port: 11533, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1ustra1.164cc.top, benchmark-disabled: true }
+- { name: "美国 V1|C3(中转/Netflix/ChatGPT)", type: trojan, server: rackus1.jgcdn.xyz, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1trusc3.161cc.top, benchmark-disabled: true }
+- { name: "美国 V1|C5(中转/Netflix/ChatGPT)", type: trojan, server: rackus1.jgcdn.xyz, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: susc5.166cc.top, benchmark-disabled: true }
+- { name: "美国 V1|WS|A02", type: vmess, server: 9e7c21ac.sgcdn.top, port: 8443, uuid: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", alterId: 0, cipher: auto, udp: true, servername: snv1ustra1.161cc.top, network: ws, ws-path: /hls/cctv5phd.m3u8, ws-headers: { Host: snv1ustra1.161cc.top }, ws-opts: { path: /hls/cctv5phd.m3u8, headers: { Host: snv1ustra1.161cc.top } }, tls: true, benchmark-disabled: true }
+- { name: "美国 V1|WS|A5", type: vmess, server: e07e6481.sgcdn.top, port: 8443, uuid: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", alterId: 0, cipher: auto, udp: true, servername: sv1ustra5.162cc.top, network: ws, ws-path: /hls/cctv5phd.m3u8, ws-headers: { Host: sv1ustra5.162cc.top }, ws-opts: { path: /hls/cctv5phd.m3u8, headers: { Host: sv1ustra5.162cc.top } }, tls: true, benchmark-disabled: true }
+- { name: "美国 V1|WS|B1", type: vmess, server: 3f621eda.jpcdn.top, port: 443, uuid: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", alterId: 0, cipher: auto, udp: true, servername: susb1.164cc.top, network: ws, ws-path: /hls/cctv5phd.m3u8, ws-headers: { Host: susb1.164cc.top }, ws-opts: { path: /hls/cctv5phd.m3u8, headers: { Host: susb1.164cc.top } }, tls: true, benchmark-disabled: true }
+- { name: "美国 V2|01", type: trojan, server: susvip2b4.162cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: susvip2b4.162cc.top, benchmark-disabled: true }
+- { name: "美国 V2|B2(Netflix/ChatGPT)", type: trojan, server: susvip2b2.xv1dd1.top, port: 10353, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: susvip2b2.162cc.top, benchmark-disabled: true }
+- { name: "美国 V2|WS|A1", type: vmess, server: susvip2a1.jpcdn.top, port: 443, uuid: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", alterId: 0, cipher: auto, udp: true, servername: susvip2a1.110ctc.top, network: ws, ws-path: /hls/cctv5phd.m3u8, ws-headers: { Host: susvip2a1.110ctc.top }, ws-opts: { path: /hls/cctv5phd.m3u8, headers: { Host: susvip2a1.110ctc.top } }, tls: true, benchmark-disabled: true }
+- { name: "英国 V2|01", type: trojan, server: sv1hktr9.166cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1hktr9.166cc.top, benchmark-disabled: true }
+- { name: "荷兰 V1|01", type: trojan, server: sv1trhl1.166cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1trhl1.166cc.top, benchmark-disabled: true }
+- { name: "菲律宾 V2|01", type: trojan, server: sflb.166cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sflb.166cc.top, benchmark-disabled: true }
+- { name: "韩国 V1|01", type: trojan, server: shan.164cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: shan.164cc.top, benchmark-disabled: true }
+- { name: "韩国 V1|02", type: trojan, server: sv1hgtr2.182cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1hgtr2.182cc.top, benchmark-disabled: true }
+- { name: "韩国 V1|03", type: trojan, server: sv1hktr4.162cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1hktr4.162cc.top, benchmark-disabled: true }
+- { name: "韩国 V2|01", type: trojan, server: sv2hktr1.162cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv2hktr1.162cc.top, benchmark-disabled: true }
+- { name: "香港 V1|02(中转)", type: trojan, server: sv1hktr2.cdn102.top, port: 17244, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1hktr2.110ctc.top, benchmark-disabled: true }
+- { name: "香港 V1|05(中转)", type: trojan, server: sv1hk5.162cdn.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1trhk5.166cc.top, benchmark-disabled: true }
+- { name: "香港 V1|07", type: trojan, server: sv1trsg7.161cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1trsg7.161cc.top, benchmark-disabled: true }
+- { name: "香港 V1|11", type: trojan, server: sv1hktr11.166cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv1hktr11.166cc.top, benchmark-disabled: true }
+- { name: "香港 V1|WS|01(中转)\t", type: vmess, server: sv1hktr6.sgcdn.top, port: 7443, uuid: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", alterId: 0, cipher: auto, udp: true, servername: sv1hktr6.111ctc.buzz, network: ws, ws-path: /hls/cctv5phd.m3u8, ws-headers: { Host: sv1hktr6.111ctc.buzz }, ws-opts: { path: /hls/cctv5phd.m3u8, headers: { Host: sv1hktr6.111ctc.buzz } }, tls: true, benchmark-disabled: true }
+- { name: "香港 V2|01", type: trojan, server: sv2hktr1.110ctc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv2hktr1.110ctc.top, benchmark-disabled: true }
+- { name: "香港 V2|02", type: trojan, server: sv2hktr2.162cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv2hktr2.162cc.top, benchmark-disabled: true }
+- { name: "香港 V2|03(仅IPV6)", type: trojan, server: sv2hktr3.166cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv2hktr3.166cc.top, benchmark-disabled: true }
+- { name: "香港 V2|04(中转/静态双ISP住宅IP/原生IP/Netflix等)", type: trojan, server: hkisp1.cdn102.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv2trhk4.163cc.top, benchmark-disabled: true }
+- { name: "香港 V2|05", type: trojan, server: sv2trhk5.110ctc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv2trhk5.110ctc.top, benchmark-disabled: true }
+- { name: "香港 V2|07(仅支持IPV6)", type: trojan, server: sv2trhk07.161cc.top, port: 15125, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: sv2trhk07.161cc.top, benchmark-disabled: true }
+- { name: "香港 免费F3", type: trojan, server: shkf3.110ctc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: shkf3.110ctc.top, benchmark-disabled: true }
+- { name: "马来西亚 V2|01", type: trojan, server: smlxy.166cc.top, port: 443, password: "b6c6c5c8-babe-3bcd-8bde-5939f12e9bc4", sni: smlxy.166cc.top, benchmark-disabled: true }
