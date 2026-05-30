@@ -10,4 +10,12 @@ DOMAIN-SUFFIX,pinterest.com
 DOMAIN-SUFFIX,reddit.com
 DOMAIN-SUFFIX,wikipedia.org
 DOMAIN-SUFFIX,dropbox.com
-DOMAIN-SUFFIX,slack.com
+DOMAIN-SUFFIX,slack.comDOMAIN-SUFFIX,stackoverflow.com
+DOMAIN-SUFFIX,stackauth.com
+DOMAIN-SUFFIX,serverfault.com
+DOMAIN-SUFFIX,superuser.com
+DOMAIN-SUFFIX,askubuntu.com
+DOMAIN-SUFFIX,stackapps.com
+DOMAIN-SUFFIX,mathoverflow.net
+DOMAIN-SUFFIX,stackexchange.com
+DOMAIN-SUFFIX,sstatic.net
