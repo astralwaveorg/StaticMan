@@ -1,5 +1,3 @@
-# > 专为各大机场定制
-
 DOMAIN-KEYWORD,limbopro
 DOMAIN-KEYWORD,iplcm
 DOMAIN-KEYWORD,kcssr
@@ -118,8 +116,6 @@ DOMAIN-KEYWORD,flowercloud
 DOMAIN-SUFFIX,amytele.co
 DOMAIN-SUFFIX,bit.ly
 DOMAIN-SUFFIX,1yunti
-#Cloudflare 减速器
 DOMAIN,ajax.cloudflare.com
 DOMAIN,static.cloudflareinsights.com
-# Google Analytics
 DOMAIN,analyticsmobile-pa.googleapis.com
