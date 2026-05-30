@@ -15,8 +15,6 @@ DOMAIN-SUFFIX,sub.id9.cc
 DOMAIN-SUFFIX,convert.v1.mk
 DOMAIN-SUFFIX,api.wcc.best
 DOMAIN-SUFFIX,sub.xeton.dev
-DOMAIN-SUFFIX,apple.com
-DOMAIN-SUFFIX,icloud.com
 DOMAIN-SUFFIX,homehub.stream
 DOMAIN-SUFFIX,astralwave.io
 DOMAIN-SUFFIX,astralwave.vip
@@ -59,13 +57,6 @@ DOMAIN-SUFFIX,jdpay.com
 DOMAIN-SUFFIX,xiaojukeji.com
 DOMAIN-SUFFIX,didiglobal.com
 DOMAIN-SUFFIX,didichuxing.com
-DOMAIN-KEYWORD,bank
-DOMAIN-SUFFIX,microsoft.com
-DOMAIN-SUFFIX,msecnd.net
-DOMAIN-SUFFIX,office365.com
-DOMAIN-SUFFIX,outlook.com
-DOMAIN-SUFFIX,trafficmanager.net
-DOMAIN-SUFFIX,windowsupdate.com
 DOMAIN-SUFFIX,aliyun.com
 DOMAIN-SUFFIX,aliyuncs.com
 DOMAIN-SUFFIX,qcloud.com
