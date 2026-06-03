@@ -541,6 +541,14 @@ func (h *Handler) handleFile(w http.ResponseWriter, r *http.Request) {
 
 	isAuth := h.isAuthenticated(r)
 	isProtected := h.cfg.IsProtected(path)
+
+	// 对受保护文件拒绝未认证访问（与 /raw/ 行为一致）
+	if isProtected && !isAuth {
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		http.Error(w, "Forbidden: this file requires authentication. Add ?key=YOUR_JWT_TOKEN to the URL.", http.StatusForbidden)
+		return
+	}
+
 	isBinary := h.isBinaryFile(path)
 	language := h.detectLanguage(path)
 
@@ -1028,7 +1036,7 @@ func (h *Handler) isBinaryFile(path string) bool {
 // handleLegacySurge 兼容旧 Surge URL
 func (h *Handler) handleLegacySurge(w http.ResponseWriter, r *http.Request) {
 	path := strings.TrimPrefix(r.URL.Path, "/d/surge/")
-	newPath := "proxy/surge/" + path
+	newPath := "Surge/" + path
 	h.serveRawContent(w, r, newPath)
 }
 
@@ -1038,15 +1046,15 @@ func (h *Handler) handleLegacyClash(w http.ResponseWriter, r *http.Request) {
 	var newPath string
 	switch path {
 	case "config.yaml":
-		newPath = "proxy/mihomo/config.yaml"
+		newPath = "Clash/config.yaml"
 	case "mihomo/config.yaml":
-		newPath = "proxy/mihomo/config-nas.yaml"
+		newPath = "Clash/config-nas.yaml"
 	case "mihomo/config-android.yaml":
-		newPath = "proxy/mihomo/config-android.yaml"
+		newPath = "Clash/config-android.yaml"
 	case "list.yaml":
-		newPath = "proxy/clash-list.yaml"
+		newPath = "Clash/nodes.yaml"
 	default:
-		newPath = "proxy/" + path
+		newPath = "Clash/" + path
 	}
 	h.serveRawContent(w, r, newPath)
 }

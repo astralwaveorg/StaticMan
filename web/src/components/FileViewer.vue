@@ -15,7 +15,7 @@
         <span class="file-size">{{ fmtSize(file.size) }}</span>
       </div>
       <div class="file-actions">
-        <button class="action-btn" :class="{copied: copied==='raw'}" @click="copyRaw" :disabled="file.type==='directory'" title="复制 Raw URL">
+        <button class="action-btn" :class="{copied: copied==='raw'}" @click="copyRaw" :disabled="file.type==='directory' || (file.protected && !isLoggedIn())" :title="file.protected && !isLoggedIn() ? '需要登录' : '复制 Raw URL'">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           <span class="action-text">{{ copied==='raw' ? '已复制' : 'Raw' }}</span>
         </button>
@@ -23,10 +23,10 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           <span class="action-text">{{ copied==='path' ? '已复制' : '路径' }}</span>
         </button>
-        <a v-if="file.type !== 'directory'" :href="rawUrl" target="_blank" rel="noopener" class="action-btn" title="新窗口打开">
+        <a v-if="file.type !== 'directory'" :href="rawUrl" target="_blank" rel="noopener" class="action-btn" :class="{disabled: file.protected && !isLoggedIn()}" :tabindex="file.protected && !isLoggedIn() ? -1 : 0" :aria-disabled="file.protected && !isLoggedIn()" :title="file.protected && !isLoggedIn() ? '需要登录' : '新窗口打开'">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         </a>
-        <a v-if="file.type !== 'directory'" :href="rawUrl" :download="file.name" class="action-btn action-accent" title="下载">
+        <a v-if="file.type !== 'directory'" :href="rawUrl" :download="file.name" class="action-btn action-accent" :class="{disabled: file.protected && !isLoggedIn()}" :tabindex="file.protected && !isLoggedIn() ? -1 : 0" :aria-disabled="file.protected && !isLoggedIn()" :title="file.protected && !isLoggedIn() ? '需要登录' : '下载'">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </a>
       </div>
@@ -83,7 +83,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { FileContent } from '../api'
-import { getRawUrl } from '../api'
+import { getRawUrl, isLoggedIn } from '../api'
 import hljs from 'highlight.js'
 
 const props = defineProps<{ file: FileContent }>()
@@ -125,6 +125,11 @@ async function copyToClipboard(text: string) {
 }
 
 async function copyRaw() {
+  if (props.file.protected && !isLoggedIn()) {
+    // 受保护文件未登录：提示先登录
+    alert('此文件受保护，请先登录后再复制 Raw URL')
+    return
+  }
   const url = getRawUrl(props.file.path, props.file.protected, true)
   if (await copyToClipboard(url)) {
     copied.value = 'raw'
@@ -181,7 +186,7 @@ async function copyPath() {
   text-decoration: none; white-space: nowrap;
 }
 .action-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
-.action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.action-btn:disabled, .action-btn.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 .action-btn.copied { background: var(--success); color: white; border-color: var(--success); }
 .action-accent { background: var(--accent); color: white; border-color: var(--accent); }
 .action-accent:hover { background: var(--accent-hover); }

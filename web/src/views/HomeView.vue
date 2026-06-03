@@ -143,12 +143,12 @@ onMounted(async () => {
 
 /* Hero */
 .hero {
-  display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
-  margin-bottom: 16px;
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 14px;
   padding: 0 4px;
 }
 .hero h1 {
-  font-size: 20px; font-weight: 700;
+  font-size: 19px; font-weight: 700;
   letter-spacing: -0.02em;
   margin: 0;
   background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-hover) 100%);

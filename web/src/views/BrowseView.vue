@@ -16,7 +16,17 @@
     </div>
 
     <!-- File browser -->
-    <div v-if="!currentFile || isDirectory" class="browser fade-in">
+    <div v-if="!currentFile || isDirectory || fileError" class="browser fade-in">
+      <div v-if="fileError" class="file-error-notice">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <h3 v-if="fileError.type === 'protected'">文件受保护</h3>
+        <h3 v-else-if="fileError.type === 'notfound'">未找到</h3>
+        <h3 v-else>出错了</h3>
+        <p>{{ fileError.message }}</p>
+        <button v-if="fileError.type === 'protected' && !auth.authenticated" class="btn btn-accent" @click="ui.openLogin()" style="margin-top: 14px;">登录解锁</button>
+        <button v-else-if="fileError.type === 'notfound'" class="btn btn-ghost" @click="router.push('/')" style="margin-top: 14px;">返回首页</button>
+      </div>
+      <div v-else>
       <div class="browser-header" v-if="availableTools.length > 1 && isCategoryRoot">
         <div class="browser-tabs">
           <button
@@ -34,6 +44,7 @@
       <div class="browser-body">
         <FileBrowser :root-path="rootPath" :active-tool="activeTool" />
       </div>
+      </div>
     </div>
 
     <!-- File viewer (only when actual file selected) -->
@@ -48,11 +59,15 @@ import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getFile, getCategories, type FileContent, type CategoryInfo } from '../api'
 import { icon } from '../icons'
+import { useAuthStore } from '../stores/auth'
+import { useUIStore } from '../stores/ui'
 import FileViewer from '../components/FileViewer.vue'
 import FileBrowser from '../components/FileBrowser.vue'
 
 const route = useRoute()
 const router = useRouter()
+const auth = useAuthStore()
+const ui = useUIStore()
 const currentFile = ref<FileContent | null>(null)
 const categories = ref<CategoryInfo[]>([])
 
@@ -131,17 +146,33 @@ function prettifyName(name: string) {
 }
 
 const isDirectory = computed(() => currentFile.value?.type === 'directory')
+const fileError = ref<{ type: 'protected' | 'notfound' | 'other'; message: string } | null>(null)
 
 async function loadFile(path: string) {
   if (!path) {
     currentFile.value = null
+    fileError.value = null
     return
   }
+  // 单层路径是分类根：交由 FileBrowser 显示工具列表
+  if (!path.includes('/')) {
+    currentFile.value = null
+    fileError.value = null
+    return
+  }
+  fileError.value = null
   try {
     const { data } = await getFile(path)
     currentFile.value = data
-  } catch {
+  } catch (e: any) {
     currentFile.value = null
+    if (e?.response?.status === 403) {
+      fileError.value = { type: 'protected', message: '此文件受保护，请登录后查看' }
+    } else if (e?.response?.status === 404) {
+      fileError.value = { type: 'notfound', message: '文件不存在' }
+    } else {
+      fileError.value = { type: 'other', message: '加载失败' }
+    }
   }
 }
 
@@ -297,6 +328,16 @@ watch(() => route.fullPath, loadCategories, { immediate: true })
   display: flex;
   flex-direction: column;
 }
+
+.file-error-notice {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 60px 20px; text-align: center;
+  flex: 1; gap: 8px;
+}
+.file-error-notice svg { color: var(--warning); }
+.file-error-notice h3 { font-size: 18px; font-weight: 600; }
+.file-error-notice p { color: var(--text-secondary); font-size: 13px; max-width: 400px; }
+.file-error-notice .btn { padding: 8px 20px; font-size: 13px; }
 
 @media (max-width: 768px) {
   .cover { padding: 12px 16px; }

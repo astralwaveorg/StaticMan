@@ -38,7 +38,7 @@
             <svg v-else width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           </button>
 
-          <button v-if="!auth.authenticated" class="login-btn" @click="showLogin=true">
+          <button v-if="!auth.authenticated" class="login-btn" @click="ui.openLogin()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             <span>登录</span>
           </button>
@@ -60,22 +60,23 @@
     </main>
 
     <!-- Command palette -->
-    <CommandPalette v-model:open="commandOpen" />
+    <CommandPalette :open="ui.showCommand" @update:open="ui.closeCommand()" />
 
     <!-- Login modal -->
     <Teleport to="body">
       <transition name="fade">
-        <div v-if="showLogin" class="modal-backdrop" @click.self="showLogin=false">
+        <div v-if="ui.showLogin" class="modal-backdrop" @click.self="ui.closeLogin()">
           <div class="modal">
             <div class="modal-mark">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </div>
             <h3>登录解锁</h3>
             <p>输入密码后可查看受保护文件</p>
-            <input v-model="password" type="password" class="input" placeholder="访问密码" @keydown.enter="doLogin" ref="passwordInput" />
+            <input v-model="password" type="password" class="input" :class="{error: loginError}" placeholder="访问密码" @keydown.enter="doLogin" ref="passwordInput" @input="loginError=''" />
+            <div v-if="loginError" class="modal-error">{{ loginError }}</div>
             <div class="modal-row">
-              <button class="btn btn-ghost" @click="showLogin=false">取消</button>
-              <button class="btn btn-primary" @click="doLogin" :disabled="loginLoading">
+              <button class="btn btn-ghost" @click="ui.closeLogin()">取消</button>
+              <button class="btn btn-accent" @click="doLogin" :disabled="loginLoading">
                 <span v-if="loginLoading" class="spinner-mini"></span>
                 {{ loginLoading ? '验证中' : '登录' }}
               </button>
@@ -93,17 +94,18 @@ import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from './stores/auth'
 import { getBreadcrumbs, type Breadcrumb } from './api'
 import CommandPalette from './components/CommandPalette.vue'
+import { useUIStore } from './stores/ui'
 
 const auth = useAuthStore()
+const ui = useUIStore()
 const route = useRoute()
 const router = useRouter()
 
 const theme = ref((localStorage.getItem('magichub_theme') as 'dark' | 'light') || 'dark')
-const showLogin = ref(false)
 const password = ref('')
 const loginLoading = ref(false)
+const loginError = ref('')
 const passwordInput = ref<HTMLInputElement | null>(null)
-const commandOpen = ref(false)
 const crumbs = ref<Breadcrumb[]>([])
 
 function toggleTheme() {
@@ -112,15 +114,24 @@ function toggleTheme() {
 }
 
 async function doLogin() {
-  if (!password.value) return
+  if (!password.value) {
+    loginError.value = '请输入密码'
+    return
+  }
   loginLoading.value = true
+  loginError.value = ''
   const ok = await auth.login(password.value)
   loginLoading.value = false
-  if (ok) { showLogin.value = false; password.value = '' }
-  else { alert('密码错误') }
+  if (ok) {
+    ui.closeLogin()
+    password.value = ''
+    loginError.value = ''
+  } else {
+    loginError.value = '密码错误'
+  }
 }
 
-function openCommand() { commandOpen.value = true }
+function openCommand() { ui.openCommand() }
 
 async function loadCrumbs() {
   const p = route.params.pathMatch
@@ -146,10 +157,10 @@ watch(() => route.fullPath, loadCrumbs, { immediate: true })
 function handleKey(e: KeyboardEvent) {
   if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
     e.preventDefault()
-    commandOpen.value = true
+    ui.openCommand()
   }
-  if (e.key === 'Escape' && commandOpen.value) {
-    commandOpen.value = false
+  if (e.key === 'Escape' && ui.showCommand) {
+    ui.closeCommand()
   }
 }
 
@@ -160,7 +171,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('keydown', handleKey)
 })
 
-watch(showLogin, (v) => { if (v) nextTick(() => passwordInput.value?.focus()) })
+watch(() => ui.showLogin, (v) => { if (v) nextTick(() => passwordInput.value?.focus()) })
 </script>
 
 <style scoped>
@@ -394,6 +405,8 @@ watch(showLogin, (v) => { if (v) nextTick(() => passwordInput.value?.focus()) })
   transition: all var(--t-fast) var(--ease);
 }
 .input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-muted); outline: none; }
+.input.error { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(248,113,113,0.12); }
+.modal-error { font-size: 12px; color: var(--danger); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
 .modal-row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
 .spinner-mini { width: 12px; height: 12px; border: 2px solid transparent; border-top-color: currentColor; border-radius: 50%; animation: spin 0.6s linear infinite; display: inline-block; }
 
