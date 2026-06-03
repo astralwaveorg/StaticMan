@@ -1,3 +1,0 @@
-# Mihomo 定时任务
-# 每天凌晨 03:20：同步配置 + 更新 providers + 重启服务
-20 3 * * * /usr/local/bin/mihomo-maintenance.sh >/dev/null 2>&1

@@ -1,10 +1,27 @@
-sqlite_mcp_server.db
-.vscode/
-.codegpt
-.venv
-.idea
+# OS
 **/.DS_Store
 **/Thumbs.db
+
+# Editor
+.vscode/
+.codegpt
+.idea
+
+# Python
+.venv
+sqlite_mcp_server.db
+
+# Node
 **/node_modules/**
 **/misc.xml
+
+# v2 build artifacts
+magichub
+server
+web/node_modules/
+web/dist/
+internal/web/dist/
 tools/node-checker/node-checker
+*.exe
+*.test.mjs
+web/*.mjs

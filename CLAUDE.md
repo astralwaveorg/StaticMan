@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目定位
 
-MagicHub 是一个**私人网络代理订阅管理仓库**，服务于 Surge（macOS/iOS）和 Mihomo（Linux/Android）两种代理客户端。核心功能：聚合代理节点、管理分流规则、自动生成并部署配置文件。
+MagicHub 是一个**私人网络代理订阅管理平台**，v2 重构后采用 Go + Vue 3 全栈架构，替代原 v1 纯 Python 脚本方案。
 
-生产站点：`https://list.magichub.top`（静态文件服务）| `https://sub.magichub.top`（订阅转换）
+生产站点：`https://list.magichub.top`（静态文件服务 + Web UI）| `https://sub.magichub.top`（订阅转换）
 
 ## 架构总览
 
@@ -14,75 +14,118 @@ MagicHub 是一个**私人网络代理订阅管理仓库**，服务于 Surge（m
 外部订阅源 / 规则仓库
        │
        ▼
-bin/update_sub_list.py  ──→  clash/list.yaml + surge/list.ini
+bin/update_sub_list.py ──→  data/configs/ (v2 数据目录)
 bin/update_rules.py     ──→  surge/rules/*.list
-tools/clash2surge.py    ──→  Clash YAML → Surge INI 转换
-surge/scripts/optimize_surge.py ──→  重写 Surge [Rule] + [Host] 段
-bin/cfstmodule.sh       ──→  surge/modules/cfst.sgmodule（Cloudflare 优选 IP）
        │
        ▼
-git push ──→ GitHub Actions (deploy.yml) ──→ SSH 到生产服务器 git pull
+Go HTTP Server (cmd/server)
+  ├─ /api/*          ──→  JSON API（文件树、分类、搜索、鉴权）
+  ├─ /{category}/*   ──→  原始文件服务（受保护文件需 ?key=JWT）
+  ├─ /d/*            ──→  v1 兼容路由（无鉴权）
+  └─ /               ──→  Vue SPA（Go embed 嵌入）
        │
-       ├─→ Surge 客户端通过 managed URL 拉取 .conf
-       └─→ Mihomo NAS 网关通过每日 cron 拉取 config.yaml
+       ▼
+Docker Compose 部署（magichub:v2）
 ```
 
 ## 常用命令
 
 ```bash
-# 安装 Python 依赖
-pip install -r requirements.txt
+# 前端开发
+cd web && npm run dev          # Vite 开发服务器（代理 /api → localhost:8080）
+cd web && npm run build        # 构建 → ../internal/web/dist/
 
-# 更新 Surge 规则文件（从 rules.yaml 中定义的上游 URL 下载并合并）
-python3 bin/update_rules.py
+# 后端开发
+go run ./cmd/server/           # 运行 Go 服务（默认 :8080）
+go build -tags withweb ./cmd/server/  # 构建含嵌入前端的单二进制
 
-# 更新代理节点列表（从订阅 URL 拉取，黑名单过滤后写入 clash/list.yaml 和 surge/list.ini）
-python3 bin/update_sub_list.py
+# Docker
+docker-compose up -d           # 部署（需先构建 magichub:v2 镜像）
 
-# Clash YAML 转 Surge INI
-python3 tools/clash2surge.py <input.yaml> [output.ini]
-
-# 优化所有 Surge 配置（重写 Rule 段、修正 Proxy Group、追加 DNS hints）
-python3 surge/scripts/optimize_surge.py
-
-# Cloudflare 优选 IP 并生成 Surge 模块（需在 Linux 服务器运行）
-bash bin/cfstmodule.sh
-
-# 手动 git 推送（macOS 用当前目录，Linux 用 /data/wwwroot/MagicHub）
-bash bin/push.sh
+# v1 脚本（仍在使用）
+python3 bin/update_sub_list.py # 更新代理节点
+python3 bin/update_rules.py    # 更新 Surge 规则
+python3 tools/clash2surge.py   # Clash YAML → Surge INI
+python3 surge/scripts/optimize_surge.py  # 优化 Surge 配置
+bash bin/cfstmodule.sh         # Cloudflare 优选 IP（需 Linux）
 ```
 
-## 无编译/测试/lint
+## V2 架构详情
 
-此项目没有构建系统、没有测试、没有 linter 配置。`requirements.txt` 仅包含 `requests` 和 `PyYAML`。
+### Go 后端（`internal/`）
 
-## 关键文件与格式
+| 包 | 职责 |
+|---|---|
+| `cmd/server` | 入口：加载配置、注册路由、启动 HTTP |
+| `config` | 热加载 `data/password.yaml` + `metadata.yaml`（30s 轮询） |
+| `auth` | 密码验证（常量时间比较）、JWT 签发/校验（HS256, 7天） |
+| `handler` | 三层路由：API 层 / 原始文件层 / v1 兼容层 |
+| `masker` | 内容脱敏：10 个正则模式（SS密码、API Key 等） |
+| `middleware` | CORS + 请求日志 |
+| `web` | `//go:embed dist/` 嵌入前端 SPA；构建标签 `withweb` |
 
-| 文件 | 格式 | 用途 |
-|------|------|------|
-| `surge/macOS.conf` / `iOS.conf` / `Macmini.conf` | Surge INI | 三设备配置，含 `#!MANAGED-CONFIG` 自动更新 |
-| `clash/config.yaml` / `clash/mihomo/config.yaml` | YAML | Mihomo 主配置（97 rule-providers、30+ proxy-groups） |
-| `surge/rules/rules.yaml` | YAML | 规则源定义（URL + 自定义规则），供 `update_rules.py` 读取 |
-| `surge/rules/**/` | `.list` 文本 | 按分类组织（ai/、apple/、google/、social/ 等）的域名规则 |
-| `clash/templates/*.ini` | INI | 订阅转换器模板，配合 `sub.magichub.top` 使用 |
-| `clash/mihomo/` | — | NAS 网关部署套件（systemd unit、维护脚本、crontab） |
+### Vue 3 前端（`web/`）
+
+| 文件 | 职责 |
+|---|---|
+| `App.vue` | 根布局：Header（搜索/主题/登录） + 路由视图 + 登录弹窗 |
+| `views/HomeView.vue` | 分类卡片网格 |
+| `views/BrowseView.vue` | 左侧文件树 + 右侧文件查看器 |
+| `views/SearchView.vue` | 文件名/内容搜索 |
+| `components/TreeNode.vue` | 递归文件树组件 |
+| `components/FileViewer.vue` | highlight.js 代码高亮 + 操作按钮 |
+| `api/index.ts` | Axios API 客户端（JWT 自动附加） |
+| `stores/auth.ts` | Pinia 认证状态 |
+| `styles/global.css` | 设计系统 CSS 变量（dark/light 主题） |
+
+### 数据目录（`data/`）
+
+- `data/configs/` — 按分类存放配置文件（proxy/surge/, proxy/mihomo/, vim/, git/, shell/）
+- `data/password.yaml` — 访问密码 + 受保护路径列表
+- `data/metadata.yaml` — 分类元数据（图标、描述、颜色）
+
+## 关键文件
+
+| 文件 | 用途 |
+|---|---|
+| `internal/handler/handler.go` | 所有 HTTP 路由定义和业务逻辑 |
+| `internal/config/config.go` | 配置热加载，`IsProtected(path)` 检查 |
+| `internal/masker/masker.go` | 内容脱敏正则引擎 |
+| `internal/web/embed.go` | `//go:embed` 前端资源（需 `-tags withweb`） |
+| `web/vite.config.ts` | 开发代理 + 构建输出到 `internal/web/dist/` |
+| `Dockerfile` | 三阶段构建：Node 前端 → Go 后端 → Alpine 运行 |
+| `docker-compose.yml` | 生产部署配置（端口 8080，挂载 `./data`） |
+| `data/password.yaml` | 认证密码和受保护路径配置 |
+| `data/metadata.yaml` | 分类展示元数据 |
 
 ## 重要约定
 
-- **双格式并行**：每次变更节点或规则，需同时维护 Surge（INI）和 Clash/Mihomo（YAML）两套格式
-- **Surge managed URL**：`.conf` 文件通过 `#!MANAGED-CONFIG URL INTERVAL` 指向 `list.magichub.top`，客户端每 6 小时自动拉取
-- **规则优先级顺序**：局域网 → 广告拦截 → 国内直连 → AI 分流 → 社交 → 流媒体 → Google → 开发工具 → 兜底。修改 `optimize_surge.py` 中的 `NEW_RULE_SECTION` 可全局重写
-- **Mihomo rule-providers 必须带 `proxy: "节点选择"`**：从 GitHub 下载规则文件需要走代理，否则国内无法加载
-- **Telegram 告警**：`update_sub_list.py` 内置错误告警，有 60 分钟同错误冷却机制
-- **Cloudflare 优选**：`cfstmodule.sh` 在 Linux 上运行 CloudflareSpeedTest，提取 Top 3 IP 写入 Surge Module
+- **v1 兼容**：`/d/*` 路由绕过所有鉴权，确保旧客户端不断线
+- **双格式维护**：Surge（INI）和 Mihomo（YAML）需同时更新
+- **受保护文件**：未认证时内容脱敏（masker）；认证后原文返回
+- **构建标签**：生产构建须 `go build -tags withweb`，否则无前端 SPA
+- **规则优先级**：局域网 → 广告拦截 → 国内直连 → AI → 社交 → 流媒体 → Google → 开发工具 → 兜底
 
 ## 部署流程
 
-1. 本地修改配置文件
-2. `git push origin main`
-3. GitHub Actions 自动 SSH 到 `/data/magichub` 执行 `git pull`
-4. Mihomo 网关每天 03:20 cron 自动同步远程 `config.yaml` 并重启
+**Docker（推荐 v2）**：
+```bash
+docker-compose up -d    # 需先构建镜像
+```
 
-## Git 子模块
+**v1 方式（仍在使用）**：
+```bash
+git push origin main → GitHub Actions → SSH 到生产服务器 git pull
+```
 
-`external/subs-check` 指向 `https://github.com/beck-8/subs-check.git`，当前未初始化。如需使用需执行 `git submodule update --init`。
+## 环境变量
+
+| 变量 | 默认值 | 说明 |
+|---|---|---|
+| `JWT_SECRET` | `changeme` | JWT 签名密钥 |
+| `PORT` | `8080` | HTTP 监听端口 |
+| `DATA_DIR` | `./data` | 数据目录路径 |
+
+## 无测试/lint
+
+v2 前后端均无测试框架和 linter 配置。
