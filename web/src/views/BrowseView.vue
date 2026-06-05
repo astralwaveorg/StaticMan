@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="browser-body">
-        <FileBrowser :root-path="rootPath" :active-tool="activeTool" />
+        <FileBrowser :root-path="browserPath" :active-tool="activeTool" />
       </div>
       </div>
     </div>
@@ -134,6 +134,15 @@ const rootPath = computed(() => {
       : currentPath.value
   }
   return currentPath.value
+})
+
+// path passed to FileBrowser — excludes the category root when no tool is selected,
+// to avoid showing the category's own tools in FileBrowser (they're shown as tabs)
+const browserPath = computed(() => {
+  if (isCategoryRoot.value && !activeTool.value) {
+    return '' // FileBrowser with empty path shows nothing; tabs handle the display
+  }
+  return rootPath.value
 })
 
 function switchTool(key: string) {

@@ -1,7 +1,7 @@
 <template>
   <div class="fb">
-    <!-- Sub-header with breadcrumb + view toggle + actions -->
-    <div class="fb-subbar" v-if="showPath">
+    <!-- Sub-header with view toggle (always show) + breadcrumb (when path) -->
+    <div class="fb-subbar" v-if="showPath || true">
       <div class="fb-path">
         <a class="path-link" @click="goUp" v-if="parentLabel">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
