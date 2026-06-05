@@ -119,7 +119,7 @@ import { ref, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { getLs, getFile, getRawUrl, isLoggedIn, type LsItem } from '../api'
 
-const props = defineProps<{ rootPath: string; activeTool: string }>()
+const props = defineProps<{ rootPath: string; activeTool: string; excludeDirs?: string[] }>()
 const router = useRouter()
 
 const items = ref<LsItem[]>([])
@@ -143,10 +143,22 @@ const parentLabel = computed(() => {
 })
 
 async function load(p: string) {
+  if (!p) {
+    items.value = []
+    loading.value = false
+    return
+  }
   loading.value = true
   try {
     const { data } = await getLs(p)
-    items.value = data.items
+    // 后端 items 可能为 null，统一兜底成空数组
+    let raw: any[] = data?.items || []
+    // 过滤掉已注册为 tools 的子目录
+    if (props.excludeDirs && props.excludeDirs.length) {
+      const excludeSet = new Set(props.excludeDirs)
+      raw = raw.filter((it: any) => !(it.type === 'directory' && excludeSet.has(it.name)))
+    }
+    items.value = raw
   } catch {
     items.value = []
   }
@@ -232,7 +244,7 @@ function downloadItem(item: LsItem) {
 }
 
 watch(viewMode, (v) => localStorage.setItem('fb_view', v))
-watch(() => path.value, (p) => load(p), { immediate: true })
+watch(() => [path.value, props.excludeDirs], () => load(path.value), { immediate: true })
 </script>
 
 <style scoped>
@@ -321,13 +333,11 @@ watch(() => path.value, (p) => load(p), { immediate: true })
 .grid-name { font-size: 12px; font-weight: 500; max-width: 100%; word-break: break-word; line-height: 1.3; }
 .grid-size { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; font-family: var(--font-mono); }
 
-/* Grid actions - 显示在 grid 卡片下方的操作行 */
+/* Grid actions - 常驻显示 */
 .grid-actions {
   display: flex; gap: 4px; justify-content: center;
-  opacity: 0.4;
-  transition: opacity var(--t-base) var(--ease);
+  opacity: 1;
 }
-.grid-item-wrap:hover .grid-actions { opacity: 1; }
 .grid-action {
   display: inline-flex; align-items: center; gap: 3px;
   padding: 2px 6px;
@@ -357,6 +367,11 @@ watch(() => path.value, (p) => load(p), { immediate: true })
   border-bottom: 1px solid var(--glass-border);
   padding-top: 10px; padding-bottom: 10px;
 }
+.list-header > span { display: block; }
+.list-header .col-icon { width: 24px; }
+.list-header .col-size { text-align: right; padding-right: 0; }
+.list-header .col-time { text-align: right; padding-right: 0; }
+.list-header .col-actions { text-align: right; padding-right: 0; }
 .list-item {
   border-bottom: 1px solid var(--glass-border);
   cursor: pointer;
@@ -373,17 +388,15 @@ watch(() => path.value, (p) => load(p), { immediate: true })
 .list-icon.dir { color: var(--accent); }
 .list-icon.locked { color: var(--warning); }
 .list-icon.bin { color: #a855f7; }
-.list-name { font-size: 13px; }
+.list-name { font-size: 13px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .list-size { font-size: 12px; color: var(--text-tertiary); font-family: var(--font-mono); text-align: right; }
 .list-time { font-size: 11px; color: var(--text-tertiary); font-family: var(--font-mono); text-align: right; }
 
-/* List row actions - 默认隐藏，hover 显示 */
+/* List row actions - 常驻显示 */
 .list-actions {
   display: flex; gap: 4px; justify-content: flex-end;
-  opacity: 0;
-  transition: opacity var(--t-base) var(--ease);
+  opacity: 1;
 }
-.list-item:hover .list-actions { opacity: 1; }
 .row-action {
   display: inline-flex; align-items: center; gap: 3px;
   padding: 3px 8px;
@@ -403,16 +416,21 @@ watch(() => path.value, (p) => load(p), { immediate: true })
 }
 
 @media (max-width: 768px) {
-  .grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 6px; padding: 12px; }
-  .grid-item { padding: 12px 6px 8px; }
-  .grid-icon { width: 36px; height: 36px; }
-  .list-header, .list-item { grid-template-columns: 24px 1fr 70px 130px; padding: 8px 12px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 6px; padding: 10px; }
+  .grid-item { padding: 10px 4px 8px; }
+  .grid-icon { width: 32px; height: 32px; border-radius: 8px; }
+  .grid-icon :deep(svg) { width: 18px !important; height: 18px !important; }
+  .grid-name { font-size: 11px; }
+  .grid-size { font-size: 9px; }
+  .list-header, .list-item { grid-template-columns: 22px 1fr auto; padding: 7px 10px; }
+  .col-size, .list-size { display: none; }
   .col-time, .list-time { display: none; }
-  .list-actions { display: flex; opacity: 1; }
-  .list-size { font-size: 11px; }
-  /* 移动端：grid 操作按钮常驻显示，文字只显示图标 */
+  .col-actions { display: none; }
+  .list-header .col-actions { display: block; text-align: right; }
+  .list-actions { gap: 2px; }
   .grid-action-label, .row-action-label { display: none; }
-  .grid-action { padding: 4px 6px; }
-  .row-action { padding: 4px 6px; }
+  .grid-action, .row-action { padding: 5px 7px; }
+  .fb-subbar { padding: 6px 10px; }
+  .path-link { max-width: 80px; font-size: 11px; }
 }
 </style>

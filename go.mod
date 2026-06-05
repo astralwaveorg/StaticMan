@@ -1,4 +1,4 @@
-module github.com/athena/magichub
+module github.com/athena/staticman
 
 go 1.22
 

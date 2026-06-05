@@ -1,5 +1,5 @@
 <template>
-  <div class="app" :data-theme="theme">
+  <div class="app">
     <!-- Floating top bar (glass) -->
     <header class="topbar">
       <div class="topbar-inner">
@@ -10,24 +10,20 @@
           </div>
           <div class="brand-text">
             <span class="brand-title">配置共享管理系统</span>
-            <span class="brand-sub">MagicHub</span>
+            <span class="brand-sub">StaticMan</span>
           </div>
         </router-link>
 
-        <!-- Center: search + Ctrl K -->
-        <div class="topbar-center">
-          <button class="search-box" @click="openCommand" title="搜索 (Ctrl+K)">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            <span class="search-placeholder">搜索文件名、跳转分类…</span>
-            <span class="kbd-hint"><kbd>⌘</kbd><kbd>K</kbd></span>
-          </button>
-        </div>
-
         <!-- Right: actions -->
         <div class="topbar-right">
-          <nav class="crumbs" v-if="crumbs.length > 1">
+          <nav class="crumbs" v-if="crumbs.length > 0">
             <template v-for="(c, i) in crumbs" :key="c.path">
-              <a class="crumb" v-if="i < crumbs.length - 1" @click="navigateTo(c.path)">{{ c.name }}</a>
+              <a
+                class="crumb"
+                :class="{ 'crumb-home': i === 0 }"
+                v-if="i < crumbs.length - 1"
+                @click="navigateTo(c.path)"
+              >{{ i === 0 ? '首页' : c.name }}</a>
               <span class="crumb-sep" v-if="i < crumbs.length - 1">/</span>
               <span class="crumb-current" v-else>{{ c.name }}</span>
             </template>
@@ -101,7 +97,11 @@ const ui = useUIStore()
 const route = useRoute()
 const router = useRouter()
 
-const theme = ref((localStorage.getItem('magichub_theme') as 'dark' | 'light') || 'dark')
+const theme = ref((localStorage.getItem('staticman_theme') as 'dark' | 'light') || 'dark')
+// 同步主题到 <html> 元素，让 body 背景色正确响应主题
+watch(theme, (v) => {
+  document.documentElement.setAttribute('data-theme', v)
+}, { immediate: true })
 const password = ref('')
 const loginLoading = ref(false)
 const loginError = ref('')
@@ -110,7 +110,7 @@ const crumbs = ref<Breadcrumb[]>([])
 
 function toggleTheme() {
   theme.value = theme.value === 'dark' ? 'light' : 'dark'
-  localStorage.setItem('magichub_theme', theme.value)
+  localStorage.setItem('staticman_theme', theme.value)
 }
 
 async function doLogin() {
@@ -131,7 +131,7 @@ async function doLogin() {
   }
 }
 
-function openCommand() { ui.openCommand() }
+
 
 async function loadCrumbs() {
   const p = route.params.pathMatch
@@ -194,7 +194,7 @@ watch(() => ui.showLogin, (v) => { if (v) nextTick(() => passwordInput.value?.fo
   align-items: center;
   gap: 16px;
   padding: 0 20px;
-  max-width: 1400px;
+  max-width: 1280px;
   margin: 0 auto;
   width: 100%;
 }
@@ -203,34 +203,34 @@ watch(() => ui.showLogin, (v) => { if (v) nextTick(() => passwordInput.value?.fo
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
   color: var(--text-primary);
   flex-shrink: 0;
   user-select: none;
 }
 .brand-mark {
-  width: 30px; height: 30px;
-  border-radius: 8px;
+  width: 38px; height: 38px;
+  border-radius: 10px;
   background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.25);
+  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.3);
 }
-.brand-icon { width: 17px; height: 17px; filter: brightness(2.2); }
+.brand-icon { width: 22px; height: 22px; filter: brightness(2.2); }
 .brand-text {
   display: flex;
   flex-direction: column;
   line-height: 1.15;
 }
 .brand-title {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.01em;
   color: var(--text-primary);
 }
 .brand-sub {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-tertiary);
   letter-spacing: 0.04em;
   font-weight: 500;
@@ -301,6 +301,7 @@ watch(() => ui.showLogin, (v) => { if (v) nextTick(() => passwordInput.value?.fo
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .crumbs {
@@ -317,6 +318,11 @@ watch(() => ui.showLogin, (v) => { if (v) nextTick(() => passwordInput.value?.fo
   transition: all var(--t-fast) var(--ease);
 }
 .crumb:hover { background: var(--bg-hover); color: var(--text-primary); }
+.crumb-home {
+  color: var(--accent);
+  font-weight: 500;
+}
+.crumb-home:hover { color: var(--accent-hover); background: var(--accent-muted); }
 .crumb-sep { color: var(--text-tertiary); }
 .crumb-current {
   color: var(--text-primary); font-weight: 500;
@@ -423,13 +429,9 @@ watch(() => ui.showLogin, (v) => { if (v) nextTick(() => passwordInput.value?.fo
   .topbar-inner { padding: 0 12px; gap: 8px; }
   .brand-sub { display: none; }
   .crumbs { display: none; }
-  .topbar-center { max-width: none; }
-  .search-box { max-width: none; }
-  .search-placeholder { font-size: 12px; }
-  .kbd-hint { display: none; }
 }
 @media (max-width: 480px) {
-  .topbar { height: 48px; }
+  .topbar { height: 56px; }
   .brand-title { font-size: 12px; }
   .login-btn span { display: none; }
   .login-btn { padding: 7px; }

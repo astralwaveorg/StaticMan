@@ -18,14 +18,14 @@ api.interceptors.response.use(
   (e) => { if (e.response?.status === 401) clearToken(); return Promise.reject(e) }
 )
 
-function getToken(): string | null { return localStorage.getItem('magichub_token') }
+function getToken(): string | null { return localStorage.getItem('staticman_token') }
 function setToken(t: string) {
-  localStorage.setItem('magichub_token', t)
-  document.cookie = `magichub_token=${t};path=/;max-age=${7*24*3600};samesite=lax`
+  localStorage.setItem('staticman_token', t)
+  document.cookie = `staticman_token=${t};path=/;max-age=${7*24*3600};samesite=lax`
 }
 function clearToken() {
-  localStorage.removeItem('magichub_token')
-  document.cookie = 'magichub_token=;path=/;max-age=0'
+  localStorage.removeItem('staticman_token')
+  document.cookie = 'staticman_token=;path=/;max-age=0'
 }
 
 // ─── Types ──────────────────────────────────────────────

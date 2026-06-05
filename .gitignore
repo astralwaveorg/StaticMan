@@ -16,7 +16,7 @@ sqlite_mcp_server.db
 **/misc.xml
 
 # v2 build artifacts
-magichub
+staticman
 server
 web/node_modules/
 web/dist/

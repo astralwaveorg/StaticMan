@@ -1,4 +1,4 @@
-/* === MagicHub Design System v2 === */
+/* === StaticMan Design System v2 === */
 :root {
   /* Surfaces */
   --bg-base: #09090f;
@@ -32,7 +32,7 @@
   --code-bg: #0a0a12;
 
   /* Geometry */
-  --header-height: 52px;
+  --header-height: 60px;
   --sidebar-width: 260px;
   --radius: 8px;
   --radius-lg: 12px;
@@ -52,26 +52,26 @@
 }
 
 [data-theme="light"] {
-  --bg-base: #f8f9fc;
+  --bg-base: #eef0f5;
   --bg-surface: #ffffff;
-  --bg-elevated: #f1f1f5;
-  --bg-hover: #e8e8ee;
-  --bg-active: #dadae0;
+  --bg-elevated: #e5e7ee;
+  --bg-hover: #d8dae3;
+  --bg-active: #c8cad4;
 
-  --glass-bg: #ffffff;
-  --glass-bg-strong: #ffffff;
-  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-bg-strong: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.12);
 
-  --text-primary: #14151f;
-  --text-secondary: #5a5c72;
-  --text-tertiary: #8e90a3;
+  --text-primary: #0c0d18;
+  --text-secondary: #4a4d65;
+  --text-tertiary: #74778e;
 
   --accent: #4f46e5;
   --accent-hover: #6366f1;
-  --accent-muted: rgba(79,70,229,0.08);
+  --accent-muted: rgba(79,70,229,0.12);
   --accent-glow: rgba(79,70,229,0.18);
 
-  --code-bg: #f4f4f8;
+  --code-bg: #f0f1f5;
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }

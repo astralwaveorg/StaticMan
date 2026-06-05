@@ -17,13 +17,13 @@ COPY cmd/ ./cmd/
 COPY internal/ ./internal/
 # 嵌入前端静态资源
 COPY --from=web-builder /app/internal/web/dist ./internal/web/dist
-RUN CGO_ENABLED=0 GOOS=linux go build -o /magichub ./cmd/server
+RUN CGO_ENABLED=0 GOOS=linux go build -o /staticman ./cmd/server
 
 # 阶段3: 运行镜像
 FROM alpine:3.20
 RUN apk add --no-cache ca-certificates tzdata
 WORKDIR /app
-COPY --from=go-builder /magichub /app/magichub
+COPY --from=go-builder /staticman /app/staticman
 EXPOSE 8080
 VOLUME /app/data
-ENTRYPOINT ["/app/magichub"]
+ENTRYPOINT ["/app/staticman"]

@@ -7,8 +7,33 @@
 
     <div class="home-inner">
       <section class="hero">
-        <h1>欢迎回来</h1>
-        <p class="hero-subtitle">集中管理 · 统一分发 · 便捷共享</p>
+        <div class="hero-text">
+          <h1>欢迎回来</h1>
+          <p class="hero-subtitle">集中管理 · 统一分发 · 便捷共享</p>
+        </div>
+
+        <!-- 搜索入口：靠右 -->
+        <div class="home-search">
+          <div class="search-shell">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input
+              v-model="searchQuery"
+              class="search-input"
+              type="text"
+              :placeholder="searchMode === 'name' ? '搜索文件名、跳转分类…' : '搜索文件内容…'"
+              @keydown.enter="onSearchEnter"
+              @focus="onSearchFocus"
+              @click="onSearchFocus"
+            />
+            <div class="search-mode">
+              <button :class="{active: searchMode==='name'}" @click="searchMode='name'">文件名</button>
+              <button :class="{active: searchMode==='content'}" @click="searchMode='content'">内容</button>
+            </div>
+            <button class="kbd-hint" @click="openCommand" title="打开命令面板">
+              <kbd>⌘</kbd><kbd>K</kbd>
+            </button>
+          </div>
+        </div>
       </section>
 
       <div class="stats" v-if="categories.length">
@@ -45,15 +70,9 @@
           <div class="cat-content">
             <div class="cat-header">
               <div class="cat-icon" v-html="icon(cat.icon, { size: 18 })"></div>
-              <svg class="cat-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <div class="cat-name">{{ cat.name }}</div>
             </div>
-            <div class="cat-name">{{ cat.name }}</div>
-            <div class="cat-desc">{{ cat.description }}</div>
             <div class="cat-footer">
-              <div class="cat-tools" v-if="cat.tools && cat.tools.length">
-                <span v-for="t in cat.tools.slice(0, 3)" :key="t" class="tool-pill">{{ t }}</span>
-                <span v-if="cat.tools.length > 3" class="tool-more">+{{ cat.tools.length - 3 }}</span>
-              </div>
               <div class="cat-stats">
                 <span class="meta-item" :title="`${cat.fileCount} 个文件`">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -88,10 +107,35 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getCategories, type CategoryInfo } from '../api'
 import { icon } from '../icons'
+import { useUIStore } from '../stores/ui'
 
 const router = useRouter()
+const ui = useUIStore()
 const categories = ref<CategoryInfo[]>([])
 const loading = ref(true)
+
+const searchQuery = ref('')
+const searchMode = ref<'name' | 'content'>('name')
+
+// 同步首页模式到 UI store，方便命令面板打开时继承
+
+
+function openCommand() {
+  // 同步首页的搜索词和模式到命令面板
+  if (searchQuery.value.trim()) {
+    
+  } else {
+    ui.openCommand()
+  }
+}
+
+function onSearchEnter() {
+  openCommand()
+}
+
+function onSearchFocus() {
+  // 仅打开命令面板（不立即跳转）
+}
 
 const totalFiles = computed(() => categories.value.reduce((s, c) => s + c.fileCount, 0))
 const totalTools = computed(() => categories.value.reduce((s, c) => s + (c.tools?.length || 0), 0))
@@ -111,8 +155,10 @@ function fmtSize(b: number): string {
 onMounted(async () => {
   try {
     const { data } = await getCategories()
-    categories.value = data
-  } catch {}
+    categories.value = data || []
+  } catch {
+    categories.value = []
+  }
   loading.value = false
 })
 </script>
@@ -136,16 +182,21 @@ onMounted(async () => {
 
 .home-inner {
   position: relative; z-index: 1;
-  max-width: 1100px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 20px 24px 32px;
 }
 
 /* Hero */
 .hero {
-  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  display: flex; align-items: center;
+  gap: 16px;
   margin-bottom: 14px;
   padding: 0 4px;
+}
+.hero-text {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  flex-shrink: 0;
 }
 .hero h1 {
   font-size: 19px; font-weight: 700;
@@ -162,6 +213,88 @@ onMounted(async () => {
   flex-wrap: wrap;
 }
 .kbd-hint { display: inline-flex; align-items: center; gap: 2px; }
+.kbd-hint kbd {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  padding: 1px 5px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* 搜索框（靠右，最大 2/3 父容器宽度，自适应） */
+.home-search {
+  flex: 0 1 auto;
+  min-width: 280px;
+  width: clamp(280px, 50%, 66%);
+  max-width: 66%;
+  margin-left: auto;
+}
+.search-shell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 9px;
+  padding: 0 6px 0 12px;
+  height: 36px;
+  width: 100%;
+  color: var(--text-secondary);
+  transition: all var(--t-base) var(--ease);
+}
+.search-shell:hover {
+  border-color: var(--accent);
+  background: var(--bg-hover);
+}
+.search-shell:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-muted);
+}
+.search-shell .icon { color: var(--text-tertiary); flex-shrink: 0; }
+.search-input {
+  flex: 1; min-width: 0;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: transparent;
+  border: none; outline: none;
+  padding: 0;
+}
+.search-input::placeholder { color: var(--text-tertiary); }
+
+.search-mode {
+  display: flex;
+  background: var(--bg-elevated);
+  border-radius: 5px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.search-mode button {
+  padding: 3px 9px;
+  font-size: 11px; font-weight: 500;
+  color: var(--text-tertiary);
+  transition: all var(--t-fast) var(--ease);
+  white-space: nowrap;
+}
+.search-mode button:hover { color: var(--text-primary); }
+.search-mode button.active {
+  background: var(--accent);
+  color: white;
+}
+
+.search-shell .kbd-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  padding: 2px 4px;
+  border-radius: 5px;
+  transition: background var(--t-fast) var(--ease);
+}
+.search-shell .kbd-hint:hover { background: var(--bg-elevated); }
 .kbd-hint kbd {
   font-family: var(--font-sans);
   font-size: 10px;
@@ -244,8 +377,10 @@ onMounted(async () => {
 
 .cat-content { position: relative; z-index: 1; }
 
+/* 头部：图标+名称 居左 */
 .cat-header {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center;
+  gap: 10px;
   margin-bottom: 10px;
 }
 .cat-icon {
@@ -254,37 +389,19 @@ onMounted(async () => {
   background: color-mix(in srgb, var(--accent-color) 12%, transparent);
   color: var(--accent-color);
   transition: transform var(--t-base) var(--ease-spring);
+  flex-shrink: 0;
 }
 .cat-card:hover .cat-icon { transform: rotate(-4deg) scale(1.08); }
-.cat-arrow {
-  color: var(--text-tertiary); opacity: 0;
-  transition: all var(--t-base) var(--ease);
-}
-.cat-card:hover .cat-arrow { opacity: 1; color: var(--accent-color); transform: translateX(2px); }
-
 .cat-name { font-size: 14px; font-weight: 550; line-height: 1.3; }
-.cat-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; line-height: 1.4;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-  min-height: 34px;
-}
+.cat-desc { display: none; }
 
 .cat-footer {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; justify-content: flex-end;
   gap: 8px;
   padding-top: 10px;
   border-top: 1px solid var(--glass-border);
 }
-.cat-tools { display: flex; gap: 3px; flex-wrap: wrap; flex: 1; min-width: 0; }
-.tool-pill {
-  font-size: 10px;
-  padding: 2px 6px;
-  background: var(--bg-elevated);
-  border-radius: 4px;
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  white-space: nowrap;
-}
-.tool-more { font-size: 10px; padding: 2px 5px; color: var(--text-tertiary); font-family: var(--font-mono); }
+.cat-tools { display: none; }
 .cat-stats { display: flex; gap: 8px; flex-shrink: 0; }
 .meta-item {
   display: inline-flex; align-items: center; gap: 3px;
@@ -304,7 +421,33 @@ onMounted(async () => {
 .empty-state code { font-family: var(--font-mono); font-size: 12px; padding: 2px 6px; background: var(--bg-elevated); border-radius: 4px; }
 
 @media (max-width: 640px) {
-  .home-inner { padding: 16px; }
-  .gallery { grid-template-columns: 1fr; }
+  .home-inner { padding: 12px 10px 20px; }
+  .orbs { display: none; }
+  .gallery { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .hero { flex-direction: column; align-items: stretch; gap: 10px; }
+  .hero-text { gap: 0; flex-direction: column; align-items: flex-start; }
+  .hero h1 { font-size: 16px; }
+  .hero-subtitle { display: none; }
+  .home-search { max-width: none; flex: 1 1 100%; min-width: 0; }
+  .search-shell { height: 44px; padding: 0 6px 0 12px; }
+  .search-mode button { padding: 4px 8px; }
+  .search-shell .kbd-hint { display: none; }
+  .stats { margin-bottom: 10px; padding: 6px 10px; }
+  .stat-value { font-size: 13px; }
+  .stat-label { font-size: 10px; }
+
+  /* 移动端卡片精简 */
+  .cat-card { padding: 10px 12px; }
+  .cat-header { margin-bottom: 6px; }
+  .cat-icon { width: 24px; height: 24px; border-radius: 5px; }
+  .cat-icon :deep(svg) { width: 14px !important; height: 14px !important; }
+  .cat-arrow { display: none; }
+  .cat-name { font-size: 13px; font-weight: 550; }
+  .cat-desc { display: none; }
+  .cat-footer { padding-top: 6px; }
+  .cat-tools { display: none; }
+  .cat-stats { width: 100%; justify-content: space-between; }
+  .meta-item { font-size: 10px; }
+  .cat-glow { display: none; }
 }
 </style>

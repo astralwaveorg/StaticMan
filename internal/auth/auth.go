@@ -4,7 +4,7 @@ import (
 	"crypto/subtle"
 	"time"
 
-	"github.com/athena/magichub/internal/config"
+	"github.com/athena/staticman/internal/config"
 	"github.com/golang-jwt/jwt/v5"
 )
 

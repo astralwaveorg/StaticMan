@@ -1,4 +1,4 @@
-# MagicHub
+# StaticMan
 
 私人配置文件管理平台 — 浏览、搜索、保护你的配置文件。
 
@@ -30,8 +30,8 @@
 ## 快速开始
 
 ```bash
-git clone https://github.com/athena/magichub.git && cd magichub && git checkout v2
-bash scripts/migrate-v1.sh
+git clone https://github.com/astralwaveorg/staticman.git && cd staticman && 
+
 cp .env.example .env  # 编辑 JWT_SECRET
 docker compose up -d
 ```

@@ -26,7 +26,7 @@ jobs:
                   ssh -o StrictHostKeyChecking=no \
                       -i ~/.ssh/id_rsa \
                       root@${{ secrets.HOST }} \
-                      "cd /data/magichub && \
+                      "cd /data/staticman && \
                        git fetch --all && \
                        git reset --hard origin/main && \
                        git clean -fd && \

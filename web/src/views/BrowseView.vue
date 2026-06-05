@@ -12,6 +12,29 @@
           <h1 class="cover-title">{{ currentName }}</h1>
           <p class="cover-desc">{{ coverDesc }}</p>
         </div>
+
+        <!-- 搜索框：靠右 -->
+        <div class="browse-search">
+          <div class="search-shell">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input
+              v-model="searchQuery"
+              class="search-input"
+              type="text"
+              :placeholder="searchMode === 'name' ? '搜索文件名、跳转分类…' : '搜索文件内容…'"
+              @keydown.enter="onSearchEnter"
+              @focus="onSearchFocus"
+              @click="onSearchFocus"
+            />
+            <div class="search-mode">
+              <button :class="{active: searchMode==='name'}" @click="searchMode='name'">文件名</button>
+              <button :class="{active: searchMode==='content'}" @click="searchMode='content'">内容</button>
+            </div>
+            <button class="kbd-hint" @click="openCommand" title="打开命令面板">
+              <kbd>⌘</kbd><kbd>K</kbd>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -41,8 +64,12 @@
           </button>
         </div>
       </div>
-      <div class="browser-body">
-        <FileBrowser :root-path="browserPath" :active-tool="activeTool" />
+      <div class="browser-body" v-if="browserPath">
+        <FileBrowser
+          :root-path="browserPath"
+          :active-tool="activeTool"
+          :exclude-dirs="isCategoryRoot && !activeTool ? availableTools.map(t => t.key) : []"
+        />
       </div>
       </div>
     </div>
@@ -70,6 +97,21 @@ const auth = useAuthStore()
 const ui = useUIStore()
 const currentFile = ref<FileContent | null>(null)
 const categories = ref<CategoryInfo[]>([])
+
+const searchQuery = ref('')
+const searchMode = ref<'name' | 'content'>('name')
+
+
+
+function openCommand() {
+  if (searchQuery.value.trim()) {
+    
+  } else {
+    ui.openCommand()
+  }
+}
+function onSearchEnter() { openCommand() }
+function onSearchFocus() { /* no-op */ }
 
 const currentPath = computed(() => {
   const p = route.params.pathMatch
@@ -136,11 +178,10 @@ const rootPath = computed(() => {
   return currentPath.value
 })
 
-// path passed to FileBrowser — excludes the category root when no tool is selected,
-// to avoid showing the category's own tools in FileBrowser (they're shown as tabs)
+// path passed to FileBrowser — 分类根始终展示根目录内容，FileBrowser 会自动排除已注册为 tools 的子目录
 const browserPath = computed(() => {
   if (isCategoryRoot.value && !activeTool.value) {
-    return '' // FileBrowser with empty path shows nothing; tabs handle the display
+    return currentPath.value
   }
   return rootPath.value
 })
@@ -216,14 +257,11 @@ watch(() => route.fullPath, loadCategories, { immediate: true })
 .cover {
   position: relative;
   padding: 12px 24px;
-  width: fit-content;
+  width: 100%;
+  max-width: 1280px;
   margin: 0 auto;
   overflow: visible;
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
 }
 .cover-glow {
   position: absolute;
@@ -236,10 +274,8 @@ watch(() => route.fullPath, loadCategories, { immediate: true })
 }
 .cover-content {
   position: relative; z-index: 1;
-  display: flex; align-items: center; gap: 10px;
-  justify-content: center;
-  flex-direction: row;
-  width: fit-content;
+  display: flex; align-items: center; gap: 16px;
+  width: 100%;
 }
 .cover-back {
   display: flex; align-items: center; justify-content: center;
@@ -261,7 +297,7 @@ watch(() => route.fullPath, loadCategories, { immediate: true })
   border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
   flex-shrink: 0;
 }
-.cover-text { text-align: left; }
+.cover-text { text-align: left; min-width: 0; }
 .cover-title {
   font-size: 18px; font-weight: 700;
   letter-spacing: -0.02em;
@@ -273,10 +309,89 @@ watch(() => route.fullPath, loadCategories, { immediate: true })
 }
 .cover-desc { font-size: 12px; color: var(--text-secondary); margin: 1px 0 0; }
 
+/* 搜索框（靠右，最大 2/3 父容器宽度，自适应） */
+.browse-search {
+  flex: 0 1 auto;
+  min-width: 280px;
+  width: clamp(280px, 50%, 66%);
+  max-width: 66%;
+  margin-left: auto;
+}
+.browse-search .search-shell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 9px;
+  padding: 0 6px 0 12px;
+  height: 36px;
+  width: 100%;
+  color: var(--text-secondary);
+  transition: all var(--t-base) var(--ease);
+}
+.browse-search .search-shell:hover {
+  border-color: var(--accent);
+  background: var(--bg-hover);
+}
+.browse-search .search-shell:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-muted);
+}
+.browse-search .icon { color: var(--text-tertiary); flex-shrink: 0; }
+.browse-search .search-input {
+  flex: 1; min-width: 0;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: transparent;
+  border: none; outline: none;
+  padding: 0;
+}
+.browse-search .search-input::placeholder { color: var(--text-tertiary); }
+.browse-search .search-mode {
+  display: flex;
+  background: var(--bg-elevated);
+  border-radius: 5px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.browse-search .search-mode button {
+  padding: 3px 9px;
+  font-size: 11px; font-weight: 500;
+  color: var(--text-tertiary);
+  transition: all var(--t-fast) var(--ease);
+  white-space: nowrap;
+}
+.browse-search .search-mode button:hover { color: var(--text-primary); }
+.browse-search .search-mode button.active {
+  background: var(--accent);
+  color: white;
+}
+.browse-search .kbd-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  padding: 2px 4px;
+  border-radius: 5px;
+}
+.browse-search .kbd-hint:hover { background: var(--bg-elevated); }
+.browse-search .kbd-hint kbd {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  padding: 1px 5px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+  font-weight: 500;
+}
+
 .viewer-wrap {
   flex: 1;
   padding: 12px 24px 24px;
-  max-width: 1100px;
+  max-width: 1280px;
   margin: 0 auto;
   width: 100%;
   min-height: 0;
@@ -286,14 +401,15 @@ watch(() => route.fullPath, loadCategories, { immediate: true })
 
 .browser {
   flex: 1;
-  max-width: 1100px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 24px 32px;
+  padding: 0 24px 24px;
   width: 100%;
   min-height: 0;
   display: flex;
   flex-direction: column;
 }
+
 .browser-header {
   margin-bottom: 10px;
   flex-shrink: 0;
@@ -349,12 +465,20 @@ watch(() => route.fullPath, loadCategories, { immediate: true })
 .file-error-notice .btn { padding: 8px 20px; font-size: 13px; }
 
 @media (max-width: 768px) {
-  .cover { padding: 12px 16px; }
-  .cover-icon { width: 32px; height: 32px; }
-  .cover-title { font-size: 16px; }
+  .cover { padding: 10px 12px; }
+  .cover-content { flex-wrap: wrap; gap: 8px; }
+  .browse-search { flex: 1 1 100%; min-width: 0; max-width: none; order: 2; margin-right: 0; }
+  .browse-search .search-shell { height: 40px; }
+  .browse-search .kbd-hint { display: none; }
+  .cover-icon { width: 28px; height: 28px; border-radius: 7px; }
+  .cover-title { font-size: 15px; }
   .cover-desc { font-size: 11px; }
-  .browser { padding: 0 12px 24px; }
-  .viewer-wrap { padding: 8px 12px 16px; }
-  .tab { padding: 4px 10px; font-size: 11px; }
+  .cover-back { width: 26px; height: 26px; }
+  .cover-glow { display: none; }
+  .browser { padding: 0 10px 16px; }
+  .viewer-wrap { padding: 8px 10px 16px; }
+  .browser-body { border-radius: var(--radius); }
+  .tab { padding: 4px 8px; font-size: 11px; }
+  .tab-dot { width: 5px; height: 5px; }
 }
 </style>

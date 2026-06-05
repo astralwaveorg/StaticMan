@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/athena/magichub/internal/auth"
-	"github.com/athena/magichub/internal/config"
-	"github.com/athena/magichub/internal/masker"
+	"github.com/athena/staticman/internal/auth"
+	"github.com/athena/staticman/internal/config"
+	"github.com/athena/staticman/internal/masker"
 )
 
 // Handler HTTP 请求处理器
@@ -256,7 +256,7 @@ func (h *Handler) handleLs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var items []LsItem
+	items := []LsItem{}
 	for _, entry := range entries {
 		childPath := filepath.Join(path, entry.Name())
 		if path == "" {
