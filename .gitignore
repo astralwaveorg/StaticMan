@@ -25,3 +25,7 @@ tools/node-checker/node-checker
 *.exe
 *.test.mjs
 web/*.mjs
+# 系统残留
+data/.gitconfig
+data/Git/.gitconfig
+start.sh
