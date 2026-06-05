@@ -82,7 +82,7 @@ func (h *Handler) handleHealth(w http.ResponseWriter, r *http.Request) {
 }
 
 // isAuthenticated 检查请求是否已认证
-// 支持两种方式：Authorization header 和 ?key= 查询参数
+// 支持三种方式：Authorization header、?key= 查询参数、固定 static_key
 func (h *Handler) isAuthenticated(r *http.Request) bool {
 	// 1. 检查 Authorization header
 	tokenStr := ""
@@ -96,6 +96,14 @@ func (h *Handler) isAuthenticated(r *http.Request) bool {
 	if tokenStr == "" {
 		return false
 	}
+
+	// 3. 优先匹配固定 static_key（简洁、可预测）
+	staticKey := h.cfg.GetPassword().StaticKey
+	if staticKey != "" && tokenStr == staticKey {
+		return true
+	}
+
+	// 4. 回退到 JWT 验证
 	valid, _ := h.auth.ValidateToken(tokenStr)
 	return valid
 }
@@ -545,7 +553,7 @@ func (h *Handler) handleFile(w http.ResponseWriter, r *http.Request) {
 	// 对受保护文件拒绝未认证访问（与 /raw/ 行为一致）
 	if isProtected && !isAuth {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-		http.Error(w, "Forbidden: this file requires authentication. Add ?key=YOUR_JWT_TOKEN to the URL.", http.StatusForbidden)
+		http.Error(w, "禁止访问：此文件需要认证。请在 URL 中添加 ?key=正确的访问秘钥", http.StatusForbidden)
 		return
 	}
 
@@ -656,7 +664,7 @@ func (h *Handler) handleRaw(w http.ResponseWriter, r *http.Request) {
 
 	if h.cfg.IsProtected(path) && !h.isAuthenticated(r) {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-		http.Error(w, "Forbidden: this file requires authentication. Add ?key=YOUR_JWT_TOKEN to the URL.", http.StatusForbidden)
+		http.Error(w, "禁止访问：此文件需要认证。请在 URL 中添加 ?key=正确的访问秘钥", http.StatusForbidden)
 		return
 	}
 	h.serveRawContent(w, r, path)

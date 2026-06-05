@@ -20,7 +20,8 @@ bin/update_rules.py     ──→  surge/rules/*.list
        ▼
 Go HTTP Server (cmd/server)
   ├─ /api/*          ──→  JSON API（文件树、分类、搜索、鉴权）
-  ├─ /{category}/*   ──→  原始文件服务（受保护文件需 ?key=JWT）
+  ├─ /raw/*          ──→  统一原始文件路由（受保护文件需 ?key=JWT）
+  ├─ /{category}/*   ──→  分类短 URL（运行时扫描 data/ 动态注册，等价于 /raw）
   ├─ /d/*            ──→  v1 兼容路由（无鉴权）
   └─ /               ──→  Vue SPA（Go embed 嵌入）
        │
@@ -59,8 +60,8 @@ bash bin/cfstmodule.sh         # Cloudflare 优选 IP（需 Linux）
 | `cmd/server` | 入口：加载配置、注册路由、启动 HTTP |
 | `config` | 热加载 `data/password.yaml` + `metadata.yaml`（30s 轮询） |
 | `auth` | 密码验证（常量时间比较）、JWT 签发/校验（HS256, 7天） |
-| `handler` | 三层路由：API 层 / 原始文件层 / v1 兼容层 |
-| `masker` | 内容脱敏：10 个正则模式（SS密码、API Key 等） |
+| `handler` | 三层路由 + **动态注册**：运行时扫描 `data/` 下顶级目录作为分类前缀路由 |
+| `masker` | 内容脱敏：4 个正则模式（明文 key:value、JSON 凭据、URI 凭据、YAML 凭据） |
 | `middleware` | CORS + 请求日志 |
 | `web` | `//go:embed dist/` 嵌入前端 SPA；构建标签 `withweb` |
 
@@ -74,9 +75,16 @@ bash bin/cfstmodule.sh         # Cloudflare 优选 IP（需 Linux）
 | `views/SearchView.vue` | 文件名/内容搜索 |
 | `components/TreeNode.vue` | 递归文件树组件 |
 | `components/FileViewer.vue` | highlight.js 代码高亮 + 操作按钮 |
-| `api/index.ts` | Axios API 客户端（JWT 自动附加） |
-| `stores/auth.ts` | Pinia 认证状态 |
+| `api/index.ts` | Axios API 客户端（JWT 自动附加，同时存 localStorage + cookie） |
+| `stores/auth.ts` | Pinia 认证状态（login/logout） |
+| `stores/ui.ts` | Pinia UI 状态（登录弹窗/命令面板开关） |
+| `components/CommandPalette.vue` | 全局搜索命令面板（Ctrl+K 触发，集成 SearchView） |
 | `styles/global.css` | 设计系统 CSS 变量（dark/light 主题） |
+
+**路由（仅两条，均在 `web/src/router/index.ts`）：**
+- `/` → HomeView（分类卡片）
+- `/browse/:pathMatch(.*)*` → BrowseView（文件树 + 查看器）
+- 搜索功能通过 `CommandPalette` 组件全局嵌入，无独立路由
 
 ### 数据目录（`data/`）
 

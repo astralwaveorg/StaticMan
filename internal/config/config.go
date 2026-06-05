@@ -12,6 +12,7 @@ import (
 // PasswordConfig 密码保护配置
 type PasswordConfig struct {
 	Password  string          `yaml:"password"`
+	StaticKey string          `yaml:"static_key"`
 	Protected []ProtectedPath `yaml:"protected"`
 }
 
