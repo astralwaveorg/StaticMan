@@ -6,6 +6,9 @@ on:
   workflow_dispatch:
 
 env:
+  # 提前启用 Node.js 24，消除 Node 20 弃用告警
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
   # 从 GitHub Secrets 读取；未配置时使用 __UNSET__ 占位符，
   # 部署脚本会跳过未设置的变量，避免覆盖服务器上已有的手动配置。
   ACCESS_KEY: ${{ secrets.STATICMAN_ACCESS_KEY != '' && secrets.STATICMAN_ACCESS_KEY || '__UNSET__' }}
@@ -32,6 +35,12 @@ jobs:
           cd web
           npm ci
           npm run build
+
+      - name: Sync Frontend Build into Embed Directory
+        run: |
+          rm -rf internal/web/dist
+          cp -r web/dist internal/web/dist
+          ls -la internal/web/dist/assets/ | head -10
 
       - name: Setup Go
         uses: actions/setup-go@v5

@@ -1,6 +1,10 @@
 # StaticMan
 
+[![Deploy StaticMan](https://github.com/astralwaveorg/StaticMan/actions/workflows/deploy.yml/badge.svg)](https://github.com/astralwaveorg/StaticMan/actions/workflows/deploy.yml)
+
 私人配置文件管理平台 — 浏览、搜索、保护你的配置文件。
+
+> **Clone 注意**：`StaticMan` 项目名大小写敏感，请使用 `git clone https://github.com/astralwaveorg/StaticMan.git`（大写 S 和 M）。若 Go module 路径解析失败，请检查本地目录是否为 `StaticMan` 而非 `staticman`。
 
 ## 功能
 
@@ -30,9 +34,29 @@
 ## 快速开始
 
 ```bash
-git clone https://github.com/astralwaveorg/staticman.git && cd staticman && 
+# 注意项目名为 StaticMan（大小写敏感）
+git clone https://github.com/astralwaveorg/StaticMan.git && cd StaticMan
 
-cp .env.example .env  # 编辑 ACCESS_KEY
+# 创建环境变量文件
+cat > .env <<EOF
+ACCESS_KEY=changeme
+PORT=8080
+DATA_DIR=./data
+SITE_TITLE=StaticMan
+SITE_DESCRIPTION=StaticMan file browser
+SITE_LOGO=/logo.svg
+EOF
+
+# 启动（需要本地安装 Go 1.22+ 和 Node 20+）
+cd web && npm install && npm run build && cd ..
+cp -r web/dist internal/web/dist
+go build -tags withweb -o staticman ./cmd/server
+./staticman
+```
+
+或使用 Docker：
+
+```bash
 docker compose up -d
 ```
 
@@ -131,23 +155,28 @@ data/
 ## 开发
 
 ```bash
-# 后端
+# 后端（开发模式从 internal/web/dist 读取，不强制嵌入）
 go run ./cmd/server/
 
 # 前端
 cd web && npm install && npm run dev
 
-# 前端构建 + 嵌入后端
-cd web && npm run build && cd .. && go build -tags withweb ./cmd/server/
+# 前端构建 + 嵌入后端（必须将构建产物复制到 embed 目录）
+cd web && npm run build && cd ..
+rm -rf internal/web/dist && cp -r web/dist internal/web/dist
+go build -tags withweb ./cmd/server/
 ```
 
 ## 环境变量
 
 | 变量 | 默认 | 说明 |
 |------|------|------|
-| `ACCESS_KEY` | 密码值 | JWT 签名密钥（**必须修改**） |
+| `ACCESS_KEY` | `changeme` | JWT 签名密钥（**生产环境必须修改**） |
 | `PORT` | `8080` | 服务端口 |
 | `DATA_DIR` | `data` | 数据目录路径 |
+| `SITE_TITLE` | `StaticMan` | 站点标题（支持自定义品牌名） |
+| `SITE_DESCRIPTION` | `StaticMan file browser...` | 站点描述，注入 HTML meta |
+| `SITE_LOGO` | `/logo.svg` | 站点 Logo URL |
 
 ## 许可
 
