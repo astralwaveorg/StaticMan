@@ -15,6 +15,10 @@
         <span class="file-size">{{ fmtSize(file.size) }}</span>
       </div>
       <div class="file-actions">
+        <button class="action-btn" :class="{active: isFavorite(file.path)}" @click="toggleFavorite({path: file.path, name: file.name, type: 'file'})" :title="isFavorite(file.path) ? '取消收藏' : '收藏'">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span class="action-text">{{ isFavorite(file.path) ? '已收藏' : '收藏' }}</span>
+        </button>
         <button class="action-btn" :class="{copied: copied==='raw'}" @click="copyRaw" :disabled="file.type==='directory' || (file.protected && !isLoggedIn())" :title="file.protected && !isLoggedIn() ? '需要登录' : '复制 Raw URL'">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           <span class="action-text">{{ copied==='raw' ? '已复制' : 'Raw' }}</span>
@@ -84,9 +88,13 @@
 import { computed, ref } from 'vue'
 import type { FileContent } from '../api'
 import { getRawUrl, isLoggedIn } from '../api'
+import { useToast } from '../composables/useToast'
+import { useFavorites } from '../composables/useFavorites'
 import hljs from 'highlight.js'
 
 const props = defineProps<{ file: FileContent }>()
+const toast = useToast()
+const { isFavorite, toggleFavorite } = useFavorites()
 
 const copied = ref<'raw' | 'path' | null>(null)
 
@@ -126,13 +134,13 @@ async function copyToClipboard(text: string) {
 
 async function copyRaw() {
   if (props.file.protected && !isLoggedIn()) {
-    // 受保护文件未登录：提示先登录
-    alert('此文件受保护，请先登录后再复制 Raw URL')
+    toast.error('此文件受保护，请先登录')
     return
   }
   const url = getRawUrl(props.file.path, props.file.protected, true)
   if (await copyToClipboard(url)) {
     copied.value = 'raw'
+    toast.success('Raw URL 已复制')
     setTimeout(() => { if (copied.value === 'raw') copied.value = null }, 1500)
   }
 }
@@ -140,6 +148,7 @@ async function copyRaw() {
 async function copyPath() {
   if (await copyToClipboard(props.file.path)) {
     copied.value = 'path'
+    toast.success('路径已复制')
     setTimeout(() => { if (copied.value === 'path') copied.value = null }, 1500)
   }
 }
@@ -271,9 +280,43 @@ async function copyPath() {
 .dl-link { color: var(--accent); text-decoration: underline; }
 
 @media (max-width: 768px) {
-  .viewer-bar { flex-direction: column; align-items: stretch; padding: 8px 10px; }
-  .file-actions { justify-content: flex-end; }
-  .action-text { display: none; }
+  .viewer-bar {
+    position: sticky;
+    bottom: 0;
+    top: auto;
+    margin-bottom: 0;
+    border-radius: 0;
+    border-top: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    padding: 8px 10px;
+    z-index: 10;
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+  .file-actions {
+    justify-content: space-around;
+    width: 100%;
+  }
+  .action-btn {
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px 8px;
+    font-size: 10px;
+    min-height: 44px;
+    min-width: 44px;
+    justify-content: center;
+  }
+  .action-text { display: block !important; }
+  .action-btn.active { color: var(--warning); background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.2); }
   .line-gutter { display: none; }
+  .code-block {
+    font-size: 14px;
+    padding: 12px 14px;
+    line-height: 1.7;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
 }
 </style>

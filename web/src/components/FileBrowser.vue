@@ -115,12 +115,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { getLs, getFile, getRawUrl, isLoggedIn, type LsItem } from '../api'
+import { useToast } from '../composables/useToast'
+import { useHistory } from '../composables/useHistory'
 
 const props = defineProps<{ rootPath: string; activeTool: string; excludeDirs?: string[] }>()
 const router = useRouter()
+const toast = useToast()
+const { addHistory } = useHistory()
 
 const items = ref<LsItem[]>([])
 const loading = ref(false)
@@ -165,7 +169,12 @@ async function load(p: string) {
   loading.value = false
 }
 
+function refreshContent() {
+  load(path.value)
+}
+
 function openItem(item: LsItem) {
+  addHistory({ path: item.path, name: item.name, type: item.type })
   router.push('/browse/' + item.path)
 }
 
@@ -198,17 +207,20 @@ async function copyToClipboard(text: string): Promise<boolean> {
 }
 
 // 复制当前项的相对路径
-function copyPath(item: LsItem) {
-  copyToClipboard(item.path)
+async function copyPath(item: LsItem) {
+  await copyToClipboard(item.path)
+  toast.success('已复制到剪贴板')
 }
 
 // 复制文件原始 Raw URL（受保护时若已登录会带 ?key=）
-function copyRaw(item: LsItem) {
+async function copyRaw(item: LsItem) {
   const url = getRawUrl(item.path, item.protected, true)
   if (item.protected && !isLoggedIn()) {
-    copyToClipboard(item.path)
+    await copyToClipboard(item.path)
+    toast.warning('文件受保护，已复制路径')
   } else {
-    copyToClipboard(url)
+    await copyToClipboard(url)
+    toast.success('已复制到剪贴板')
   }
 }
 
@@ -216,17 +228,18 @@ function copyRaw(item: LsItem) {
 async function copyContent(item: LsItem) {
   if (item.type === 'directory') return
   if (item.protected && !isLoggedIn()) {
-    alert('此文件受保护，请先登录后再复制内容')
+    toast.error('此文件受保护，请先登录')
     return
   }
   try {
     const { data } = await getFile(item.path)
     await copyToClipboard(data.content || '')
+    toast.success('内容已复制')
   } catch (e: any) {
     if (e?.response?.status === 403) {
-      alert('此文件受保护，请先登录')
+      toast.error('此文件受保护，请先登录')
     } else {
-      alert('复制失败')
+      toast.error('复制失败')
     }
   }
 }
@@ -245,6 +258,55 @@ function downloadItem(item: LsItem) {
 
 watch(viewMode, (v) => localStorage.setItem('fb_view', v))
 watch(() => [path.value, props.excludeDirs], () => load(path.value), { immediate: true })
+
+// 键盘导航
+const focusedIdx = ref(-1)
+function handleKeyNav(e: KeyboardEvent) {
+  if (!items.value.length) return
+  // 仅在文件列表区域内响应方向键（当没有模态框打开时）
+  const target = e.target as HTMLElement
+  if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return
+
+  switch (e.key) {
+    case 'ArrowDown':
+      e.preventDefault()
+      focusedIdx.value = (focusedIdx.value + 1) % items.value.length
+      scrollToFocused()
+      break
+    case 'ArrowUp':
+      e.preventDefault()
+      focusedIdx.value = (focusedIdx.value - 1 + items.value.length) % items.value.length
+      scrollToFocused()
+      break
+    case 'Enter':
+      if (focusedIdx.value >= 0 && focusedIdx.value < items.value.length) {
+        e.preventDefault()
+        openItem(items.value[focusedIdx.value])
+      }
+      break
+    case 'ArrowLeft':
+      e.preventDefault()
+      goUp()
+      break
+  }
+}
+function scrollToFocused() {
+  // 通过 DOM 查询找到对应元素并滚动到可视区域
+  nextTick(() => {
+    const el = document.querySelector(`.grid-item-wrap:nth-child(${focusedIdx.value + 1}), .list-item:nth-child(${focusedIdx.value + 2})`) as HTMLElement
+    el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+  })
+}
+
+// 监听登录成功事件，自动刷新
+onMounted(() => {
+  window.addEventListener('auth:login', refreshContent)
+  document.addEventListener('keydown', handleKeyNav)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('auth:login', refreshContent)
+  document.removeEventListener('keydown', handleKeyNav)
+})
 </script>
 
 <style scoped>
@@ -309,12 +371,13 @@ watch(() => [path.value, props.excludeDirs], () => load(path.value), { immediate
   transition: all var(--t-base) var(--ease);
   text-align: center;
 }
-.grid-item:hover {
+.grid-item:hover, .grid-item:focus-visible {
   transform: translateY(-2px);
   border-color: var(--accent);
   background: var(--bg-hover);
+  outline: none;
 }
-.grid-item.dir:hover { border-color: var(--accent); }
+.grid-item.dir:hover, .grid-item.dir:focus-visible { border-color: var(--accent); }
 .grid-item.locked { background: rgba(251,191,36,0.04); }
 .grid-icon {
   width: 44px; height: 44px;
@@ -416,21 +479,32 @@ watch(() => [path.value, props.excludeDirs], () => load(path.value), { immediate
 }
 
 @media (max-width: 768px) {
-  .grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 6px; padding: 10px; }
-  .grid-item { padding: 10px 4px 8px; }
-  .grid-icon { width: 32px; height: 32px; border-radius: 8px; }
-  .grid-icon :deep(svg) { width: 18px !important; height: 18px !important; }
-  .grid-name { font-size: 11px; }
-  .grid-size { font-size: 9px; }
-  .list-header, .list-item { grid-template-columns: 22px 1fr auto; padding: 7px 10px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; padding: 10px; }
+  .grid-item { padding: 12px 6px 10px; min-height: 80px; }
+  .grid-icon { width: 36px; height: 36px; border-radius: 8px; }
+  .grid-icon :deep(svg) { width: 20px !important; height: 20px !important; }
+  .grid-name { font-size: 12px; }
+  .grid-size { font-size: 10px; }
+  .list-header { display: none; }
+  .list-item { grid-template-columns: 36px 1fr auto; padding: 10px 12px; min-height: 56px; }
   .col-size, .list-size { display: none; }
   .col-time, .list-time { display: none; }
-  .col-actions { display: none; }
-  .list-header .col-actions { display: block; text-align: right; }
-  .list-actions { gap: 2px; }
+  .list-actions {
+    display: flex !important;
+    gap: 4px;
+  }
+  .row-action {
+    padding: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+  }
   .grid-action-label, .row-action-label { display: none; }
-  .grid-action, .row-action { padding: 5px 7px; }
+  .grid-action { padding: 6px 8px; min-height: 36px; }
   .fb-subbar { padding: 6px 10px; }
   .path-link { max-width: 80px; font-size: 11px; }
+}
+@media (max-width: 380px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>

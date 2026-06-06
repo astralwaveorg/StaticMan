@@ -4,8 +4,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/athena/staticman/internal/auth"
+	"github.com/athena/staticman/internal/cache"
 	"github.com/athena/staticman/internal/config"
 	"github.com/athena/staticman/internal/handler"
 	"github.com/athena/staticman/internal/middleware"
@@ -33,20 +35,42 @@ func main() {
 	// 启动配置热加载
 	cfg.Watch()
 
+	// 创建内存缓存
+	appCache := cache.New()
+
 	mux := http.NewServeMux()
 
 	// 注册所有路由（API、原始文件层、兼容层）
-	h := handler.New(cfg, authSvc)
+	h := handler.New(cfg, authSvc, appCache)
 	h.RegisterRoutes(mux)
 
 	// 前端 SPA 静态资源
 	spaHandler := web.NewSPAHandler()
 	mux.Handle("/", spaHandler)
 
-	// 应用中间件（不再需要 Auth 中间件，由各 handler 自行处理）
+	// 限流配置
+	rateLimits := map[string]*middleware.RateLimiter{
+		"/api/auth":  middleware.NewRateLimiter(5, 5.0/60.0),   // 5次/分钟
+		"/api/search": middleware.NewRateLimiter(30, 30.0/60.0), // 30次/分钟
+		"/api/":      middleware.NewRateLimiter(120, 120.0/60.0), // 120次/分钟
+	}
+
+	// 应用中间件
 	var finalHandler http.Handler = mux
+	finalHandler = middleware.RateLimitMiddleware(rateLimits)(finalHandler)
 	finalHandler = middleware.CORS(finalHandler)
 	finalHandler = middleware.Logging(finalHandler)
+
+	// 定期清理限流器
+	go func() {
+		ticker := time.NewTicker(10 * time.Minute)
+		defer ticker.Stop()
+		for range ticker.C {
+			for _, limiter := range rateLimits {
+				limiter.Cleanup()
+			}
+		}
+	}()
 
 	addr := ":" + os.Getenv("PORT")
 	if addr == ":" {

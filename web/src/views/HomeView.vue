@@ -121,12 +121,7 @@ const searchMode = ref<'name' | 'content'>('name')
 
 
 function openCommand() {
-  // 同步首页的搜索词和模式到命令面板
-  if (searchQuery.value.trim()) {
-    
-  } else {
-    ui.openCommand()
-  }
+  ui.openCommand(searchQuery.value.trim(), searchMode.value)
 }
 
 function onSearchEnter() {
@@ -134,7 +129,7 @@ function onSearchEnter() {
 }
 
 function onSearchFocus() {
-  // 仅打开命令面板（不立即跳转）
+  openCommand()
 }
 
 const totalFiles = computed(() => categories.value.reduce((s, c) => s + c.fileCount, 0))
@@ -429,8 +424,8 @@ onMounted(async () => {
   .hero h1 { font-size: 16px; }
   .hero-subtitle { display: none; }
   .home-search { max-width: none; flex: 1 1 100%; min-width: 0; }
-  .search-shell { height: 44px; padding: 0 6px 0 12px; }
-  .search-mode button { padding: 4px 8px; }
+  .search-shell { height: 48px; padding: 0 6px 0 12px; }
+  .search-mode button { padding: 6px 12px; font-size: 12px; }
   .search-shell .kbd-hint { display: none; }
   .stats { margin-bottom: 10px; padding: 6px 10px; }
   .stat-value { font-size: 13px; }

@@ -1,22 +1,26 @@
-# StaticMan 项目指令 (Codebase)
+# StaticMan Engine (Codebase)
 
-这是 StaticMan 的主代码仓库指令文件。
+StaticMan 是驱动 MagicHub 的核心引擎，基于 Go + Vue 3 的轻量级文件管理系统。
 
-## 项目定位
-- **名称**: StaticMan
-- **定位**: 轻量级静态文件管理器与分发服务器。
-- **技术栈**: Go + Vue 3 (Rolldown/Vite 8)。
+## ⚙️ 技术栈与构建
+- **Backend**: Go 1.22+ (标准库 http + fsnotify 热加载)。
+- **Frontend**: Vue 3 + Vite 8 + Rolldown。
+- **构建标签**: 必须带 `-tags withweb` 才能将前端 UI 嵌入 Go 二进制文件。
 
-## 关键配置
-- **运行方式**: Systemd 服务 (非 Docker)
-- **核心路径**:
-  - 二进制文件: /opt/magichub/bin/staticman
-  - 源码与配置: /opt/magichub/src/
-  - 数据目录: /opt/magichub/data/
-- **环境变量**: ACCESS_KEY, PORT, DATA_DIR (定义于 /opt/magichub/src/.env)。
+## 🚀 生产环境配置 (Server: hkb)
+- **服务类型**: Systemd Service (`staticman.service`)。
+- **关键路径**:
+  - 执行文件: `/opt/magichub/bin/staticman`
+  - 环境配置: `/opt/magichub/src/.env`
+- **环境变量**:
+  - `ACCESS_KEY`: 用于 JWT 签名的核心密钥（由服务器端定义）。
+  - `DATA_DIR`: 指向 `/opt/magichub/data`。
 
-## 运维流程
-- **域名**: file.magichub.top (Nginx 反向代理至 8080 端口)。
-- **部署**: GitHub Actions 自动执行前端打包和 Go 编译，并通过 SCP 传输二进制文件至服务器，最后重启 systemd 服务。
-- **构建**: go build -tags withweb (嵌入静态资源)。
-- **Secrets**: SERVER_HOST, SSH_PRIVATE_KEY。
+## 🌐 网络与安全
+- **入口**: `https://files.magichub.top`
+- **转发**: Nginx (443) -> localhost (8080)。
+- **保护**: 默认忽略 `.git`, `.github`, `.DS_Store`。系统文件 (`password.yaml`, `metadata.yaml`) 自动在导航中隐藏。
+
+## 🔄 CI/CD 工作流
+- **触发**: Push to `main` 分支。
+- **过程**: 构建前端 -> 编译 Go -> SCP 传输 -> `systemctl restart staticman`。

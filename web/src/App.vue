@@ -58,6 +58,9 @@
     <!-- Command palette -->
     <CommandPalette :open="ui.showCommand" @update:open="ui.closeCommand()" />
 
+    <!-- Toast notifications -->
+    <ToastContainer />
+
     <!-- Login modal -->
     <Teleport to="body">
       <transition name="fade">
@@ -90,18 +93,50 @@ import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from './stores/auth'
 import { getBreadcrumbs, type Breadcrumb } from './api'
 import CommandPalette from './components/CommandPalette.vue'
+import ToastContainer from './components/ToastContainer.vue'
 import { useUIStore } from './stores/ui'
+import { useToast } from './composables/useToast'
 
 const auth = useAuthStore()
 const ui = useUIStore()
 const route = useRoute()
 const router = useRouter()
+const toast = useToast()
 
-const theme = ref((localStorage.getItem('staticman_theme') as 'dark' | 'light') || 'dark')
-// 同步主题到 <html> 元素，让 body 背景色正确响应主题
+// 系统主题偏好检测 + 本地存储覆盖
+const savedTheme = localStorage.getItem('staticman_theme') as 'dark' | 'light' | null
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+const theme = ref<'dark' | 'light'>(savedTheme || (prefersDark ? 'dark' : 'light'))
+
+// 监听系统主题变化（仅在用户未手动设置时）
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  if (!localStorage.getItem('staticman_theme')) {
+    theme.value = e.matches ? 'dark' : 'light'
+  }
+})
+
+// 动态加载代码高亮主题 CSS
+function loadHljsTheme(isDark: boolean) {
+  const id = 'hljs-theme'
+  let link = document.getElementById(id) as HTMLLinkElement | null
+  const href = isDark
+    ? '/hljs/github-dark-dimmed.min.css'
+    : '/hljs/github.min.css'
+  if (!link) {
+    link = document.createElement('link')
+    link.id = id
+    link.rel = 'stylesheet'
+    document.head.appendChild(link)
+  }
+  link.href = href
+}
+
+// 同步主题到 <html> 元素
 watch(theme, (v) => {
   document.documentElement.setAttribute('data-theme', v)
+  loadHljsTheme(v === 'dark')
 }, { immediate: true })
+
 const password = ref('')
 const loginLoading = ref(false)
 const loginError = ref('')
@@ -126,8 +161,10 @@ async function doLogin() {
     ui.closeLogin()
     password.value = ''
     loginError.value = ''
+    toast.success('登录成功')
   } else {
     loginError.value = '密码错误'
+    toast.error('密码错误')
   }
 }
 
@@ -335,6 +372,8 @@ watch(() => ui.showLogin, (v) => { if (v) nextTick(() => passwordInput.value?.fo
   cursor: pointer; padding: 7px; border-radius: 7px;
   display: flex; align-items: center; justify-content: center;
   transition: all var(--t-fast) var(--ease);
+  min-width: 44px;
+  min-height: 44px;
 }
 .icon-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
 
@@ -357,6 +396,7 @@ watch(() => ui.showLogin, (v) => { if (v) nextTick(() => passwordInput.value?.fo
   font-size: 13px; font-weight: 500;
   transition: all var(--t-fast) var(--ease);
   box-shadow: 0 2px 8px rgba(124, 58, 237, 0.25);
+  min-height: 44px;
 }
 .login-btn:hover { background: var(--accent-hover); }
 
@@ -367,6 +407,7 @@ watch(() => ui.showLogin, (v) => { if (v) nextTick(() => passwordInput.value?.fo
   color: var(--text-primary); font-size: 12px; font-weight: 500;
   border: 1px solid var(--glass-border);
   transition: all var(--t-fast) var(--ease);
+  min-height: 44px;
 }
 .user-btn:hover { background: var(--bg-hover); }
 .user-dot {
@@ -428,12 +469,26 @@ watch(() => ui.showLogin, (v) => { if (v) nextTick(() => passwordInput.value?.fo
 @media (max-width: 768px) {
   .topbar-inner { padding: 0 12px; gap: 8px; }
   .brand-sub { display: none; }
-  .crumbs { display: none; }
+  .crumbs {
+    display: flex;
+    font-size: 11px;
+    gap: 2px;
+    margin-right: 2px;
+  }
+  .crumb {
+    max-width: 60px;
+    padding: 4px 4px;
+  }
+  .crumb-current {
+    max-width: 80px;
+  }
+  .crumb-sep { display: none; }
 }
 @media (max-width: 480px) {
   .topbar { height: 56px; }
   .brand-title { font-size: 12px; }
   .login-btn span { display: none; }
   .login-btn { padding: 7px; }
+  .crumbs { display: none; }
 }
 </style>

@@ -11,8 +11,10 @@ import (
 	"time"
 
 	"github.com/athena/staticman/internal/auth"
+	"github.com/athena/staticman/internal/cache"
 	"github.com/athena/staticman/internal/config"
 	"github.com/athena/staticman/internal/masker"
+	"github.com/athena/staticman/internal/mime"
 )
 
 // Handler HTTP 请求处理器
@@ -21,15 +23,17 @@ type Handler struct {
 	masker  *masker.Masker
 	dataDir string
 	auth    *auth.Service
+	cache   *cache.Cache
 }
 
 // New 创建新的 Handler
-func New(cfg *config.Config, authSvc *auth.Service) *Handler {
+func New(cfg *config.Config, authSvc *auth.Service, c *cache.Cache) *Handler {
 	return &Handler{
 		cfg:     cfg,
 		masker:  masker.New(),
 		dataDir: cfg.ConfigsDir(),
 		auth:    authSvc,
+		cache:   c,
 	}
 }
 
@@ -72,12 +76,17 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 
 // handleHealth 健康检查
 func (h *Handler) handleHealth(w http.ResponseWriter, r *http.Request) {
+	total, expired := h.cache.Stats()
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"status":    "ok",
 		"version":   "v2",
 		"dataDir":   h.dataDir,
 		"timestamp": time.Now().Unix(),
+		"cache": map[string]interface{}{
+			"total":   total,
+			"expired": expired,
+		},
 	})
 }
 
@@ -131,11 +140,19 @@ func (h *Handler) handleTree(w http.ResponseWriter, r *http.Request) {
 			maxDepth = 3
 		}
 	}
+	// 缓存键包含认证状态和深度
+	cacheKey := fmt.Sprintf("tree:%v:%d", isAuth, maxDepth)
+	if val, ok := h.cache.Get(cacheKey); ok {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(val)
+		return
+	}
 	tree, err := h.buildTree(h.dataDir, "", isAuth, maxDepth, 0)
 	if err != nil {
 		http.Error(w, "Failed to build tree", http.StatusInternalServerError)
 		return
 	}
+	h.cache.Set(cacheKey, tree, 30*time.Second)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(tree)
 }
@@ -231,8 +248,14 @@ type LsItem struct {
 func (h *Handler) handleLs(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Query().Get("path")
 	if path == "" {
-		// 列出根
 		path = ""
+	}
+	// 缓存
+	cacheKey := "ls:" + path
+	if val, ok := h.cache.Get(cacheKey); ok {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(val)
+		return
 	}
 	fullPath, ok := safeJoin(h.dataDir, path)
 	if !ok {
@@ -258,6 +281,9 @@ func (h *Handler) handleLs(w http.ResponseWriter, r *http.Request) {
 
 	items := []LsItem{}
 	for _, entry := range entries {
+		if config.IsSystemFile(entry.Name()) {
+			continue
+		}
 		childPath := filepath.Join(path, entry.Name())
 		if path == "" {
 			childPath = entry.Name()
@@ -292,12 +318,14 @@ func (h *Handler) handleLs(w http.ResponseWriter, r *http.Request) {
 		return items[i].Name < items[j].Name
 	})
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	result := map[string]interface{}{
 		"path":  path,
 		"items": items,
 		"total": len(items),
-	})
+	}
+	h.cache.Set(cacheKey, result, 10*time.Second)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
 }
 
 // Breadcrumb 面包屑
@@ -344,6 +372,14 @@ func (h *Handler) handleBreadcrumbs(w http.ResponseWriter, r *http.Request) {
 //   - color:       根据目录名哈希生成稳定的色彩
 //   - description: 子工具统计 "包含 N 个工具：..."
 func (h *Handler) handleCategories(w http.ResponseWriter, r *http.Request) {
+	// 缓存键
+	const cacheKey = "categories"
+	if val, ok := h.cache.Get(cacheKey); ok {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(val)
+		return
+	}
+
 	type categoryResult struct {
 		Key         string   `json:"key"`
 		Name        string   `json:"name"`
@@ -385,6 +421,7 @@ func (h *Handler) handleCategories(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
+	h.cache.Set(cacheKey, result, 30*time.Second)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(result)
 }
@@ -507,7 +544,7 @@ func buildDescription(name string, tools []string, fileCount int) string {
 	return fmt.Sprintf("%s · %d 个文件", prettyName, fileCount)
 }
 
-// countFilesAndSize 递归统计文件数和总大小
+// countFilesAndSize 递归统计文件数和总大小（跳过系统文件）
 func (h *Handler) countFilesAndSize(dir string) (int, int64) {
 	count := 0
 	var size int64
@@ -516,6 +553,9 @@ func (h *Handler) countFilesAndSize(dir string) (int, int64) {
 		return 0, 0
 	}
 	for _, entry := range entries {
+		if config.IsSystemFile(entry.Name()) {
+			continue
+		}
 		fullPath := filepath.Join(dir, entry.Name())
 		if entry.IsDir() {
 			c, s := h.countFilesAndSize(fullPath)
@@ -749,29 +789,72 @@ func (h *Handler) handleSearch(w http.ResponseWriter, r *http.Request) {
 		searchType = "name"
 	}
 
+	// 分页参数
+	offset := 0
+	limit := 50
+	if o := r.URL.Query().Get("offset"); o != "" {
+		fmt.Sscanf(o, "%d", &offset)
+		if offset < 0 {
+			offset = 0
+		}
+	}
+	if l := r.URL.Query().Get("limit"); l != "" {
+		fmt.Sscanf(l, "%d", &limit)
+		if limit < 1 {
+			limit = 50
+		}
+		if limit > 200 {
+			limit = 200
+		}
+	}
+
 	if query == "" {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]SearchResult{})
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"results": []SearchResult{},
+			"total":   0,
+			"offset":  offset,
+			"limit":   limit,
+		})
 		return
 	}
 
 	isAuth := h.isAuthenticated(r)
-	var results []SearchResult
+	var allResults []SearchResult
 
 	if searchType == "name" {
-		results = h.searchByName(query, isAuth)
+		allResults = h.searchByName(query, isAuth)
 	} else {
-		results = h.searchByContent(query, isAuth)
+		allResults = h.searchByContent(query, isAuth)
+	}
+
+	total := len(allResults)
+	// 分页切片
+	end := offset + limit
+	if end > total {
+		end = total
+	}
+	var results []SearchResult
+	if offset < total {
+		results = allResults[offset:end]
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(results)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"results": results,
+		"total":   total,
+		"offset":  offset,
+		"limit":   limit,
+	})
 }
 
 // searchByName 按文件名搜索
 func (h *Handler) searchByName(query string, isAuth bool) []SearchResult {
 	var results []SearchResult
 	h.walkDir(h.dataDir, "", func(relPath string, info os.FileInfo) {
+		if config.IsSystemFile(info.Name()) {
+			return
+		}
 		if strings.Contains(strings.ToLower(info.Name()), strings.ToLower(query)) {
 			result := SearchResult{
 				Path:      relPath,
@@ -794,6 +877,9 @@ func (h *Handler) searchByName(query string, isAuth bool) []SearchResult {
 func (h *Handler) searchByContent(query string, isAuth bool) []SearchResult {
 	var results []SearchResult
 	h.walkDir(h.dataDir, "", func(relPath string, info os.FileInfo) {
+		if config.IsSystemFile(info.Name()) {
+			return
+		}
 		if info.IsDir() {
 			return
 		}
@@ -802,10 +888,15 @@ func (h *Handler) searchByContent(query string, isAuth bool) []SearchResult {
 		}
 
 		fullPath := filepath.Join(h.dataDir, relPath)
-		data, err := os.ReadFile(fullPath)
+		// 限制单个文件最大读取 500KB
+		f, err := os.Open(fullPath)
 		if err != nil {
 			return
 		}
+		defer f.Close()
+		data := make([]byte, 500*1024)
+		n, _ := f.Read(data)
+		data = data[:n]
 
 		content := string(data)
 		var matches []MatchLine
@@ -1003,10 +1094,10 @@ func (h *Handler) fileType(info os.FileInfo) string {
 	return "file"
 }
 
-// isBinaryFile 判断是否为二进制文件
+// isBinaryFile 判断是否为二进制文件（扩展名 + 魔数双重检测）
 func (h *Handler) isBinaryFile(path string) bool {
 	ext := strings.ToLower(filepath.Ext(path))
-	// 已知文本扩展名
+	// 已知文本扩展名 — 快速短路返回
 	textExts := map[string]bool{
 		".yaml": true, ".yml": true, ".ini": true, ".conf": true,
 		".list": true, ".md": true, ".markdown": true,
@@ -1021,12 +1112,11 @@ func (h *Handler) isBinaryFile(path string) bool {
 		".sql": true, ".txt": true, ".log": true,
 		".env": true, ".gitignore": true, ".dockerfile": true,
 		".csv": true, ".tsv": true,
-		"": true, // 无扩展名按文本处理
 	}
 	if textExts[ext] {
 		return false
 	}
-	// 已知二进制扩展名
+	// 已知二进制扩展名 — 快速短路返回
 	binaryExts := map[string]bool{
 		".png": true, ".jpg": true, ".jpeg": true, ".gif": true,
 		".ico": true, ".webp": true, ".bmp": true,
@@ -1038,7 +1128,17 @@ func (h *Handler) isBinaryFile(path string) bool {
 		".woff": true, ".woff2": true, ".ttf": true, ".otf": true, ".eot": true,
 		".bin": true, ".dat": true,
 	}
-	return binaryExts[ext]
+	if binaryExts[ext] {
+		return true
+	}
+	// 无扩展名或未知扩展名：使用魔数检测
+	fullPath := filepath.Join(h.dataDir, path)
+	isBin, err := mime.IsBinaryByMagic(fullPath)
+	if err == nil {
+		return isBin
+	}
+	// 检测失败时，无扩展名默认视为文本，其他扩展名默认视为二进制（保守策略）
+	return ext != ""
 }
 
 // handleLegacySurge 兼容旧 Surge URL

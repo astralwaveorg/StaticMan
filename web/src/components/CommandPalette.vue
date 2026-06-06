@@ -20,10 +20,11 @@
             </div>
           </div>
 
-          <div class="cmd-results" v-if="results.length">
+          <div class="cmd-results" v-if="displayItems.length">
+            <div class="cmd-history-label" v-if="showHistory">最近访问</div>
             <div
-              v-for="(r, i) in results"
-              :key="r.path"
+              v-for="(r, i) in displayItems"
+              :key="r.path + (r.isHistory ? '-h' : '')"
               class="cmd-item"
               :class="{active: i === activeIdx}"
               @mouseenter="activeIdx = i"
@@ -36,9 +37,11 @@
               </div>
               <div class="cmd-info">
                 <div class="cmd-name">{{ r.name }}</div>
-                <div class="cmd-path">{{ r.path }}</div>
+                <div class="cmd-path">
+                  {{ r.isHistory ? formatRelativeTime(r.timestamp) : r.path }}
+                </div>
               </div>
-              <span v-if="r.matches" class="cmd-badge">{{ r.matches.length }} 匹配</span>
+              <span v-if="r.matches && !r.isHistory" class="cmd-badge">{{ r.matches.length }} 匹配</span>
               <svg class="cmd-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </div>
           </div>
@@ -47,7 +50,7 @@
             <p>没有找到 "{{ query }}"</p>
           </div>
 
-          <div class="cmd-hint" v-if="!query.trim()">
+          <div class="cmd-hint" v-if="!query.trim() && !showHistory">
             <p>开始输入以搜索 · 支持文件名和文件内容</p>
           </div>
 
@@ -67,14 +70,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUIStore } from '../stores/ui'
+import { useHistory } from '../composables/useHistory'
 import { searchFiles, type SearchResult } from '../api'
+
+const ui = useUIStore()
 
 const props = defineProps<{ open: boolean }>()
 const emit = defineEmits<{ 'update:open': [v: boolean] }>()
 
 const router = useRouter()
+const { history, formatRelativeTime } = useHistory()
 const query = ref('')
 const mode = ref<'name' | 'content'>('name')
 const results = ref<SearchResult[]>([])
@@ -82,21 +90,37 @@ const activeIdx = ref(0)
 const loading = ref(false)
 const inputRef = ref<HTMLInputElement | null>(null)
 
+const showHistory = computed(() => !query.value.trim() && history.value.length > 0)
+const displayItems = computed(() => {
+  if (showHistory.value) {
+    return history.value.map(h => ({
+      path: h.path,
+      name: h.name,
+      type: h.type,
+      protected: false,
+      isBinary: false,
+      isHistory: true,
+      timestamp: h.timestamp,
+    })) as any[]
+  }
+  return results.value
+})
+
 function close() { emit('update:open', false) }
 
 function move(delta: number) {
-  if (!results.value.length) return
-  activeIdx.value = (activeIdx.value + delta + results.value.length) % results.value.length
+  if (!displayItems.value.length) return
+  activeIdx.value = (activeIdx.value + delta + displayItems.value.length) % displayItems.value.length
 }
 
-function executeItem(r: SearchResult) {
+function executeItem(r: any) {
   router.push('/browse/' + r.path)
   close()
 }
 
 function execute() {
-  if (results.value[activeIdx.value]) {
-    executeItem(results.value[activeIdx.value])
+  if (displayItems.value[activeIdx.value]) {
+    executeItem(displayItems.value[activeIdx.value])
   } else if (query.value.trim()) {
     // trigger search
   }
@@ -128,11 +152,26 @@ watch(mode, () => {
 
 watch(() => props.open, async (v) => {
   if (v) {
-    query.value = ''
+    query.value = ui.commandQuery
+    mode.value = ui.commandMode
     results.value = []
     activeIdx.value = 0
+    // 如果有初始搜索词，立即触发搜索
+    if (query.value.trim()) {
+      if (debounceTimer) clearTimeout(debounceTimer)
+      debounceTimer = window.setTimeout(async () => {
+        loading.value = true
+        try {
+          const { data } = await searchFiles(query.value.trim(), mode.value)
+          results.value = data
+          activeIdx.value = 0
+        } catch {}
+        loading.value = false
+      }, 150)
+    }
     await nextTick()
     inputRef.value?.focus()
+    inputRef.value?.select()
   }
 })
 </script>
@@ -249,11 +288,31 @@ watch(() => props.open, async (v) => {
 
 /* Mobile */
 @media (max-width: 640px) {
-  .cmd-backdrop { padding: 8vh 12px 12px; }
-  .cmd-panel { max-height: 75vh; }
+  .cmd-backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .cmd-panel {
+    max-height: 85vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    animation: slideUp var(--t-base) var(--ease);
+  }
   .cmd-search { padding: 12px; gap: 8px; }
   .cmd-input { font-size: 14px; }
   .cmd-mode button { padding: 4px 8px; font-size: 10px; }
   .cmd-footer { gap: 10px; font-size: 10px; }
+  .cmd-history-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    padding: 6px 12px 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>

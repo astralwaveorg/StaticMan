@@ -15,7 +15,17 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (r) => r,
-  (e) => { if (e.response?.status === 401) clearToken(); return Promise.reject(e) }
+  async (e) => {
+    if (e.response?.status === 401) clearToken()
+    // 自动重试机制（指数退避）
+    const config = e.config
+    if (config && !config._retryCount && config.method === 'get') {
+      config._retryCount = 1
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      return api(config)
+    }
+    return Promise.reject(e)
+  }
 )
 
 function getToken(): string | null { return localStorage.getItem('staticman_token') }

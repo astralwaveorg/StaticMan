@@ -104,14 +104,10 @@ const searchMode = ref<'name' | 'content'>('name')
 
 
 function openCommand() {
-  if (searchQuery.value.trim()) {
-    
-  } else {
-    ui.openCommand()
-  }
+  ui.openCommand(searchQuery.value.trim(), searchMode.value)
 }
 function onSearchEnter() { openCommand() }
-function onSearchFocus() { /* no-op */ }
+function onSearchFocus() { openCommand() }
 
 const currentPath = computed(() => {
   const p = route.params.pathMatch
