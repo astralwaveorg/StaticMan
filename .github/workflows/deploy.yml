@@ -13,6 +13,8 @@ env:
   # 部署脚本会跳过未设置的变量，避免覆盖服务器上已有的手动配置。
   ACCESS_KEY: ${{ secrets.STATICMAN_ACCESS_KEY != '' && secrets.STATICMAN_ACCESS_KEY || '__UNSET__' }}
   SITE_TITLE: ${{ secrets.STATICMAN_SITE_TITLE != '' && secrets.STATICMAN_SITE_TITLE || '__UNSET__' }}
+  SITE_TITLE_CN: ${{ secrets.STATICMAN_SITE_TITLE_CN != '' && secrets.STATICMAN_SITE_TITLE_CN || '__UNSET__' }}
+  SITE_TITLE_EN: ${{ secrets.STATICMAN_SITE_TITLE_EN != '' && secrets.STATICMAN_SITE_TITLE_EN || '__UNSET__' }}
   SITE_DESCRIPTION: ${{ secrets.STATICMAN_SITE_DESCRIPTION != '' && secrets.STATICMAN_SITE_DESCRIPTION || '__UNSET__' }}
   SITE_LOGO: ${{ secrets.STATICMAN_SITE_LOGO != '' && secrets.STATICMAN_SITE_LOGO || '__UNSET__' }}
 
@@ -75,7 +77,7 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script_stop: true
-          envs: ACCESS_KEY,SITE_TITLE,SITE_DESCRIPTION,SITE_LOGO
+          envs: ACCESS_KEY,SITE_TITLE,SITE_TITLE_CN,SITE_TITLE_EN,SITE_DESCRIPTION,SITE_LOGO
           script: |
             set -euo pipefail
 
@@ -111,6 +113,8 @@ jobs:
             update_env "PORT" "8080"
             update_env "DATA_DIR" "/opt/magichub/data"
             update_env_if_set "SITE_TITLE" "${SITE_TITLE}"
+            update_env_if_set "SITE_TITLE_CN" "${SITE_TITLE_CN}"
+            update_env_if_set "SITE_TITLE_EN" "${SITE_TITLE_EN}"
             update_env_if_set "SITE_DESCRIPTION" "${SITE_DESCRIPTION}"
             update_env_if_set "SITE_LOGO" "${SITE_LOGO}"
 

@@ -14,8 +14,9 @@ services:
       - ACCESS_KEY=${ACCESS_KEY:-changeme}
       - PORT=8080
       - DATA_DIR=/app/data
-      - SITE_TITLE=${SITE_TITLE:-魔匣}
-      - SITE_DESCRIPTION=${SITE_DESCRIPTION:-魔匣 MagicBox - 私人网络配置管理中心}
+      - SITE_TITLE_CN=${SITE_TITLE_CN:-魔匣}
+      - SITE_TITLE_EN=${SITE_TITLE_EN:-MagicBox}
+      - SITE_DESCRIPTION=${SITE_DESCRIPTION:-私人网络代理配置管理中心}
       - SITE_LOGO=${SITE_LOGO:-/logo.svg}
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8080/api/health"]

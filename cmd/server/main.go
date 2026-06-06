@@ -48,6 +48,8 @@ func main() {
 	spaHandler := web.NewSPAHandler(func() web.SiteConfig {
 		site := cfg.GetSite()
 		return web.SiteConfig{
+			TitleCN:     site.TitleCN,
+			TitleEN:     site.TitleEN,
 			Title:       site.Title,
 			Description: site.Description,
 			Logo:        site.Logo,

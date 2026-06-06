@@ -42,8 +42,9 @@ cat > .env <<EOF
 ACCESS_KEY=changeme
 PORT=8080
 DATA_DIR=./data
-SITE_TITLE=StaticMan
-SITE_DESCRIPTION=StaticMan file browser
+SITE_TITLE_CN=魔匣
+SITE_TITLE_EN=MagicBox
+SITE_DESCRIPTION=私人网络代理配置管理中心
 SITE_LOGO=/logo.svg
 EOF
 
@@ -178,9 +179,11 @@ go build -tags withweb ./cmd/server/
 | `ACCESS_KEY` | `changeme` | 访问密钥（**生产环境必须修改**） |
 | `PORT` | `8080` | 服务端口 |
 | `DATA_DIR` | `data` | 数据目录路径 |
-| `SITE_TITLE` | `StaticMan` | 站点标题（支持自定义品牌名） |
-| `SITE_DESCRIPTION` | `StaticMan file browser...` | 站点描述，注入 HTML meta |
+| `SITE_TITLE_CN` | `StaticMan` | 中文品牌名（浏览器标签、Logo 主标题） |
+| `SITE_TITLE_EN` | `StaticMan` | 英文品牌名/实例名（Logo 副标题） |
+| `SITE_DESCRIPTION` | — | 站点描述，与英文名组合显示在副标题 |
 | `SITE_LOGO` | `/logo.svg` | 站点 Logo URL |
+| `SITE_TITLE` | — | 向后兼容：完整标题（未设置 CN/EN 时回退） |
 
 ## 许可
 

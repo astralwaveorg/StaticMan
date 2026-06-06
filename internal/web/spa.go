@@ -8,7 +8,9 @@ import (
 
 // SiteConfig 用于动态注入 index.html 的站点配置
 type SiteConfig struct {
-	Title       string
+	TitleCN     string
+	TitleEN     string
+	Title       string // 向后兼容
 	Description string
 	Logo        string
 }
@@ -71,20 +73,34 @@ func (h *SPAHandler) serveIndexHTML(w http.ResponseWriter, r *http.Request) {
 	// 动态注入站点标题、描述和 logo
 	if h.getSite != nil {
 		site := h.getSite()
-		if site.Title != "" {
-			html = strings.Replace(html, "<title>StaticMan</title>", "<title>"+site.Title+"</title>", 1)
-			html = strings.Replace(html, `<meta name="description" content="StaticMan`, `<meta name="description" content="`+site.Title, 1)
+
+		// 浏览器标签页使用中文品牌名
+		title := site.TitleCN
+		if title == "" {
+			title = site.Title
 		}
-		if site.Description != "" {
-			// 替换 description 内容
-			const descPrefix = `<meta name="description" content="`
-			if idx := strings.Index(html, descPrefix); idx != -1 {
-				start := idx + len(descPrefix)
-				if end := strings.Index(html[start:], `"`); end != -1 {
-					html = html[:start] + site.Description + html[start+end:]
-				}
+		if title == "" {
+			title = "StaticMan"
+		}
+		html = strings.Replace(html, "<title>StaticMan</title>", "<title>"+title+"</title>", 1)
+
+		// meta description 使用 "英文品牌名 | 描述"
+		desc := site.Description
+		if site.TitleEN != "" && desc != "" {
+			desc = site.TitleEN + " | " + desc
+		} else if site.TitleEN != "" {
+			desc = site.TitleEN
+		} else if desc == "" {
+			desc = title
+		}
+		const descPrefix = `<meta name="description" content="`
+		if idx := strings.Index(html, descPrefix); idx != -1 {
+			start := idx + len(descPrefix)
+			if end := strings.Index(html[start:], `"`); end != -1 {
+				html = html[:start] + desc + html[start+end:]
 			}
 		}
+
 		if site.Logo != "" {
 			html = strings.Replace(html, `<link rel="icon" type="image/svg+xml" href="/logo.svg" />`, `<link rel="icon" type="image/svg+xml" href="`+site.Logo+`" />`, 1)
 			html = strings.Replace(html, `<link rel="apple-touch-icon" href="/logo-192.png" />`, `<link rel="apple-touch-icon" href="`+site.Logo+`" />`, 1)

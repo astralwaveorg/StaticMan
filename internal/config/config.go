@@ -45,7 +45,9 @@ type FileMeta struct {
 
 // SiteConfig 站点展示配置
 type SiteConfig struct {
-	Title       string `yaml:"title"`
+	TitleCN     string `yaml:"title_cn"`
+	TitleEN     string `yaml:"title_en"`
+	Title       string `yaml:"title"` // 向后兼容：完整标题
 	Description string `yaml:"description"`
 	Logo        string `yaml:"logo"`
 }
@@ -81,10 +83,20 @@ func Load(dataDir string) (*Config, error) {
 	}
 
 	// 站点标题和描述：优先环境变量，默认使用项目名
+	siteTitle := firstNonEmpty(os.Getenv("SITE_TITLE"), "StaticMan")
+	siteDesc := firstNonEmpty(os.Getenv("SITE_DESCRIPTION"), "StaticMan - 私人网络配置管理中心")
+	siteLogo := firstNonEmpty(os.Getenv("SITE_LOGO"), "/logo.svg")
+
+	// 中英文品牌名支持：可独立配置，未配置时从 SITE_TITLE 回退
+	siteTitleCN := firstNonEmpty(os.Getenv("SITE_TITLE_CN"), extractChinese(siteTitle), siteTitle)
+	siteTitleEN := firstNonEmpty(os.Getenv("SITE_TITLE_EN"), extractEnglish(siteTitle), siteTitle)
+
 	c.Site = SiteConfig{
-		Title:       firstNonEmpty(os.Getenv("SITE_TITLE"), "StaticMan"),
-		Description: firstNonEmpty(os.Getenv("SITE_DESCRIPTION"), "StaticMan - 私人网络配置管理中心"),
-		Logo:        firstNonEmpty(os.Getenv("SITE_LOGO"), "/logo.svg"),
+		TitleCN:     siteTitleCN,
+		TitleEN:     siteTitleEN,
+		Title:       siteTitle,
+		Description: siteDesc,
+		Logo:        siteLogo,
 	}
 
 	return c, nil
@@ -97,6 +109,46 @@ func firstNonEmpty(values ...string) string {
 		}
 	}
 	return ""
+}
+
+// extractChinese 从字符串中提取连续的中文字符（取最长的一段）
+func extractChinese(s string) string {
+	var buf []rune
+	var best []rune
+	for _, r := range s {
+		if r >= 0x4E00 && r <= 0x9FFF {
+			buf = append(buf, r)
+		} else {
+			if len(buf) > len(best) {
+				best = buf
+			}
+			buf = nil
+		}
+	}
+	if len(buf) > len(best) {
+		best = buf
+	}
+	return string(best)
+}
+
+// extractEnglish 从字符串中提取连续的 ASCII 字母/数字（取最长的一段）
+func extractEnglish(s string) string {
+	var buf []rune
+	var best []rune
+	for _, r := range s {
+		if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') {
+			buf = append(buf, r)
+		} else {
+			if len(buf) > len(best) {
+				best = buf
+			}
+			buf = nil
+		}
+	}
+	if len(buf) > len(best) {
+		best = buf
+	}
+	return string(best)
 }
 
 // Watch 启动配置文件热加载

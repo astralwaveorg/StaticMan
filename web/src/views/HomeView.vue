@@ -9,7 +9,7 @@
       <section class="hero">
         <div class="hero-text">
           <h1>欢迎回来</h1>
-          <p class="hero-subtitle">集中管理 · 统一分发 · 便捷共享</p>
+          <p class="hero-subtitle" :title="currentTimeFull">{{ currentTime }}</p>
         </div>
 
         <!-- 搜索入口：靠右 -->
@@ -103,7 +103,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { getCategories, type CategoryInfo } from '../api'
 import { icon } from '../icons'
@@ -136,6 +136,33 @@ const totalFiles = computed(() => categories.value.reduce((s, c) => s + c.fileCo
 const totalTools = computed(() => categories.value.reduce((s, c) => s + (c.tools?.length || 0), 0))
 const totalSize = computed(() => categories.value.reduce((s, c) => s + (c.size || 0), 0))
 
+// 当前上海时间（首页副标题）
+const currentTime = ref('')
+const currentTimeFull = ref('')
+let timeTimer: ReturnType<typeof setInterval> | null = null
+
+function updateTime() {
+  const now = new Date()
+  currentTime.value = new Intl.DateTimeFormat('zh-CN', {
+    timeZone: 'Asia/Shanghai',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(now)
+  currentTimeFull.value = new Intl.DateTimeFormat('zh-CN', {
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    weekday: 'long',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  }).format(now)
+}
+
 function goCategory(key: string) {
   router.push('/browse/' + key)
 }
@@ -148,6 +175,8 @@ function fmtSize(b: number): string {
 }
 
 onMounted(async () => {
+  updateTime()
+  timeTimer = setInterval(updateTime, 1000)
   try {
     const { data } = await getCategories()
     categories.value = data || []
@@ -155,6 +184,13 @@ onMounted(async () => {
     categories.value = []
   }
   loading.value = false
+})
+
+onBeforeUnmount(() => {
+  if (timeTimer) {
+    clearInterval(timeTimer)
+    timeTimer = null
+  }
 })
 </script>
 

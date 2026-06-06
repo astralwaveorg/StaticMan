@@ -131,6 +131,8 @@ export const authenticate = (p: string) =>
 
 export interface SiteConfig {
   title: string
+  title_cn?: string
+  title_en?: string
   description: string
   logo: string
 }

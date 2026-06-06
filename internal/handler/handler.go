@@ -81,6 +81,8 @@ func (h *Handler) handleConfig(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
 		"title":       site.Title,
+		"title_cn":    site.TitleCN,
+		"title_en":    site.TitleEN,
 		"description": site.Description,
 		"logo":        site.Logo,
 	})

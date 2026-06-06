@@ -9,8 +9,8 @@
             <img :src="siteLogo" alt="M" class="brand-icon" />
           </div>
           <div class="brand-text">
-            <span class="brand-title">{{ siteTitle }}</span>
-            <span class="brand-sub">StaticMan</span>
+            <span class="brand-title">{{ siteTitleCN }}</span>
+            <span class="brand-sub">{{ brandSub }}</span>
           </div>
         </router-link>
 
@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from './stores/auth'
 import { getBreadcrumbs, getConfig, type Breadcrumb } from './api'
@@ -104,15 +104,30 @@ const router = useRouter()
 const toast = useToast()
 
 // 站点配置（可由环境变量自定义标题和 logo）
-const siteTitle = ref('StaticMan')
+const siteTitleCN = ref('StaticMan')
+const siteTitleEN = ref('')
+const siteDesc = ref('')
 const siteLogo = ref('/logo.svg')
+
+const brandSub = computed(() => {
+  if (siteTitleEN.value && siteDesc.value) return `${siteTitleEN.value} | ${siteDesc.value}`
+  if (siteTitleEN.value) return siteTitleEN.value
+  if (siteDesc.value) return siteDesc.value
+  return 'StaticMan'
+})
+
 onMounted(async () => {
   try {
     const { data } = await getConfig()
-    if (data.title) {
-      siteTitle.value = data.title
+    if (data.title_cn) {
+      siteTitleCN.value = data.title_cn
+      document.title = data.title_cn
+    } else if (data.title) {
+      siteTitleCN.value = data.title
       document.title = data.title
     }
+    if (data.title_en) siteTitleEN.value = data.title_en
+    if (data.description) siteDesc.value = data.description
     if (data.logo) siteLogo.value = data.logo
   } catch {}
 })
