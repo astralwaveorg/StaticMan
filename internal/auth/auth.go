@@ -11,14 +11,14 @@ import (
 // Service 认证服务
 type Service struct {
 	cfg       *config.Config
-	jwtSecret []byte
+	accessKey []byte
 }
 
 // New 创建认证服务
-func New(cfg *config.Config, jwtSecret string) *Service {
+func New(cfg *config.Config, accessKey string) *Service {
 	return &Service{
 		cfg:       cfg,
-		jwtSecret: []byte(jwtSecret),
+		accessKey: []byte(accessKey),
 	}
 }
 
@@ -38,13 +38,13 @@ func (s *Service) GenerateToken() (string, error) {
 		"iat":          time.Now().Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(s.jwtSecret)
+	return token.SignedString(s.accessKey)
 }
 
 // ValidateToken 验证 JWT token
 func (s *Service) ValidateToken(tokenString string) (bool, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return s.jwtSecret, nil
+		return s.accessKey, nil
 	})
 	if err != nil {
 		return false, err

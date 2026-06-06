@@ -11,6 +11,6 @@ services:
     volumes:
       - ./data:/app/data
     environment:
-      - JWT_SECRET=${JWT_SECRET:-changeme}
+      - ACCESS_KEY=${ACCESS_KEY:-changeme}
       - PORT=8080
       - DATA_DIR=/app/data

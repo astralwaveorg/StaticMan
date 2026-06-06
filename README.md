@@ -32,7 +32,7 @@
 ```bash
 git clone https://github.com/astralwaveorg/staticman.git && cd staticman && 
 
-cp .env.example .env  # 编辑 JWT_SECRET
+cp .env.example .env  # 编辑 ACCESS_KEY
 docker compose up -d
 ```
 
@@ -145,7 +145,7 @@ cd web && npm run build && cd .. && go build -tags withweb ./cmd/server/
 
 | 变量 | 默认 | 说明 |
 |------|------|------|
-| `JWT_SECRET` | 密码值 | JWT 签名密钥（**必须修改**） |
+| `ACCESS_KEY` | 密码值 | JWT 签名密钥（**必须修改**） |
 | `PORT` | `8080` | 服务端口 |
 | `DATA_DIR` | `data` | 数据目录路径 |
 

@@ -17,7 +17,7 @@ sqlite_mcp_server.db
 
 # v2 build artifacts
 staticman
-server
+/bin/server
 web/node_modules/
 web/dist/
 internal/web/dist/

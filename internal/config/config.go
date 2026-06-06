@@ -49,7 +49,7 @@ type Config struct {
 	DataDir      string
 	Password     PasswordConfig
 	Metadata     MetadataConfig
-	PasswordHash string // JWT 签名密钥
+	AccessKeyHash string // JWT 签名密钥
 
 	passwordModTime time.Time
 	metadataModTime time.Time
@@ -67,9 +67,9 @@ func Load(dataDir string) (*Config, error) {
 	}
 
 	// JWT 密钥：优先环境变量，否则用密码
-	c.PasswordHash = os.Getenv("JWT_SECRET")
-	if c.PasswordHash == "" {
-		c.PasswordHash = c.Password.Password
+	c.AccessKeyHash = os.Getenv("ACCESS_KEY")
+	if c.AccessKeyHash == "" {
+		c.AccessKeyHash = c.Password.Password
 	}
 
 	return c, nil
