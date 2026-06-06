@@ -1,8 +1,16 @@
-name: Deploy StaticMan (Binary)
+name: Deploy StaticMan
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
+  workflow_dispatch:
+
+env:
+  # 从 GitHub Secrets 读取，未配置时使用安全默认值
+  ACCESS_KEY: ${{ secrets.STATICMAN_ACCESS_KEY || 'changeme' }}
+  SITE_TITLE: ${{ secrets.STATICMAN_SITE_TITLE || 'StaticMan' }}
+  SITE_DESCRIPTION: ${{ secrets.STATICMAN_SITE_DESCRIPTION || 'StaticMan file browser and config manager' }}
+  SITE_LOGO: ${{ secrets.STATICMAN_SITE_LOGO || '/logo.svg' }}
 
 jobs:
   build-and-deploy:
@@ -21,7 +29,7 @@ jobs:
       - name: Build Frontend
         run: |
           cd web
-          npm install
+          npm ci
           npm run build
 
       - name: Setup Go
@@ -30,31 +38,97 @@ jobs:
           go-version: '1.22'
           cache: true
 
-      - name: Build Backend (Embedded)
+      - name: Build Backend (Linux amd64, embedded)
         run: |
-          go build -tags withweb -o staticman ./cmd/server
+          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags withweb -ldflags="-s -w" -o staticman ./cmd/server
 
-      - name: Upload Binary to Server
+      - name: Verify Binary
+        run: |
+          ls -lh staticman
+          file staticman
+          # 确保是 Linux 静态链接二进制
+          file staticman | grep -q "ELF.*statically linked"
+
+      - name: Upload Artifacts to Server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "staticman"
-          target: "/opt/magichub/bin/"
+          source: "staticman,staticman.service,docker-compose.yml"
+          target: "/opt/magichub/src/"
+          overwrite: true
 
-      - name: Restart Service via SSH
+      - name: Deploy Binary & Restart Service
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script_stop: true
+          envs: ACCESS_KEY,SITE_TITLE,SITE_DESCRIPTION,SITE_LOGO
           script: |
-            chmod +x /opt/magichub/bin/staticman
-            # 如果 service 文件不存在则部署它
-            if [ ! -f /etc/systemd/system/staticman.service ]; then
-              # 这里简单处理，假设用户已经手动或者通过后续步骤放好了 service 文件
-              echo "Warning: /etc/systemd/system/staticman.service not found."
-            fi
+            set -euo pipefail
+
+            SRC="/opt/magichub/src"
+            BIN="/opt/magichub/bin/staticman"
+            ENV_FILE="$SRC/.env"
+
+            echo "==> Updating .env from workflow environment variables"
+            touch "$ENV_FILE"
+            chmod 600 "$ENV_FILE"
+
+            # 辅助函数：更新或追加 env 变量（保留文件中其他自定义变量）
+            update_env() {
+              local key="$1"
+              local value="$2"
+              if grep -q "^${key}=" "$ENV_FILE" 2>/dev/null; then
+                sed -i "s|^${key}=.*|${key}=${value}|" "$ENV_FILE"
+              else
+                echo "${key}=${value}" >> "$ENV_FILE"
+              fi
+            }
+
+            update_env "ACCESS_KEY" "${ACCESS_KEY}"
+            update_env "PORT" "8080"
+            update_env "DATA_DIR" "/opt/magichub/data"
+            update_env "SITE_TITLE" "${SITE_TITLE}"
+            update_env "SITE_DESCRIPTION" "${SITE_DESCRIPTION}"
+            update_env "SITE_LOGO" "${SITE_LOGO}"
+
+            echo "Current .env:"
+            grep -E '^(SITE_|PORT|DATA_DIR)=' "$ENV_FILE"
+
+            echo "==> Installing latest binary"
+            cp -f "$SRC/staticman" "$BIN"
+            chmod +x "$BIN"
+            ls -lh "$BIN"
+
+            echo "==> Installing/Updating systemd service"
+            cp -f "$SRC/staticman.service" /etc/systemd/system/staticman.service
             systemctl daemon-reload
-            systemctl restart staticman || echo "Failed to restart staticman. Is service installed?"
+
+            echo "==> Restarting staticman"
+            systemctl restart staticman
+
+            echo "==> Waiting for health check"
+            for i in 1 2 3 4 5 6; do
+              sleep 2
+              if curl -sf http://127.0.0.1:8080/api/health > /dev/null; then
+                echo "==> Health check passed"
+                break
+              fi
+              if [ "$i" -eq 6 ]; then
+                echo "==> Health check failed"
+                systemctl status staticman --no-pager -l
+                journalctl -u staticman --no-pager -n 50
+                exit 1
+              fi
+              echo "Attempt $i failed, retrying..."
+            done
+
+            echo "==> Verifying site config"
+            curl -s http://127.0.0.1:8080/api/config | head -c 500
+            echo
+
+            echo "==> Deployment completed successfully"

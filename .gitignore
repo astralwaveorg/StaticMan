@@ -30,5 +30,4 @@ data/.gitconfig
 data/Git/.gitconfig
 start.sh
 .git/
-.github/
 .DS_Store
