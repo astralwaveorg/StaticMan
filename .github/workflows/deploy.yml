@@ -36,11 +36,10 @@ jobs:
           npm ci
           npm run build
 
-      - name: Sync Frontend Build into Embed Directory
+      - name: Verify Embedded Assets
         run: |
-          rm -rf internal/web/dist
-          cp -r web/dist internal/web/dist
           ls -la internal/web/dist/assets/ | head -10
+          test -f internal/web/dist/index.html || (echo "index.html missing"; exit 1)
 
       - name: Setup Go
         uses: actions/setup-go@v5
