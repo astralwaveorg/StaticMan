@@ -3,7 +3,6 @@ package web
 import (
 	"io/fs"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -17,15 +16,8 @@ type SiteConfig struct {
 // SiteConfigFunc 获取当前站点配置的回调
 type SiteConfigFunc func() SiteConfig
 
-// 前端构建产物目录（开发时可能不存在）
-// 构建时通过 `go build -tags withweb` 启用嵌入
+// assets 由 dev.go（开发模式）或 embed.go（withweb 生产模式）初始化
 var assets fs.FS
-
-func init() {
-	// 开发模式：从本地文件系统读取前端资源
-	// 生产模式：通过 `go build -tags withweb` 编译时嵌入
-	assets = os.DirFS("internal/web/dist")
-}
 
 // SPAHandler 服务前端静态资源并提供 SPA fallback
 type SPAHandler struct {
