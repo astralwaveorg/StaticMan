@@ -129,6 +129,14 @@ export const searchFiles = (q: string, t: 'name' | 'content') =>
 export const authenticate = (p: string) =>
   api.post<{ token: string }>('/auth', { password: p })
 
+export interface SiteConfig {
+  title: string
+  description: string
+}
+
+export const getConfig = () =>
+  api.get<SiteConfig>('/config')
+
 export const getHealth = () =>
   api.get('/health')
 

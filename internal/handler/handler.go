@@ -52,6 +52,7 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/api/file/", h.handleFile)
 	mux.HandleFunc("/api/search", h.handleSearch)
 	mux.HandleFunc("/api/auth", h.handleAuth)
+	mux.HandleFunc("/api/config", h.handleConfig)
 	mux.HandleFunc("/api/health", h.handleHealth)
 
 	// === 兼容层 — 旧 URL 重写 ===
@@ -72,6 +73,16 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 			}
 		}
 	}
+}
+
+// handleConfig 站点配置
+func (h *Handler) handleConfig(w http.ResponseWriter, r *http.Request) {
+	site := h.cfg.GetSite()
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"title":       site.Title,
+		"description": site.Description,
+	})
 }
 
 // handleHealth 健康检查

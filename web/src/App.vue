@@ -9,7 +9,7 @@
             <img src="/logo.svg" alt="M" class="brand-icon" />
           </div>
           <div class="brand-text">
-            <span class="brand-title">配置共享管理系统</span>
+            <span class="brand-title">{{ siteTitle }}</span>
             <span class="brand-sub">StaticMan</span>
           </div>
         </router-link>
@@ -91,7 +91,7 @@
 import { ref, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from './stores/auth'
-import { getBreadcrumbs, type Breadcrumb } from './api'
+import { getBreadcrumbs, getConfig, type Breadcrumb } from './api'
 import CommandPalette from './components/CommandPalette.vue'
 import ToastContainer from './components/ToastContainer.vue'
 import { useUIStore } from './stores/ui'
@@ -102,6 +102,17 @@ const ui = useUIStore()
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
+
+// 站点配置（可由环境变量自定义标题）
+const siteTitle = ref('StaticMan')
+onMounted(async () => {
+  try {
+    const { data } = await getConfig()
+    if (data.title) siteTitle.value = data.title
+    // 同步更新页面标题
+    document.title = data.title || 'StaticMan'
+  } catch {}
+})
 
 // 系统主题偏好检测 + 本地存储覆盖
 const savedTheme = localStorage.getItem('staticman_theme') as 'dark' | 'light' | null

@@ -43,12 +43,19 @@ type FileMeta struct {
 	Highlight   string   `yaml:"highlight"` // 语法高亮语言
 }
 
+// SiteConfig 站点展示配置
+type SiteConfig struct {
+	Title       string `yaml:"title"`
+	Description string `yaml:"description"`
+}
+
 // Config 应用配置
 type Config struct {
-	mu           sync.RWMutex
-	DataDir      string
-	Password     PasswordConfig
-	Metadata     MetadataConfig
+	mu            sync.RWMutex
+	DataDir       string
+	Password      PasswordConfig
+	Metadata      MetadataConfig
+	Site          SiteConfig
 	AccessKeyHash string // JWT 签名密钥
 
 	passwordModTime time.Time
@@ -72,7 +79,22 @@ func Load(dataDir string) (*Config, error) {
 		c.AccessKeyHash = c.Password.Password
 	}
 
+	// 站点标题和描述：优先环境变量，默认使用项目名
+	c.Site = SiteConfig{
+		Title:       firstNonEmpty(os.Getenv("SITE_TITLE"), "StaticMan"),
+		Description: firstNonEmpty(os.Getenv("SITE_DESCRIPTION"), "StaticMan - 私人网络配置管理中心"),
+	}
+
 	return c, nil
+}
+
+func firstNonEmpty(values ...string) string {
+	for _, v := range values {
+		if v != "" {
+			return v
+		}
+	}
+	return ""
 }
 
 // Watch 启动配置文件热加载
@@ -156,6 +178,13 @@ func (c *Config) GetMetadata() MetadataConfig {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 	return c.Metadata
+}
+
+// GetSite 返回站点展示配置（线程安全）
+func (c *Config) GetSite() SiteConfig {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.Site
 }
 
 // IsProtected 检查路径是否受保护
