@@ -44,8 +44,14 @@ func main() {
 	h := handler.New(cfg, authSvc, appCache)
 	h.RegisterRoutes(mux)
 
-	// 前端 SPA 静态资源
-	spaHandler := web.NewSPAHandler()
+	// 前端 SPA 静态资源（动态注入站点标题）
+	spaHandler := web.NewSPAHandler(func() web.SiteConfig {
+		site := cfg.GetSite()
+		return web.SiteConfig{
+			Title:       site.Title,
+			Description: site.Description,
+		}
+	})
 	mux.Handle("/", spaHandler)
 
 	// 限流配置

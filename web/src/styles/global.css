@@ -89,9 +89,47 @@ body {
 a { color: var(--accent); text-decoration: none; }
 a:hover { color: var(--accent-hover); }
 
+/* Text selection - elegant & visible across themes and surfaces */
 ::selection {
-  background: var(--accent);
-  color: #ffffff;
+  background: color-mix(in srgb, var(--accent) 50%, transparent);
+  color: var(--text-primary);
+  text-shadow: none;
+}
+
+/* Code blocks need slightly stronger selection for dense text */
+pre ::selection,
+code ::selection {
+  background: color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+/* Form inputs - crisp selection feedback */
+input::selection,
+textarea::selection {
+  background: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+/* Light theme - softer, lower opacity to avoid looking too heavy */
+[data-theme="light"] ::selection {
+  background: color-mix(in srgb, var(--accent) 32%, transparent);
+}
+[data-theme="light"] pre ::selection,
+[data-theme="light"] code ::selection {
+  background: color-mix(in srgb, var(--accent) 42%, transparent);
+}
+[data-theme="light"] input::selection,
+[data-theme="light"] textarea::selection {
+  background: color-mix(in srgb, var(--accent) 38%, transparent);
+}
+
+/* Mobile - slightly stronger to compensate for smaller text */
+@media (max-width: 768px) {
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  pre ::selection,
+  code ::selection {
+    background: color-mix(in srgb, var(--accent) 65%, transparent);
+  }
 }
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
