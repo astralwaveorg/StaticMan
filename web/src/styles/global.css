@@ -89,7 +89,10 @@ body {
 a { color: var(--accent); text-decoration: none; }
 a:hover { color: var(--accent-hover); }
 
-::selection { background: var(--accent-muted); }
+::selection {
+  background: var(--accent);
+  color: #ffffff;
+}
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
