@@ -10,7 +10,7 @@
 
 - 🗂️ **分类浏览** — 按类型组织配置（代理 / Vim / Git / Shell…），Web 界面一键查看
 - 🔒 **密码保护** — 登录解锁受保护文件，公开文件无需登录
-- 🔗 **短 URL + Key 认证** — 受保护文件通过 `?key=JWT` 直接访问，可浏览器预览
+- 🔗 **短 URL + Key 认证** — 受保护文件通过 `?key=<访问密钥>` 直接访问，可浏览器预览
 - 🔍 **全文搜索** — 文件名 + 内容搜索，受保护内容自动脱敏
 - 📋 **一键复制** — 公开文件复制裸 URL，受保护文件自动附 key
 - 🎨 **语法高亮** — YAML、INI、JSON、Shell、Vim 等格式自动高亮
@@ -23,11 +23,11 @@
 | 类型 | Web UI（未登录） | Web UI（已登录） | 短 URL | 复制 URL |
 |------|----------------|----------------|--------|----------|
 | **public** | 看到内容 | 看到内容 | 直接访问 | 裸 URL |
-| **protected** | 看到条目+脱敏内容 | 看到完整内容 | 403 或 `?key=JWT` | URL 自动附 key |
+| **protected** | 看到条目+脱敏内容 | 看到完整内容 | 403 或 `?key=<访问密钥>` | URL 自动附 key |
 
 **设计要点：**
 - 未登录时仍可在文件树中看到受保护文件（标注🔒），但内容脱敏
-- 受保护文件短 URL 不带 key 返回 403，带 `?key=JWT` 返回完整内容
+- 受保护文件短 URL 不带 key 返回 403，带 `?key=<访问密钥>` 返回完整内容
 - 兼容层 `/d/*` 直接放行（Surge/Mihomo 等机器客户端）
 - 登录后通过 `Authorization: Bearer` header 或 `?key=` 参数认证
 
@@ -68,8 +68,8 @@ docker compose up -d
 
 ```
 /vim/vimrc                              → 公开文件，直接访问
-/proxy/surge/macOS.conf                → 受保护文件，需 ?key=JWT
-/proxy/surge/macOS.conf?key=eyJ...     → 受保护文件，完整内容
+/proxy/surge/macOS.conf                → 受保护文件，需 ?key=<访问密钥>
+/proxy/surge/macOS.conf?key=GEM91816   → 受保护文件，完整内容
 /proxy/surge/rules/reject.list          → 公开文件，直接访问
 /proxy/surge/assets/icons/github.png    → 图片资源，直接访问
 ```
@@ -96,13 +96,17 @@ docker compose up -d
 ### `data/password.yaml`
 
 ```yaml
-# 访问密码
-password: "passward"
+# 访问密码（登录用）
+password: "GEM91816"
 
-# 受保护的文件/目录路径（相对于 data/configs/）
+# 固定访问 key（16 位以上），用于直接访问受保护文件
+# 例：http://localhost:8080/raw/Clash/config.yaml?key=GEM91816
+static_key: "GEM91816"
+
+# 受保护的文件/目录路径（相对于 data/）
 # 标记为 protected 的文件：
 #   - Web UI 未登录：显示条目但内容脱敏
-#   - 短 URL：需要 ?key=JWT 或浏览器登录后访问
+#   - 短 URL：需要 ?key=<访问密钥> 或浏览器登录后访问
 #   - 兼容层 /d/*：直接放行（机器客户端）
 protected:
   - path: "proxy/surge/nodes"
@@ -171,7 +175,7 @@ go build -tags withweb ./cmd/server/
 
 | 变量 | 默认 | 说明 |
 |------|------|------|
-| `ACCESS_KEY` | `changeme` | JWT 签名密钥（**生产环境必须修改**） |
+| `ACCESS_KEY` | `changeme` | 访问密钥（**生产环境必须修改**） |
 | `PORT` | `8080` | 服务端口 |
 | `DATA_DIR` | `data` | 数据目录路径 |
 | `SITE_TITLE` | `StaticMan` | 站点标题（支持自定义品牌名） |
