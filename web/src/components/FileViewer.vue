@@ -19,9 +19,9 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           <span class="action-text">{{ isFavorite(file.path) ? '已收藏' : '收藏' }}</span>
         </button>
-        <button class="action-btn" :class="{copied: copied==='raw'}" @click="copyRaw" :disabled="file.type==='directory' || (file.protected && !isLoggedIn())" :title="file.protected && !isLoggedIn() ? '需要登录' : '复制 Raw URL'">
+        <button class="action-btn" :class="{copied: copied==='raw'}" @click="copyRaw" :disabled="file.type==='directory' || (file.protected && !isLoggedIn())" :title="file.protected && !isLoggedIn() ? '需要登录' : '复制 Raw 链接'">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          <span class="action-text">{{ copied==='raw' ? '已复制' : 'Raw' }}</span>
+          <span class="action-text">{{ copied==='raw' ? '已复制' : 'Raw 链接' }}</span>
         </button>
         <button class="action-btn" :class="{copied: copied==='path'}" @click="copyPath" title="复制路径">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -56,7 +56,7 @@
           </a>
           <button class="btn btn-ghost" @click="copyRaw">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            复制 Raw URL
+            复制 Raw 链接
           </button>
         </div>
         <div class="binary-info">
@@ -140,7 +140,7 @@ async function copyRaw() {
   const url = getRawUrl(props.file.path, props.file.protected, true)
   if (await copyToClipboard(url)) {
     copied.value = 'raw'
-    toast.success('Raw URL 已复制')
+    toast.success('Raw 链接已复制')
     setTimeout(() => { if (copied.value === 'raw') copied.value = null }, 1500)
   }
 }

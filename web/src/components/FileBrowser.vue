@@ -42,9 +42,9 @@
           <div class="grid-size">{{ fmtSize(item.size) }}</div>
         </a>
         <div class="grid-actions">
-          <button class="grid-action" :title="item.type==='directory' ? '复制路径' : '复制链接'" @click.stop="copyPath(item)">
+          <button class="grid-action" :title="item.type==='directory' ? '复制路径' : '复制 Raw 链接'" @click.stop="copyPath(item)">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            <span class="grid-action-label">{{ item.type==='directory' ? '路径' : '链接' }}</span>
+            <span class="grid-action-label">{{ item.type==='directory' ? '路径' : 'Raw 链接' }}</span>
           </button>
           <button v-if="item.type!=='directory'" class="grid-action" title="下载" @click.stop="downloadItem(item)">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -87,13 +87,13 @@
           </button>
           <button v-else class="row-action" title="复制 Raw 链接" @click.stop="copyRaw(item)">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            <span class="row-action-label">链接</span>
+            <span class="row-action-label">Raw 链接</span>
           </button>
-          <button v-if="item.type!=='directory'" class="row-action" title="复制文本" @click.stop="copyContent(item)">
+          <button v-if="item.type!=='directory'" class="row-action" title="复制文件内容" @click.stop="copyContent(item)">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M9 5H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V9"/></svg>
-            <span class="row-action-label">复制</span>
+            <span class="row-action-label">复制内容</span>
           </button>
-          <button v-if="item.type!=='directory'" class="row-action" title="下载" @click.stop="downloadItem(item)">
+          <button v-if="item.type!=='directory'" class="row-action" title="下载文件" @click.stop="downloadItem(item)">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             <span class="row-action-label">下载</span>
           </button>
@@ -209,10 +209,10 @@ async function copyToClipboard(text: string): Promise<boolean> {
 // 复制当前项的相对路径
 async function copyPath(item: LsItem) {
   await copyToClipboard(item.path)
-  toast.success('已复制到剪贴板')
+  toast.success('路径已复制')
 }
 
-// 复制文件原始 Raw URL（受保护时若已登录会带 ?key=）
+// 复制文件 Raw 链接（受保护时若已登录会带 ?key=）
 async function copyRaw(item: LsItem) {
   const url = getRawUrl(item.path, item.protected, true)
   if (item.protected && !isLoggedIn()) {
@@ -220,7 +220,7 @@ async function copyRaw(item: LsItem) {
     toast.warning('文件受保护，已复制路径')
   } else {
     await copyToClipboard(url)
-    toast.success('已复制到剪贴板')
+    toast.success('Raw 链接已复制')
   }
 }
 
