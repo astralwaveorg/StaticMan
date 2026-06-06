@@ -132,6 +132,7 @@ export const authenticate = (p: string) =>
 export interface SiteConfig {
   title: string
   description: string
+  logo: string
 }
 
 export const getConfig = () =>

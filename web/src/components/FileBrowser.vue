@@ -414,47 +414,58 @@ onBeforeUnmount(() => {
 
 /* List */
 .list { display: flex; flex-direction: column; }
+.list { display: flex; flex-direction: column; border: 1px solid var(--glass-border); border-radius: var(--radius-lg); overflow: hidden; }
 .list-header, .list-item {
   display: grid;
-  grid-template-columns: 24px 1fr 90px 150px 220px;
+  grid-template-columns: 28px 1fr 100px 170px 240px;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  font-size: 13px;
+  gap: 12px;
+  padding: 10px 18px;
 }
 .list-header {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-tertiary);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
   border-bottom: 1px solid var(--glass-border);
-  padding-top: 10px; padding-bottom: 10px;
   white-space: nowrap;
+  min-height: 44px;
 }
-.list-header > span { display: block; white-space: nowrap; }
-.list-header .col-icon { width: 24px; }
-.list-header .col-size { text-align: right; padding-right: 0; white-space: nowrap; }
-.list-header .col-time { text-align: right; padding-right: 0; white-space: nowrap; }
-.list-header .col-actions { text-align: right; padding-right: 0; white-space: nowrap; }
+.list-header > span {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  line-height: 1;
+}
+.list-header .col-icon { width: 28px; }
+.list-header .col-name { color: var(--text-primary); }
+.list-header .col-size { color: var(--text-primary); text-align: right; justify-content: flex-end; padding-right: 0; }
+.list-header .col-time { color: var(--text-primary); text-align: right; justify-content: flex-end; padding-right: 0; }
+.list-header .col-actions { color: var(--text-primary); text-align: right; justify-content: flex-end; padding-right: 0; }
 .list-item {
+  font-size: 14px;
+  background: var(--bg-surface);
   border-bottom: 1px solid var(--glass-border);
   cursor: pointer;
   transition: background var(--t-fast) var(--ease);
   animation: fadeIn 250ms var(--ease) both;
   animation-delay: var(--delay, 0ms);
+  min-height: 52px;
 }
 .list-item:last-child { border-bottom: none; }
 .list-item:hover { background: var(--bg-hover); }
 .list-icon {
   display: flex; align-items: center; justify-content: center;
   color: var(--text-tertiary);
+  width: 28px;
 }
 .list-icon.dir { color: var(--accent); }
 .list-icon.locked { color: var(--warning); }
 .list-icon.bin { color: #a855f7; }
-.list-name { font-size: 13px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.list-size { font-size: 12px; color: var(--text-tertiary); font-family: var(--font-mono); text-align: right; }
-.list-time { font-size: 11px; color: var(--text-tertiary); font-family: var(--font-mono); text-align: right; }
+.list-name { font-size: 14px; font-weight: 500; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-primary); display: flex; align-items: center; }
+.list-size { font-size: 13px; color: var(--text-secondary); font-family: var(--font-mono); text-align: right; display: flex; align-items: center; justify-content: flex-end; }
+.list-time { font-size: 12px; color: var(--text-secondary); font-family: var(--font-mono); text-align: right; display: flex; align-items: center; justify-content: flex-end; }
 
 /* List row actions - 常驻显示 */
 .list-actions {

@@ -11,6 +11,7 @@ import (
 type SiteConfig struct {
 	Title       string
 	Description string
+	Logo        string
 }
 
 // SiteConfigFunc 获取当前站点配置的回调
@@ -75,7 +76,7 @@ func (h *SPAHandler) serveIndexHTML(w http.ResponseWriter, r *http.Request) {
 
 	html := string(data)
 
-	// 动态注入站点标题和描述
+	// 动态注入站点标题、描述和 logo
 	if h.getSite != nil {
 		site := h.getSite()
 		if site.Title != "" {
@@ -83,7 +84,7 @@ func (h *SPAHandler) serveIndexHTML(w http.ResponseWriter, r *http.Request) {
 			html = strings.Replace(html, `<meta name="description" content="StaticMan`, `<meta name="description" content="`+site.Title, 1)
 		}
 		if site.Description != "" {
-			// 替换 description 内容（如果前面已经替换过 title，这里再处理完整描述）
+			// 替换 description 内容
 			const descPrefix = `<meta name="description" content="`
 			if idx := strings.Index(html, descPrefix); idx != -1 {
 				start := idx + len(descPrefix)
@@ -91,6 +92,10 @@ func (h *SPAHandler) serveIndexHTML(w http.ResponseWriter, r *http.Request) {
 					html = html[:start] + site.Description + html[start+end:]
 				}
 			}
+		}
+		if site.Logo != "" {
+			html = strings.Replace(html, `<link rel="icon" type="image/svg+xml" href="/logo.svg" />`, `<link rel="icon" type="image/svg+xml" href="`+site.Logo+`" />`, 1)
+			html = strings.Replace(html, `<link rel="apple-touch-icon" href="/logo-192.png" />`, `<link rel="apple-touch-icon" href="`+site.Logo+`" />`, 1)
 		}
 	}
 

@@ -47,6 +47,7 @@ type FileMeta struct {
 type SiteConfig struct {
 	Title       string `yaml:"title"`
 	Description string `yaml:"description"`
+	Logo        string `yaml:"logo"`
 }
 
 // Config 应用配置
@@ -83,6 +84,7 @@ func Load(dataDir string) (*Config, error) {
 	c.Site = SiteConfig{
 		Title:       firstNonEmpty(os.Getenv("SITE_TITLE"), "StaticMan"),
 		Description: firstNonEmpty(os.Getenv("SITE_DESCRIPTION"), "StaticMan - 私人网络配置管理中心"),
+		Logo:        firstNonEmpty(os.Getenv("SITE_LOGO"), "/logo.svg"),
 	}
 
 	return c, nil

@@ -6,7 +6,7 @@
         <!-- Brand: logo + name + tagline -->
         <router-link to="/" class="brand">
           <div class="brand-mark">
-            <img src="/logo.svg" alt="M" class="brand-icon" />
+            <img :src="siteLogo" alt="M" class="brand-icon" />
           </div>
           <div class="brand-text">
             <span class="brand-title">{{ siteTitle }}</span>
@@ -103,14 +103,17 @@ const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 
-// 站点配置（可由环境变量自定义标题）
+// 站点配置（可由环境变量自定义标题和 logo）
 const siteTitle = ref('StaticMan')
+const siteLogo = ref('/logo.svg')
 onMounted(async () => {
   try {
     const { data } = await getConfig()
-    if (data.title) siteTitle.value = data.title
-    // 同步更新页面标题
-    document.title = data.title || 'StaticMan'
+    if (data.title) {
+      siteTitle.value = data.title
+      document.title = data.title
+    }
+    if (data.logo) siteLogo.value = data.logo
   } catch {}
 })
 
