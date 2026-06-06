@@ -17,7 +17,7 @@ COPY cmd/ ./cmd/
 COPY internal/ ./internal/
 # 嵌入前端静态资源
 COPY --from=web-builder /app/internal/web/dist ./internal/web/dist
-RUN CGO_ENABLED=0 GOOS=linux go build -o /staticman ./cmd/server
+RUN CGO_ENABLED=0 GOOS=linux go build -tags withweb -o /staticman ./cmd/server
 
 # 阶段3: 运行镜像
 FROM alpine:3.20
