@@ -18,18 +18,33 @@
 
 ## 保护模型
 
-统一两级保护，简洁清晰：
+系统支持基于**规则引擎**的多级访问控制：
 
-| 类型 | Web UI（未登录） | Web UI（已登录） | 短 URL | 复制 URL |
-|------|----------------|----------------|--------|----------|
-| **public** | 看到内容 | 看到内容 | 直接访问 | 裸 URL |
-| **protected** | 看到条目+脱敏内容 | 看到完整内容 | 403 或 `?key=<访问密钥>` | URL 自动附 key |
+| 策略 | 行为 | 适用场景 |
+|------|------|---------|
+| **hide**（隐藏） | 完全不出现在列表、树、搜索中，直接访问返回 404 | `.git`、临时文件、规则文件自身 |
+| **protect**（保护） | 列表中可见（带🔒），但内容需认证才能访问 | 私密配置、密钥文件、敏感文档 |
+
+### 规则优先级
+
+1. **hide > protect** — 隐藏策略优先。
+2. **目录级 > 全局级** — `.encrypt` 中的规则优先。
+3. **深层目录 > 父目录** — 遵循“最具体规则”原则。
+
+### 规则语法
+
+支持 Glob 和正则表达式：
+- `*.key`：匹配所有 `.key` 后缀文件。
+- `**/private/*`：匹配任意层级下 `private` 目录的内容。
+- `Surge/`：以 `/` 结尾表示匹配该目录及其下所有内容。
+- `regex:.*password.*`：使用正则表达式匹配。
 
 **设计要点：**
-- 未登录时仍可在文件树中看到受保护文件（标注🔒），但内容脱敏
-- 受保护文件短 URL 不带 key 返回 403，带 `?key=<访问密钥>` 返回完整内容
-- 兼容层 `/d/*` 直接放行（Surge/Mihomo 等机器客户端）
-- 登录后通过 `Authorization: Bearer` header 或 `?key=` 参数认证
+- 未登录时仍可在文件树中看到 `protect` 文件（标注🔒），但内容脱敏。
+- `hide` 文件完全不可见且短 URL 返回 404，不暴露存在性。
+- 受保护文件短 URL 不带 key 返回 403，带 `?key=<访问密钥>` 返回完整内容。
+- 兼容层 `/d/*` 直接放行（Surge/Mihomo 等机器客户端）。
+- 登录后通过 `Authorization: Bearer` header 或 `?key=` 参数认证。
 
 ## 快速开始
 
@@ -104,17 +119,33 @@ password: "GEM91816"
 # 例：http://localhost:8080/raw/Clash/config.yaml?key=GEM91816
 static_key: "GEM91816"
 
-# 受保护的文件/目录路径（相对于 data/）
-# 标记为 protected 的文件：
-#   - Web UI 未登录：显示条目但内容脱敏
-#   - 短 URL：需要 ?key=<访问密钥> 或浏览器登录后访问
-#   - 兼容层 /d/*：直接放行（机器客户端）
+# 新增：规则引擎
+rules:
+  hide:
+    - ".git/"
+    - "*.tmp"
+  protect:
+    - "*/private/*"
+    - "*.key"
+    - "regex:.*credential.*"
+
+# 向后兼容：精确路径保护
 protected:
   - path: "proxy/surge/nodes"
   - path: "proxy/surge/macOS.conf"
-  - path: "proxy/surge/iOS.conf"
-  - path: "proxy/surge/Macmini.conf"
-  - path: "proxy/mihomo/config.yaml"
+
+---
+
+### 2. 目录级配置 (`.encrypt` 文件)
+
+在数据目录任意位置放置 `.encrypt` 文件，定义该目录及其子目录的规则：
+
+```bash
+# data/proxy/.encrypt
+hide test/
+hide *.bak
+*.conf    # 默认策略为 protect
+```
 ```
 
 ### `data/metadata.yaml`

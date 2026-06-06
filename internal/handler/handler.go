@@ -67,9 +67,13 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 	entries, err := os.ReadDir(h.dataDir)
 	if err == nil {
 		for _, entry := range entries {
-			if entry.IsDir() && !config.IsSystemFile(entry.Name()) {
-				prefix := "/" + entry.Name() + "/"
-				mux.HandleFunc(prefix, h.handleRaw)
+			if entry.IsDir() {
+				// 启动时检查可见性 (仅受全局 hide 规则影响)
+				match := h.cfg.Match(entry.Name(), true)
+				if !match.Hidden {
+					prefix := "/" + entry.Name() + "/"
+					mux.HandleFunc(prefix, h.handleRaw)
+				}
 			}
 		}
 	}
@@ -196,8 +200,12 @@ func (h *Handler) buildTree(rootDir, relPath string, isAuth bool, maxDepth, curr
 	if info.IsDir() {
 		node.Type = "directory"
 
-		// 标记受保护目录
-		if h.cfg.IsProtected(relPath) {
+		// 规则匹配
+		match := h.cfg.Match(relPath, true)
+		if match.Hidden {
+			return nil, nil // 隐藏目录，不显示
+		}
+		if match.Protected {
 			node.Protected = true
 		}
 
@@ -233,8 +241,12 @@ func (h *Handler) buildTree(rootDir, relPath string, isAuth bool, maxDepth, curr
 
 		node.Children = children
 	} else {
-		// 标记受保护文件
-		if h.cfg.IsProtected(relPath) {
+		// 规则匹配
+		match := h.cfg.Match(relPath, false)
+		if match.Hidden {
+			return nil, nil // 隐藏文件，不显示
+		}
+		if match.Protected {
 			node.Protected = true
 		}
 		// 标记二进制文件
@@ -295,13 +307,16 @@ func (h *Handler) handleLs(w http.ResponseWriter, r *http.Request) {
 
 	items := []LsItem{}
 	for _, entry := range entries {
-		if config.IsSystemFile(entry.Name()) {
-			continue
-		}
 		childPath := filepath.Join(path, entry.Name())
 		if path == "" {
 			childPath = entry.Name()
 		}
+
+		match := h.cfg.Match(childPath, entry.IsDir())
+		if match.Hidden {
+			continue
+		}
+
 		entryInfo, err := entry.Info()
 		if err != nil {
 			continue
@@ -319,7 +334,7 @@ func (h *Handler) handleLs(w http.ResponseWriter, r *http.Request) {
 			item.Language = h.detectLanguage(childPath)
 			item.IsBinary = h.isBinaryFile(childPath)
 		}
-		if h.cfg.IsProtected(childPath) {
+		if match.Protected {
 			item.Protected = true
 		}
 		items = append(items, item)
@@ -414,7 +429,11 @@ func (h *Handler) handleCategories(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, entry := range entries {
-		if !entry.IsDir() || config.IsSystemFile(entry.Name()) {
+		match := h.cfg.Match(entry.Name(), entry.IsDir())
+		if match.Hidden {
+			continue
+		}
+		if !entry.IsDir() {
 			continue
 		}
 		key := entry.Name()
@@ -558,7 +577,6 @@ func buildDescription(name string, tools []string, fileCount int) string {
 	return fmt.Sprintf("%s · %d 个文件", prettyName, fileCount)
 }
 
-// countFilesAndSize 递归统计文件数和总大小（跳过系统文件）
 func (h *Handler) countFilesAndSize(dir string) (int, int64) {
 	count := 0
 	var size int64
@@ -566,10 +584,19 @@ func (h *Handler) countFilesAndSize(dir string) (int, int64) {
 	if err != nil {
 		return 0, 0
 	}
+	
+	relDir, _ := filepath.Rel(h.dataDir, dir)
+	if relDir == "." {
+		relDir = ""
+	}
+
 	for _, entry := range entries {
-		if config.IsSystemFile(entry.Name()) {
+		childRelPath := filepath.Join(relDir, entry.Name())
+		match := h.cfg.Match(childRelPath, entry.IsDir())
+		if match.Hidden {
 			continue
 		}
+		
 		fullPath := filepath.Join(dir, entry.Name())
 		if entry.IsDir() {
 			c, s := h.countFilesAndSize(fullPath)
@@ -602,15 +629,22 @@ func (h *Handler) handleFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	isAuth := h.isAuthenticated(r)
-	isProtected := h.cfg.IsProtected(path)
+	match := h.cfg.Match(path, info.IsDir())
 
-	// 对受保护文件拒绝未认证访问（与 /raw/ 行为一致）
-	if isProtected && !isAuth {
+	// 隐藏文件返回 404
+	if match.Hidden {
+		http.Error(w, "File not found", http.StatusNotFound)
+		return
+	}
+
+	// 对受保护文件拒绝未认证访问
+	if match.Protected && !isAuth {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		http.Error(w, "禁止访问：此文件需要认证。请在 URL 中添加 ?key=正确的访问秘钥", http.StatusForbidden)
 		return
 	}
 
+	isProtected := match.Protected
 	isBinary := h.isBinaryFile(path)
 	language := h.detectLanguage(path)
 
@@ -716,7 +750,13 @@ func (h *Handler) handleRaw(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if h.cfg.IsProtected(path) && !h.isAuthenticated(r) {
+	match := h.cfg.Match(path, false) // handleRaw 主要是针对文件
+	if match.Hidden {
+		http.Error(w, "File not found", http.StatusNotFound)
+		return
+	}
+
+	if match.Protected && !h.isAuthenticated(r) {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		http.Error(w, "禁止访问：此文件需要认证。请在 URL 中添加 ?key=正确的访问秘钥", http.StatusForbidden)
 		return
@@ -862,11 +902,11 @@ func (h *Handler) handleSearch(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// searchByName 按文件名搜索
 func (h *Handler) searchByName(query string, isAuth bool) []SearchResult {
 	var results []SearchResult
 	h.walkDir(h.dataDir, "", func(relPath string, info os.FileInfo) {
-		if config.IsSystemFile(info.Name()) {
+		match := h.cfg.Match(relPath, info.IsDir())
+		if match.Hidden {
 			return
 		}
 		if strings.Contains(strings.ToLower(info.Name()), strings.ToLower(query)) {
@@ -874,7 +914,7 @@ func (h *Handler) searchByName(query string, isAuth bool) []SearchResult {
 				Path:      relPath,
 				Name:      info.Name(),
 				Type:      h.fileType(info),
-				Protected: h.cfg.IsProtected(relPath),
+				Protected: match.Protected,
 				Size:      info.Size(),
 			}
 			if !info.IsDir() {
@@ -887,11 +927,11 @@ func (h *Handler) searchByName(query string, isAuth bool) []SearchResult {
 	return results
 }
 
-// searchByContent 按文件内容搜索
 func (h *Handler) searchByContent(query string, isAuth bool) []SearchResult {
 	var results []SearchResult
 	h.walkDir(h.dataDir, "", func(relPath string, info os.FileInfo) {
-		if config.IsSystemFile(info.Name()) {
+		match := h.cfg.Match(relPath, info.IsDir())
+		if match.Hidden {
 			return
 		}
 		if info.IsDir() {
@@ -918,7 +958,7 @@ func (h *Handler) searchByContent(query string, isAuth bool) []SearchResult {
 		for i, line := range lines {
 			if strings.Contains(strings.ToLower(line), strings.ToLower(query)) {
 				matchText := line
-				if h.cfg.IsProtected(relPath) && !isAuth {
+				if match.Protected && !isAuth {
 					matchText = h.masker.Mask(line)
 				}
 				if len(matchText) > 200 {
@@ -939,7 +979,7 @@ func (h *Handler) searchByContent(query string, isAuth bool) []SearchResult {
 				Path:      relPath,
 				Name:      info.Name(),
 				Type:      "file",
-				Protected: h.cfg.IsProtected(relPath),
+				Protected: match.Protected,
 				IsBinary:  h.isBinaryFile(relPath),
 				Language:  h.detectLanguage(relPath),
 				Size:      info.Size(),

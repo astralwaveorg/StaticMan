@@ -14,6 +14,13 @@ type PasswordConfig struct {
 	Password  string          `yaml:"password"`
 	StaticKey string          `yaml:"static_key"`
 	Protected []ProtectedPath `yaml:"protected"`
+	Rules     RulesConfig     `yaml:"rules"`
+}
+
+// RulesConfig 规则配置
+type RulesConfig struct {
+	Hide    []string `yaml:"hide"`
+	Protect []string `yaml:"protect"`
 }
 
 // ProtectedPath 受保护路径规则
@@ -60,6 +67,7 @@ type Config struct {
 	Metadata      MetadataConfig
 	Site          SiteConfig
 	AccessKeyHash string // JWT 签名密钥
+	Engine        *RuleEngine
 
 	passwordModTime time.Time
 	metadataModTime time.Time
@@ -67,11 +75,15 @@ type Config struct {
 
 // Load 从数据目录加载配置
 func Load(dataDir string) (*Config, error) {
-	c := &Config{DataDir: dataDir}
+	c := &Config{
+		DataDir: dataDir,
+		Engine:  NewRuleEngine(dataDir),
+	}
 
 	if err := c.loadPassword(); err != nil {
 		return nil, err
 	}
+
 	if err := c.loadMetadata(); err != nil {
 		return nil, err
 	}
@@ -168,6 +180,7 @@ func (c *Config) loadPassword() error {
 	if err != nil {
 		if os.IsNotExist(err) {
 			c.Password = PasswordConfig{Password: "", Protected: nil}
+			c.syncRules()
 			return nil
 		}
 		return err
@@ -175,11 +188,45 @@ func (c *Config) loadPassword() error {
 	if err := yaml.Unmarshal(data, &c.Password); err != nil {
 		return err
 	}
+	c.syncRules()
 	info, _ := os.Stat(path)
 	if info != nil {
 		c.passwordModTime = info.ModTime()
 	}
 	return nil
+}
+
+func (c *Config) syncRules() {
+	var rules []Rule
+	
+	// 合并 hide 规则
+	for _, p := range c.Password.Rules.Hide {
+		if r, err := compileRule(RuleHide, p, "global"); err == nil {
+			rules = append(rules, *r)
+		}
+	}
+	
+	// 合并 protect 规则
+	for _, p := range c.Password.Rules.Protect {
+		if r, err := compileRule(RuleProtect, p, "global"); err == nil {
+			rules = append(rules, *r)
+		}
+	}
+
+	// 如果没有配置规则，添加默认隐藏规则 (原 IsSystemFile 逻辑)
+	if len(c.Password.Rules.Hide) == 0 && len(c.Password.Rules.Protect) == 0 {
+		defaults := []string{
+			"password.yaml", "password.yml", "metadata.yaml", "metadata.yml",
+			".git/", ".github/", ".DS_Store", ".encrypt",
+		}
+		for _, p := range defaults {
+			if r, err := compileRule(RuleHide, p, "default"); err == nil {
+				rules = append(rules, *r)
+			}
+		}
+	}
+	
+	c.Engine.SetGlobalRules(rules)
 }
 
 func (c *Config) loadMetadata() error {
@@ -241,22 +288,35 @@ func (c *Config) GetSite() SiteConfig {
 	return c.Site
 }
 
-// IsProtected 检查路径是否受保护
-// 统一保护模型：protected 表示需要认证，public 表示公开
-func (c *Config) IsProtected(path string) bool {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-
-	// 检查 password.yaml 中的 protected 列表
-	for _, p := range c.Password.Protected {
-		if path == p.Path || isPathUnder(path, p.Path) {
-			return true
+// Match 匹配文件规则
+func (c *Config) Match(path string, isDir bool) MatchResult {
+	// 1. 引擎模式匹配
+	res := c.Engine.Match(path, isDir)
+	
+	// 2. 检查 metadata.yaml 中的可见性 (仅文件)
+	if !isDir {
+		if meta, ok := c.Metadata.Files[path]; ok {
+			if meta.Visibility == "protected" {
+				res.Protected = true
+			}
 		}
 	}
+	
+	return res
+}
 
-	// 检查 metadata.yaml 中的可见性
-	if meta, ok := c.Metadata.Files[path]; ok {
-		if meta.Visibility == "protected" {
+// IsProtected 检查路径是否受保护
+func (c *Config) IsProtected(path string) bool {
+	res := c.Match(path, false) // 这里默认非目录检查
+	if res.Protected {
+		return true
+	}
+
+	// 向后兼容：检查老的 protected 列表
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	for _, p := range c.Password.Protected {
+		if path == p.Path || isPathUnder(path, p.Path) {
 			return true
 		}
 	}
@@ -287,18 +347,4 @@ func (c *Config) GetFileMeta(path string) *FileMeta {
 // 即 dataDir 自身，但排除系统配置文件（password.yaml 等）
 func (c *Config) ConfigsDir() string {
 	return c.DataDir
-}
-
-// IsSystemFile 判断是否为系统配置文件（非用户内容，不应出现在导航中）
-func IsSystemFile(name string) bool {
-	systemFiles := map[string]bool{
-		"password.yaml": true,
-		"password.yml":  true,
-		"metadata.yaml": true,
-		"metadata.yml":  true,
-                ".git":          true,
-                ".github":       true,
-                ".DS_Store":     true,
-	}
-	return systemFiles[name]
 }
