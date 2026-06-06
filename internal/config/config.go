@@ -213,6 +213,9 @@ func IsSystemFile(name string) bool {
 		"password.yml":  true,
 		"metadata.yaml": true,
 		"metadata.yml":  true,
+                ".git":          true,
+                ".github":       true,
+                ".DS_Store":     true,
 	}
 	return systemFiles[name]
 }
