@@ -1,0 +1,15 @@
+[Unit]
+Description=StaticMan Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/magichub/src
+ExecStart=/opt/magichub/bin/staticman
+Restart=always
+RestartSec=5
+EnvironmentFile=/opt/magichub/src/.env
+
+[Install]
+WantedBy=multi-user.target
