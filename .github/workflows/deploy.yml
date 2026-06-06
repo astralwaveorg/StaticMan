@@ -6,11 +6,12 @@ on:
   workflow_dispatch:
 
 env:
-  # 从 GitHub Secrets 读取，未配置时使用安全默认值
-  ACCESS_KEY: ${{ secrets.STATICMAN_ACCESS_KEY || 'changeme' }}
-  SITE_TITLE: ${{ secrets.STATICMAN_SITE_TITLE || 'StaticMan' }}
-  SITE_DESCRIPTION: ${{ secrets.STATICMAN_SITE_DESCRIPTION || 'StaticMan file browser and config manager' }}
-  SITE_LOGO: ${{ secrets.STATICMAN_SITE_LOGO || '/logo.svg' }}
+  # 从 GitHub Secrets 读取；未配置时使用 __UNSET__ 占位符，
+  # 部署脚本会跳过未设置的变量，避免覆盖服务器上已有的手动配置。
+  ACCESS_KEY: ${{ secrets.STATICMAN_ACCESS_KEY != '' && secrets.STATICMAN_ACCESS_KEY || '__UNSET__' }}
+  SITE_TITLE: ${{ secrets.STATICMAN_SITE_TITLE != '' && secrets.STATICMAN_SITE_TITLE || '__UNSET__' }}
+  SITE_DESCRIPTION: ${{ secrets.STATICMAN_SITE_DESCRIPTION != '' && secrets.STATICMAN_SITE_DESCRIPTION || '__UNSET__' }}
+  SITE_LOGO: ${{ secrets.STATICMAN_SITE_LOGO != '' && secrets.STATICMAN_SITE_LOGO || '__UNSET__' }}
 
 jobs:
   build-and-deploy:
@@ -89,12 +90,21 @@ jobs:
               fi
             }
 
-            update_env "ACCESS_KEY" "${ACCESS_KEY}"
+            # 辅助函数：仅当 workflow 显式配置了该变量时才更新，避免覆盖服务器手动配置
+            update_env_if_set() {
+              local key="$1"
+              local value="$2"
+              if [ "${value}" != "__UNSET__" ] && [ -n "${value}" ]; then
+                update_env "$key" "$value"
+              fi
+            }
+
+            update_env_if_set "ACCESS_KEY" "${ACCESS_KEY}"
             update_env "PORT" "8080"
             update_env "DATA_DIR" "/opt/magichub/data"
-            update_env "SITE_TITLE" "${SITE_TITLE}"
-            update_env "SITE_DESCRIPTION" "${SITE_DESCRIPTION}"
-            update_env "SITE_LOGO" "${SITE_LOGO}"
+            update_env_if_set "SITE_TITLE" "${SITE_TITLE}"
+            update_env_if_set "SITE_DESCRIPTION" "${SITE_DESCRIPTION}"
+            update_env_if_set "SITE_LOGO" "${SITE_LOGO}"
 
             echo "Current .env:"
             grep -E '^(SITE_|PORT|DATA_DIR)=' "$ENV_FILE"
