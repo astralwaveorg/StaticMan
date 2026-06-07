@@ -19,20 +19,30 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           <span class="action-text">{{ isFavorite(file.path) ? '已收藏' : '收藏' }}</span>
         </button>
-        <button class="action-btn" :class="{copied: copied==='raw'}" @click="copyRaw" :disabled="file.type==='directory' || (file.protected && !isLoggedIn())" :title="file.protected && !isLoggedIn() ? '需要登录' : '复制 Raw 链接'">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          <span class="action-text">{{ copied==='raw' ? '已复制' : 'Raw 链接' }}</span>
-        </button>
-        <button class="action-btn" :class="{copied: copied==='path'}" @click="copyPath" title="复制路径">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          <span class="action-text">{{ copied==='path' ? '已复制' : '路径' }}</span>
-        </button>
-        <a v-if="file.type !== 'directory'" :href="rawUrl" target="_blank" rel="noopener" class="action-btn" :class="{disabled: file.protected && !isLoggedIn()}" :tabindex="file.protected && !isLoggedIn() ? -1 : 0" :aria-disabled="file.protected && !isLoggedIn()" :title="file.protected && !isLoggedIn() ? '需要登录' : '新窗口打开'">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </a>
-        <a v-if="file.type !== 'directory'" :href="rawUrl" :download="file.name" class="action-btn action-accent" :class="{disabled: file.protected && !isLoggedIn()}" :tabindex="file.protected && !isLoggedIn() ? -1 : 0" :aria-disabled="file.protected && !isLoggedIn()" :title="file.protected && !isLoggedIn() ? '需要登录' : '下载'">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        </a>
+        <!-- 受保护文件未登录时隐藏操作按钮 -->
+        <template v-if="!file.protected || loggedIn">
+          <button class="action-btn" :class="{copied: copied==='raw'}" @click="copyRaw" :disabled="file.type==='directory'" :title="file.type==='directory' ? '' : '复制 Raw 链接'">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <span class="action-text">{{ copied==='raw' ? '已复制' : 'Raw 链接' }}</span>
+          </button>
+          <button class="action-btn" :class="{copied: copied==='path'}" @click="copyPath" title="复制路径">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span class="action-text">{{ copied==='path' ? '已复制' : '路径' }}</span>
+          </button>
+          <a v-if="file.type !== 'directory'" :href="rawUrl" target="_blank" rel="noopener" class="action-btn" :title="'新窗口打开'">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+          <a v-if="file.type !== 'directory'" :href="rawUrl" :download="file.name" class="action-btn action-accent" :title="'下载'">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </a>
+        </template>
+        <!-- 受保护文件未登录时显示登录提示 -->
+        <template v-else>
+          <button class="action-btn action-login-hint" @click="$emit('request-login')" title="登录后查看">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span class="action-text">登录后查看</span>
+          </button>
+        </template>
       </div>
     </div>
 
@@ -54,7 +64,7 @@
         </div>
         <h3>无法预览此文件</h3>
         <p>{{ file.name }} 是二进制文件</p>
-        <div class="binary-actions">
+        <div class="binary-actions" v-if="!file.protected || loggedIn">
           <a :href="rawUrl" :download="file.name" class="btn btn-accent">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             下载
@@ -82,7 +92,7 @@
         <div v-if="file.truncated" class="trunc-notice">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           文件过大，已截断至前 1000 行
-          <a :href="rawUrl" :download="file.name" class="dl-link">下载完整文件</a>
+          <a v-if="!file.protected || loggedIn" :href="rawUrl" :download="file.name" class="dl-link">下载完整文件</a>
         </div>
       </div>
     </div>
@@ -98,8 +108,11 @@ import { useFavorites } from '../composables/useFavorites'
 import hljs from 'highlight.js'
 
 const props = defineProps<{ file: FileContent }>()
+defineEmits<{ 'request-login': [] }>()
 const toast = useToast()
 const { isFavorite, toggleFavorite } = useFavorites()
+
+const loggedIn = isLoggedIn()
 
 const isImage = computed(() => {
   const ext = props.file.name.split('.').pop()?.toLowerCase() || ''
@@ -143,10 +156,6 @@ async function copyToClipboard(text: string) {
 }
 
 async function copyRaw() {
-  if (props.file.protected && !isLoggedIn()) {
-    toast.error('此文件受保护，请先登录')
-    return
-  }
   const url = getRawUrl(props.file.path, props.file.protected, true)
   if (await copyToClipboard(url)) {
     copied.value = 'raw'
@@ -209,6 +218,8 @@ async function copyPath() {
 .action-btn.copied { background: var(--success); color: white; border-color: var(--success); }
 .action-accent { background: var(--accent); color: white; border-color: var(--accent); }
 .action-accent:hover { background: var(--accent-hover); }
+.action-login-hint { color: var(--warning); border-color: rgba(251,191,36,0.3); }
+.action-login-hint:hover { background: rgba(251,191,36,0.08); border-color: var(--warning); color: var(--warning); }
 
 .viewer-body { flex: 1; overflow: auto; min-height: 0; }
 

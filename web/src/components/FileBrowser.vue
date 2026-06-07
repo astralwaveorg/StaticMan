@@ -42,11 +42,12 @@
           <div class="grid-size">{{ fmtSize(item.size) }}</div>
         </a>
         <div class="grid-actions">
-          <button class="grid-action" :title="item.type==='directory' ? '复制路径' : '复制 Raw 链接'" @click.stop="copyPath(item)">
+          <!-- 受保护文件未登录时只显示路径复制 -->
+          <button v-if="item.type==='directory' || !item.protected || loggedIn" class="grid-action" :title="item.type==='directory' ? '复制路径' : '复制 Raw 链接'" @click.stop="item.type==='directory' ? copyPath(item) : copyRaw(item)">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
             <span class="grid-action-label">{{ item.type==='directory' ? '路径' : 'Raw 链接' }}</span>
           </button>
-          <button v-if="item.type!=='directory'" class="grid-action" title="下载" @click.stop="downloadItem(item)">
+          <button v-if="item.type!=='directory' && (!item.protected || loggedIn)" class="grid-action" title="下载" @click.stop="downloadItem(item)">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             <span class="grid-action-label">下载</span>
           </button>
@@ -84,23 +85,28 @@
             <span class="list-time">{{ item.modTime || '—' }}</span>
           </div>
         </div>
+        <span class="list-size">{{ fmtSize(item.size) }}</span>
+        <span class="list-time">{{ item.modTime || '—' }}</span>
         <div class="list-actions">
           <button v-if="item.type==='directory'" class="row-action" title="复制路径" @click.stop="copyPath(item)">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             <span class="row-action-label">路径</span>
           </button>
-          <button v-else class="row-action" title="复制 Raw 链接" @click.stop="copyRaw(item)">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            <span class="row-action-label">Raw 链接</span>
-          </button>
-          <button v-if="item.type!=='directory'" class="row-action" title="复制文件内容" @click.stop="copyContent(item)">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M9 5H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V9"/></svg>
-            <span class="row-action-label">复制内容</span>
-          </button>
-          <button v-if="item.type!=='directory'" class="row-action" title="下载文件" @click.stop="downloadItem(item)">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            <span class="row-action-label">下载</span>
-          </button>
+          <!-- 受保护文件未登录时隐藏 Raw 链接 / 复制内容 / 下载 -->
+          <template v-if="item.type!=='directory' && (!item.protected || loggedIn)">
+            <button class="row-action" title="复制 Raw 链接" @click.stop="copyRaw(item)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              <span class="row-action-label">Raw 链接</span>
+            </button>
+            <button class="row-action" title="复制文件内容" @click.stop="copyContent(item)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M9 5H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V9"/></svg>
+              <span class="row-action-label">复制内容</span>
+            </button>
+            <button class="row-action" title="下载文件" @click.stop="downloadItem(item)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span class="row-action-label">下载</span>
+            </button>
+          </template>
         </div>
       </div>
     </div>
@@ -131,6 +137,8 @@ const props = defineProps<{ rootPath: string; activeTool: string; excludeDirs?: 
 const router = useRouter()
 const toast = useToast()
 const { addHistory } = useHistory()
+
+const loggedIn = isLoggedIn()
 
 const items = ref<LsItem[]>([])
 const loading = ref(false)
@@ -218,25 +226,16 @@ async function copyPath(item: LsItem) {
   toast.success('路径已复制')
 }
 
-// 复制文件 Raw 链接（受保护时若已登录会带 ?key=）
+// 复制文件 Raw 链接（已登录时统一带 ?key=auth_key）
 async function copyRaw(item: LsItem) {
   const url = getRawUrl(item.path, item.protected, true)
-  if (item.protected && !isLoggedIn()) {
-    await copyToClipboard(item.path)
-    toast.warning('文件受保护，已复制路径')
-  } else {
-    await copyToClipboard(url)
-    toast.success('Raw 链接已复制')
-  }
+  await copyToClipboard(url)
+  toast.success('Raw 链接已复制')
 }
 
 // 复制文件内容（仅文件）
 async function copyContent(item: LsItem) {
   if (item.type === 'directory') return
-  if (item.protected && !isLoggedIn()) {
-    toast.error('此文件受保护，请先登录')
-    return
-  }
   try {
     const { data } = await getFile(item.path)
     await copyToClipboard(data.content || '')
@@ -269,7 +268,6 @@ watch(() => [path.value, props.excludeDirs], () => load(path.value), { immediate
 const focusedIdx = ref(-1)
 function handleKeyNav(e: KeyboardEvent) {
   if (!items.value.length) return
-  // 仅在文件列表区域内响应方向键（当没有模态框打开时）
   const target = e.target as HTMLElement
   if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return
 
@@ -297,7 +295,6 @@ function handleKeyNav(e: KeyboardEvent) {
   }
 }
 function scrollToFocused() {
-  // 通过 DOM 查询找到对应元素并滚动到可视区域
   nextTick(() => {
     const el = document.querySelector(`.grid-item-wrap:nth-child(${focusedIdx.value + 1}), .list-item:nth-child(${focusedIdx.value + 2})`) as HTMLElement
     el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
@@ -405,7 +402,7 @@ onBeforeUnmount(() => {
 .grid-name { font-size: 12px; font-weight: 500; max-width: 100%; word-break: break-word; line-height: 1.3; }
 .grid-size { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; font-family: var(--font-mono); }
 
-/* Grid actions - 常驻显示 */
+/* Grid actions */
 .grid-actions {
   display: flex; gap: 4px; justify-content: center;
   opacity: 1;
@@ -435,6 +432,7 @@ onBeforeUnmount(() => {
   background: var(--bg-elevated); border-bottom: 1px solid var(--glass-border);
   min-height: 44px;
 }
+.col-size, .col-time, .col-actions { text-align: right; }
 .list-item {
   font-size: 14px; background: var(--bg-surface); border-bottom: 1px solid var(--glass-border);
   cursor: pointer; transition: background var(--t-fast) var(--ease);
@@ -450,7 +448,7 @@ onBeforeUnmount(() => {
 
 .list-meta { display: flex; flex-direction: column; min-width: 0; flex: 1; }
 .list-name { font-size: 14px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.list-details { display: none; } /* 默认隐藏（在大屏下由 grid 列代替） */
+.list-details { display: none; }
 
 .list-size, .list-time { font-size: 13px; color: var(--text-secondary); font-family: var(--font-mono); text-align: right; display: flex; align-items: center; justify-content: flex-end; }
 
@@ -466,12 +464,10 @@ onBeforeUnmount(() => {
     font-size: 11px; color: var(--text-tertiary);
   }
   .dot-sep { opacity: 0.5; }
-  /* 隐藏原始的 grid 列 */
   .list > .list-size, .list > .list-time, .list-header .col-size, .list-header .col-time { display: none !important; }
-  /* 刚才为了代码兼容，我们在 template 里加了 list-details，现在隐藏直接在 grid 里的那些列 */
 }
 
-/* List row actions - 常驻显示 */
+/* List row actions */
 .list-actions {
   display: flex; gap: 4px; justify-content: flex-end;
   opacity: 1;
@@ -509,7 +505,7 @@ onBeforeUnmount(() => {
     justify-content: flex-start;
     gap: 10px;
     padding: 10px 12px;
-    min-height: 56px;
+    min-height: 44px;
   }
   .list-icon {
     flex-shrink: 0;
@@ -523,6 +519,7 @@ onBeforeUnmount(() => {
   }
   .col-size, .list-size { display: none !important; }
   .col-time, .list-time { display: none !important; }
+  .list-details .list-size, .list-details .list-time { display: inline !important; }
   .col-actions { display: none !important; }
   .list-actions {
     display: flex !important;
@@ -533,7 +530,7 @@ onBeforeUnmount(() => {
   .row-action {
     padding: 8px;
     min-width: 44px;
-    min-height: 44px;
+    min-height: 32px;
     justify-content: center;
   }
   .grid-action-label, .row-action-label { display: none; }

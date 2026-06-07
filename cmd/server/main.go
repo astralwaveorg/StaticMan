@@ -25,12 +25,7 @@ func main() {
 		log.Fatalf("Failed to load config: %v", err)
 	}
 
-	accessKey := os.Getenv("ACCESS_KEY")
-	if accessKey == "" {
-		accessKey = cfg.AccessKeyHash
-	}
-
-	authSvc := auth.New(cfg, accessKey)
+	authSvc := auth.New(cfg)
 
 	// 启动配置热加载
 	cfg.Watch()

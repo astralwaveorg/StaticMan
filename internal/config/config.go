@@ -11,8 +11,8 @@ import (
 
 // PasswordConfig 密码保护配置
 type PasswordConfig struct {
-	Password  string          `yaml:"password"`
-	StaticKey string          `yaml:"static_key"`
+	Password string          `yaml:"password"`
+	AuthKey  string          `yaml:"auth_key"`
 	Protected []ProtectedPath `yaml:"protected"`
 	Rules     RulesConfig     `yaml:"rules"`
 }
@@ -66,7 +66,6 @@ type Config struct {
 	Password      PasswordConfig
 	Metadata      MetadataConfig
 	Site          SiteConfig
-	AccessKeyHash string // JWT 签名密钥
 	Engine        *RuleEngine
 
 	passwordModTime time.Time
@@ -86,12 +85,6 @@ func Load(dataDir string) (*Config, error) {
 
 	if err := c.loadMetadata(); err != nil {
 		return nil, err
-	}
-
-	// JWT 密钥：优先环境变量，否则用密码
-	c.AccessKeyHash = os.Getenv("ACCESS_KEY")
-	if c.AccessKeyHash == "" {
-		c.AccessKeyHash = c.Password.Password
 	}
 
 	// 站点标题和描述：优先环境变量，默认使用项目名
@@ -198,14 +191,14 @@ func (c *Config) loadPassword() error {
 
 func (c *Config) syncRules() {
 	var rules []Rule
-	
+
 	// 合并 hide 规则
 	for _, p := range c.Password.Rules.Hide {
 		if r, err := compileRule(RuleHide, p, "global"); err == nil {
 			rules = append(rules, *r)
 		}
 	}
-	
+
 	// 合并 protect 规则
 	for _, p := range c.Password.Rules.Protect {
 		if r, err := compileRule(RuleProtect, p, "global"); err == nil {
@@ -225,7 +218,7 @@ func (c *Config) syncRules() {
 			}
 		}
 	}
-	
+
 	c.Engine.SetGlobalRules(rules)
 }
 

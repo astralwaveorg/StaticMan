@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { setToken, clearToken, isLoggedIn as checkLoggedIn, authenticate } from '../api'
+import { setKey, clearKey, isLoggedIn as checkLoggedIn, authenticate } from '../api'
 
 export const useAuthStore = defineStore('auth', () => {
   const authenticated = ref(checkLoggedIn())
@@ -8,7 +8,7 @@ export const useAuthStore = defineStore('auth', () => {
   async function login(password: string): Promise<boolean> {
     try {
       const { data } = await authenticate(password)
-      setToken(data.token)
+      setKey(data.key)
       authenticated.value = true
       // 触发全局登录成功事件，通知各组件刷新内容
       window.dispatchEvent(new CustomEvent('auth:login'))
@@ -17,7 +17,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function logout() {
-    clearToken()
+    clearKey()
     authenticated.value = false
     location.reload()
   }

@@ -239,30 +239,32 @@ func (h *Handler) handleHealth(w http.ResponseWriter, r *http.Request) {
 }
 
 // isAuthenticated 检查请求是否已认证
-// 支持三种方式：Authorization header、?key= 查询参数、固定 static_key
+// 支持两种方式：Authorization header、?key= 查询参数
+// 匹配 auth_key（优先）或 password（fallback）
 func (h *Handler) isAuthenticated(r *http.Request) bool {
-	// 1. 检查 Authorization header
-	tokenStr := ""
+	// 1. 从 Authorization header 或 ?key= 取值
+	key := ""
 	if auth := r.Header.Get("Authorization"); auth != "" && len(auth) > 7 && auth[:7] == "Bearer " {
-		tokenStr = auth[7:]
+		key = auth[7:]
 	}
-	// 2. 检查 ?key= 查询参数
-	if tokenStr == "" {
-		tokenStr = r.URL.Query().Get("key")
+	if key == "" {
+		key = r.URL.Query().Get("key")
 	}
-	if tokenStr == "" {
+	if key == "" {
 		return false
 	}
 
-	// 3. 优先匹配固定 static_key（简洁、可预测）
-	staticKey := h.cfg.GetPassword().StaticKey
-	if staticKey != "" && tokenStr == staticKey {
+	// 2. 匹配 auth_key
+	if ak := h.cfg.GetPassword().AuthKey; ak != "" && key == ak {
 		return true
 	}
 
-	// 4. 回退到 JWT 验证
-	valid, _ := h.auth.ValidateToken(tokenStr)
-	return valid
+	// 3. Fallback: 匹配 password（auth_key 未配置时兜底）
+	if pw := h.cfg.GetPassword().Password; pw != "" && key == pw {
+		return true
+	}
+
+	return false
 }
 
 // TreeNode 文件树节点
@@ -1189,13 +1191,14 @@ func (h *Handler) handleAuth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := h.auth.GenerateToken()
-	if err != nil {
-		http.Error(w, "Failed to generate token", http.StatusInternalServerError)
-		return
+	// 验证通过，返回 auth_key（fallback 到 password）
+	key := h.cfg.GetPassword().AuthKey
+	if key == "" {
+		key = currentPassword
 	}
+
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"token": token})
+	json.NewEncoder(w).Encode(map[string]string{"key": key})
 }
 
 // walkDir 递归遍历目录

@@ -8,15 +8,15 @@ const api = axios.create({
 })
 
 api.interceptors.request.use((config) => {
-  const token = getToken()
-  if (token) config.headers.Authorization = `Bearer ${token}`
+  const key = getKey()
+  if (key) config.headers.Authorization = `Bearer ${key}`
   return config
 })
 
 api.interceptors.response.use(
   (r) => r,
   async (e) => {
-    if (e.response?.status === 401) clearToken()
+    if (e.response?.status === 401) clearKey()
     // 自动重试机制（指数退避）
     const config = e.config
     if (config && !config._retryCount && config.method === 'get') {
@@ -28,12 +28,12 @@ api.interceptors.response.use(
   }
 )
 
-function getToken(): string | null { return localStorage.getItem('staticman_token') }
-function setToken(t: string) {
-  localStorage.setItem('staticman_token', t)
-  document.cookie = `staticman_token=${t};path=/;max-age=${7*24*3600};samesite=lax`
+function getKey(): string | null { return localStorage.getItem('staticman_token') }
+function setKey(k: string) {
+  localStorage.setItem('staticman_token', k)
+  document.cookie = `staticman_token=${k};path=/;max-age=${7*24*3600};samesite=lax`
 }
-function clearToken() {
+function clearKey() {
   localStorage.removeItem('staticman_token')
   document.cookie = 'staticman_token=;path=/;max-age=0'
 }
@@ -131,7 +131,7 @@ export const searchFiles = (q: string, t: 'name' | 'content') =>
   api.get<SearchResult[]>('/search', { params: { q, t } })
 
 export const authenticate = (p: string) =>
-  api.post<{ token: string }>('/auth', { password: p })
+  api.post<{ key: string }>('/auth', { password: p })
 
 export interface SiteConfig {
   title: string
@@ -148,14 +148,15 @@ export const getHealth = () =>
   api.get('/health')
 
 // ─── URL Helpers ────────────────────────────────────────
-// Raw URL: 服务于 /raw/<path>?key=JWT (受保护文件) 或 /<path> (公开文件)
+// Raw URL: 服务于 /raw/<path>?key=auth_key (受保护文件) 或 /<path> (公开文件)
+// 统一使用 getKey() 获取认证密钥，不再区分 token 和 raw_key
 export function getRawUrl(path: string, isProtected: boolean, useRawPrefix = true): string {
   const basePath = useRawPrefix ? `/raw/${path}` : `/${path}`
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
   const url = `${origin}${basePath}`
   if (isProtected) {
-    const t = getToken()
-    if (t) return `${url}?key=${t}`
+    const k = getKey()
+    if (k) return `${url}?key=${k}`
   }
   return url
 }
@@ -164,12 +165,12 @@ export function getRawUrl(path: string, isProtected: boolean, useRawPrefix = tru
 export function getRawPath(path: string, isProtected: boolean, useRawPrefix = true): string {
   const basePath = useRawPrefix ? `/raw/${path}` : `/${path}`
   if (isProtected) {
-    const t = getToken()
-    if (t) return `${basePath}?key=${t}`
+    const k = getKey()
+    if (k) return `${basePath}?key=${k}`
   }
   return basePath
 }
 
-export const isLoggedIn = () => !!getToken()
-export { getToken, setToken, clearToken }
+export const isLoggedIn = () => !!getKey()
+export { getKey, setKey, clearKey }
 export default api

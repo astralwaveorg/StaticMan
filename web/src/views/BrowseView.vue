@@ -55,7 +55,7 @@
 
     <!-- File viewer (only when actual file selected) -->
     <div v-else class="viewer-wrap fade-in">
-      <FileViewer :file="currentFile" :root-path="rootPath" />
+      <FileViewer :file="currentFile" :root-path="rootPath" @request-login="ui.openLogin()" />
     </div>
   </div>
 </template>
