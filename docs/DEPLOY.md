@@ -14,28 +14,17 @@ User → Nginx (80/443) → StaticMan (8080)
 
 | 域名 | 状态 | 说明 |
 |------|------|------|
-| `files.magichub.top` | ✅ 已生效 | 主域名 |
-| `magichub.top` | ⏳ 待 DNS | 配置完成，DNS 解析后自动生效 |
-| `www.magichub.top` | ⏳ 待 DNS | 同上 |
+| `magichub.top` | ✅ 已生效 | 主域名 |
+| `www.magichub.top` | ✅ 已生效 | 自动跳转到 magichub.top |
 
-### DNS 配置步骤
+### SSL 证书
 
-1. 在 DNS 服务商添加 A 记录：
-   - `magichub.top` → `38.147.173.222`
-   - `www.magichub.top` → `38.147.173.222`
+已配置 Let's Encrypt 自动续期，无需手动操作。
 
-2. 等待 DNS 生效（通常 5-30 分钟）
-
-3. 在服务器上申请 SSL 证书：
-   ```bash
-   ssh root@38.147.173.222
-   /opt/magichub/setup-ssl.sh
-   ```
-
-4. 验证：
-   ```bash
-   curl -I https://magichub.top
-   ```
+手动验证续期：
+```bash
+certbot renew --dry-run
+```
 
 ## 自动部署
 
@@ -136,7 +125,8 @@ SITE_LOGO=/logo.svg
 
 ### Nginx (/etc/nginx/conf.d/magichub.top.conf)
 
-- 双域名并行：files.magichub.top + magichub.top
+- 主域名：magichub.top
+- www 跳转：www.magichub.top → magichub.top
 - HTTP → HTTPS 自动跳转
 - ACME 挑战路径支持
 - 静态资源长期缓存 (1年)
