@@ -422,7 +422,7 @@ onBeforeUnmount(() => {
 .list { display: flex; flex-direction: column; border: 1px solid var(--glass-border); border-radius: var(--radius-lg); overflow: hidden; }
 .list-header, .list-item {
   display: grid;
-  grid-template-columns: 28px minmax(0, 1fr) 100px 170px 240px;
+  grid-template-columns: 28px minmax(0, 1fr) 90px 175px 260px;
   align-items: center;
   gap: 12px;
   padding: 10px 18px;
@@ -432,7 +432,11 @@ onBeforeUnmount(() => {
   background: var(--bg-elevated); border-bottom: 1px solid var(--glass-border);
   min-height: 44px;
 }
-.col-size, .col-time, .col-actions { text-align: right; }
+.col-size, .col-time, .col-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
 .list-item {
   font-size: 14px; background: var(--bg-surface); border-bottom: 1px solid var(--glass-border);
   cursor: pointer; transition: background var(--t-fast) var(--ease);
@@ -450,7 +454,16 @@ onBeforeUnmount(() => {
 .list-name { font-size: 14px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .list-details { display: none; }
 
-.list-size, .list-time { font-size: 13px; color: var(--text-secondary); font-family: var(--font-mono); text-align: right; display: flex; align-items: center; justify-content: flex-end; }
+.list-size, .list-time {
+  font-size: 13px; color: var(--text-secondary); font-family: var(--font-mono);
+  text-align: right;
+  display: flex; align-items: center; justify-content: flex-end;
+}
+.list-time {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 @media (max-width: 768px) {
   .list-header { display: none !important; }
@@ -462,6 +475,7 @@ onBeforeUnmount(() => {
   .list-details {
     display: flex; align-items: center; gap: 6px;
     font-size: 11px; color: var(--text-tertiary);
+    white-space: nowrap;
   }
   .dot-sep { opacity: 0.5; }
   .list > .list-size, .list > .list-time, .list-header .col-size, .list-header .col-time { display: none !important; }
@@ -471,6 +485,8 @@ onBeforeUnmount(() => {
 .list-actions {
   display: flex; gap: 4px; justify-content: flex-end;
   opacity: 1;
+  min-width: fit-content;
+  overflow: visible;
 }
 .row-action {
   display: inline-flex; align-items: center; gap: 3px;
@@ -519,7 +535,8 @@ onBeforeUnmount(() => {
   }
   .col-size, .list-size { display: none !important; }
   .col-time, .list-time { display: none !important; }
-  .list-details .list-size, .list-details .list-time { display: inline !important; }
+  .list-details .list-size { display: inline !important; }
+  .list-details .list-time { display: none !important; }
   .col-actions { display: none !important; }
   .list-actions {
     display: flex !important;
