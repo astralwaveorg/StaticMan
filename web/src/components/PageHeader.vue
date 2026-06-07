@@ -90,9 +90,9 @@ defineEmits(['back'])
 
 @media (max-width: 768px) {
   .page-header { padding: 10px 10px; }
-  .header-content { gap: 8px; flex-wrap: wrap; }
+  .header-content { gap: 8px; flex-wrap: wrap; align-items: stretch; }
   .header-text { flex: 1 1 auto; min-width: 120px; }
-  .header-actions { margin-left: 0; flex: 1 1 100%; }
+  .header-actions { margin-left: 0; width: 100%; flex: none; }
   .header-actions > * { width: 100%; }
   .header-icon { width: 28px; height: 28px; border-radius: 7px; }
   .header-title { font-size: 15px; }
