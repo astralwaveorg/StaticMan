@@ -89,7 +89,7 @@ defineEmits(['back'])
 .header-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; }
 
 @media (max-width: 768px) {
-  .page-header { padding: 10px 12px; }
+  .page-header { padding: 10px 10px; }
   .header-content { gap: 8px; flex-wrap: wrap; }
   .header-text { flex: 1 1 auto; min-width: 120px; }
   .header-actions { margin-left: 0; flex: 1 1 100%; }
