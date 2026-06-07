@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"crypto/md5"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -8,33 +9,161 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
 	"time"
+
+	"github.com/fsnotify/fsnotify"
 
 	"github.com/athena/staticman/internal/auth"
 	"github.com/athena/staticman/internal/cache"
 	"github.com/athena/staticman/internal/config"
 	"github.com/athena/staticman/internal/masker"
 	"github.com/athena/staticman/internal/mime"
+	"github.com/disintegration/imaging"
 )
 
 // Handler HTTP 请求处理器
 type Handler struct {
-	cfg     *config.Config
-	masker  *masker.Masker
-	dataDir string
-	auth    *auth.Service
-	cache   *cache.Cache
+	cfg       *config.Config
+	masker    *masker.Masker
+	dataDir   string
+	auth      *auth.Service
+	cache     *cache.Cache
+	fileIndex map[string]LsItem // 内存索引
+	lock      sync.RWMutex      // 保护索引并发访问
 }
 
 // New 创建新的 Handler
 func New(cfg *config.Config, authSvc *auth.Service, c *cache.Cache) *Handler {
-	return &Handler{
-		cfg:     cfg,
-		masker:  masker.New(),
-		dataDir: cfg.ConfigsDir(),
-		auth:    authSvc,
-		cache:   c,
+	h := &Handler{
+		cfg:       cfg,
+		masker:    masker.New(),
+		dataDir:   cfg.ConfigsDir(),
+		auth:      authSvc,
+		cache:     c,
+		fileIndex: make(map[string]LsItem),
 	}
+	// 初始构建索引
+	go h.rebuildIndex()
+	// 启动实时监听
+	go h.WatchDataDir()
+	return h
+}
+
+// WatchDataDir 实时监听数据目录变化并热重载索引
+func (h *Handler) WatchDataDir() {
+	watcher, err := fsnotify.NewWatcher()
+	if err != nil {
+		fmt.Printf("[Watcher] Error creating watcher: %v\n", err)
+		return
+	}
+	defer watcher.Close()
+
+	// 监听 dataDir 及其所有子目录
+	h.addWatchRecursive(watcher, h.dataDir)
+
+	var timer *time.Timer
+	const debounce = 500 * time.Millisecond
+
+	for {
+		select {
+		case event, ok := <-watcher.Events:
+			if !ok {
+				return
+			}
+			// 过滤非必要事件
+			if event.Op&fsnotify.Chmod == fsnotify.Chmod {
+				continue
+			}
+
+			// 如果是新目录，也加入监听
+			if event.Op&fsnotify.Create == fsnotify.Create {
+				info, err := os.Stat(event.Name)
+				if err == nil && info.IsDir() {
+					h.addWatchRecursive(watcher, event.Name)
+				}
+			}
+
+			// 防抖：500ms 内没有新事件才触发重建索引
+			if timer != nil {
+				timer.Stop()
+			}
+			timer = time.AfterFunc(debounce, func() {
+				fmt.Printf("[Watcher] Change detected: %v (%v), rebuilding index...\n", event.Name, event.Op)
+				h.rebuildIndex()
+			})
+
+		case err, ok := <-watcher.Errors:
+			if !ok {
+				return
+			}
+			fmt.Printf("[Watcher] Error: %v\n", err)
+		}
+	}
+}
+
+func (h *Handler) addWatchRecursive(watcher *fsnotify.Watcher, root string) {
+	filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return nil
+		}
+		if info.IsDir() {
+			// 检查是否在隐藏列表中
+			rel, _ := filepath.Rel(h.dataDir, path)
+			if rel == "." {
+				rel = ""
+			}
+			match := h.cfg.Match(rel, true)
+			if match.Hidden && rel != "" {
+				return filepath.SkipDir
+			}
+			watcher.Add(path)
+		}
+		return nil
+	})
+}
+
+// rebuildIndex 全量重新构建内存索引
+func (h *Handler) rebuildIndex() {
+	start := time.Now()
+	newIndex := make(map[string]LsItem)
+	h.walkDir(h.dataDir, "", func(relPath string, info os.FileInfo) {
+		match := h.cfg.Match(relPath, info.IsDir())
+		if match.Hidden {
+			return
+		}
+		item := LsItem{
+			Name:      info.Name(),
+			Path:      relPath,
+			Type:      h.fileType(info),
+			Size:      info.Size(),
+			ModTime:   info.ModTime().Format("2006-01-02 15:04:05"),
+			Protected: match.Protected,
+		}
+		if !info.IsDir() {
+			item.IsBinary = h.isBinaryFile(relPath)
+			item.Language = h.detectLanguage(relPath)
+			if h.isImage(relPath) {
+				item.Thumbnail = "/api/thumb?path=" + relPath
+			}
+		}
+		newIndex[relPath] = item
+	})
+	h.lock.Lock()
+	h.fileIndex = newIndex
+	h.lock.Unlock()
+	fmt.Printf("[Index] Rebuilt %d items in %v\n", len(newIndex), time.Since(start))
+	// 构建完成后清空缓存，确保 search 等 API 拿到最新数据
+	h.cache.Flush()
+}
+
+func (h *Handler) isImage(path string) bool {
+	ext := strings.ToLower(filepath.Ext(path))
+	switch ext {
+	case ".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp":
+		return true
+	}
+	return false
 }
 
 // RegisterRoutes 注册所有路由
@@ -50,6 +179,7 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/api/ls", h.handleLs)
 	mux.HandleFunc("/api/breadcrumbs", h.handleBreadcrumbs)
 	mux.HandleFunc("/api/file/", h.handleFile)
+	mux.HandleFunc("/api/thumb", h.handleThumbnail)
 	mux.HandleFunc("/api/search", h.handleSearch)
 	mux.HandleFunc("/api/auth", h.handleAuth)
 	mux.HandleFunc("/api/config", h.handleConfig)
@@ -268,6 +398,7 @@ type LsItem struct {
 	Protected bool   `json:"protected"`
 	IsBinary  bool   `json:"isBinary"`
 	Language  string `json:"language,omitempty"`
+	Thumbnail string `json:"thumbnail,omitempty"`
 }
 
 // handleLs 列出指定目录的内容（不带 children，用于面包屑点击进入深层）
@@ -276,68 +407,33 @@ func (h *Handler) handleLs(w http.ResponseWriter, r *http.Request) {
 	if path == "" {
 		path = ""
 	}
-	// 缓存
-	cacheKey := "ls:" + path
-	if val, ok := h.cache.Get(cacheKey); ok {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(val)
-		return
-	}
-	fullPath, ok := safeJoin(h.dataDir, path)
-	if !ok {
-		http.Error(w, "Invalid path", http.StatusBadRequest)
-		return
+
+	h.lock.RLock()
+	defer h.lock.RUnlock()
+
+	var items []LsItem
+	prefix := path
+	if prefix != "" {
+		prefix = path + "/"
 	}
 
-	info, err := os.Stat(fullPath)
-	if err != nil {
-		http.Error(w, "Path not found", http.StatusNotFound)
-		return
-	}
-	if !info.IsDir() {
-		http.Error(w, "Not a directory", http.StatusBadRequest)
-		return
-	}
-
-	entries, err := os.ReadDir(fullPath)
-	if err != nil {
-		http.Error(w, "Failed to read directory", http.StatusInternalServerError)
-		return
-	}
-
-	items := []LsItem{}
-	for _, entry := range entries {
-		childPath := filepath.Join(path, entry.Name())
+	for relPath, item := range h.fileIndex {
+		// 只取当前路径下的直接子项
+		isDirectChild := false
 		if path == "" {
-			childPath = entry.Name()
+			if !strings.Contains(relPath, "/") {
+				isDirectChild = true
+			}
+		} else if strings.HasPrefix(relPath, prefix) {
+			subPath := relPath[len(prefix):]
+			if !strings.Contains(subPath, "/") {
+				isDirectChild = true
+			}
 		}
 
-		match := h.cfg.Match(childPath, entry.IsDir())
-		if match.Hidden {
-			continue
+		if isDirectChild {
+			items = append(items, item)
 		}
-
-		entryInfo, err := entry.Info()
-		if err != nil {
-			continue
-		}
-		item := LsItem{
-			Name:    entry.Name(),
-			Path:    childPath,
-			Size:    entryInfo.Size(),
-			ModTime: entryInfo.ModTime().Format("2006-01-02 15:04:05"),
-		}
-		if entry.IsDir() {
-			item.Type = "directory"
-		} else {
-			item.Type = "file"
-			item.Language = h.detectLanguage(childPath)
-			item.IsBinary = h.isBinaryFile(childPath)
-		}
-		if match.Protected {
-			item.Protected = true
-		}
-		items = append(items, item)
 	}
 
 	sort.Slice(items, func(i, j int) bool {
@@ -347,14 +443,12 @@ func (h *Handler) handleLs(w http.ResponseWriter, r *http.Request) {
 		return items[i].Name < items[j].Name
 	})
 
-	result := map[string]interface{}{
-		"path":  path,
-		"items": items,
-		"total": len(items),
-	}
-	h.cache.Set(cacheKey, result, 10*time.Second)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(result)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"items": items,
+		"path":  path,
+		"total": len(items),
+	})
 }
 
 // Breadcrumb 面包屑
@@ -902,28 +996,111 @@ func (h *Handler) handleSearch(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// handleThumbnail 生成并返回图片的缩略图
+func (h *Handler) handleThumbnail(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.Query().Get("path")
+	if path == "" {
+		http.Error(w, "Path is required", http.StatusBadRequest)
+		return
+	}
+
+	fullPath, ok := safeJoin(h.dataDir, path)
+	if !ok {
+		http.Error(w, "Invalid path", http.StatusBadRequest)
+		return
+	}
+
+	// 宽度高度参数，默认 200x200
+	width := 200
+	height := 200
+	if wStr := r.URL.Query().Get("w"); wStr != "" {
+		fmt.Sscanf(wStr, "%d", &width)
+	}
+	if hStr := r.URL.Query().Get("h"); hStr != "" {
+		fmt.Sscanf(hStr, "%d", &height)
+	}
+
+	// 权限检查
+	match := h.cfg.Match(path, false)
+	if match.Hidden {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+	if match.Protected && !h.isAuthenticated(r) {
+		http.Error(w, "Protected", http.StatusForbidden)
+		return
+	}
+
+	// 检查缓存
+	cacheDir := filepath.Join(os.TempDir(), "staticman-thumbs")
+	os.MkdirAll(cacheDir, 0755)
+
+	info, err := os.Stat(fullPath)
+	if err != nil {
+		http.Error(w, "File not found", http.StatusNotFound)
+		return
+	}
+
+	// 缓存文件名：hash(path + modtime + size + w + h)
+	hKey := fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s-%d-%d-%d-%d", path, info.ModTime().Unix(), info.Size(), width, height))))
+	thumbPath := filepath.Join(cacheDir, hKey+".jpg")
+
+	if _, err := os.Stat(thumbPath); err == nil {
+		w.Header().Set("Cache-Control", "public, max-age=31536000") // 缓存一年
+		http.ServeFile(w, r, thumbPath)
+		return
+	}
+
+	// 生成缩略图
+	src, err := imaging.Open(fullPath)
+	if err != nil {
+		http.Error(w, "Not an image or unsupported format", http.StatusBadRequest)
+		return
+	}
+
+	// 缩放并填充
+	dst := imaging.Fill(src, width, height, imaging.Center, imaging.Lanczos)
+
+	err = imaging.Save(dst, thumbPath)
+	if err != nil {
+		http.Error(w, "Failed to save thumbnail", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Cache-Control", "public, max-age=31536000")
+	http.ServeFile(w, r, thumbPath)
+}
+
 func (h *Handler) searchByName(query string, isAuth bool) []SearchResult {
+	h.lock.RLock()
+	defer h.lock.RUnlock()
+
 	var results []SearchResult
-	h.walkDir(h.dataDir, "", func(relPath string, info os.FileInfo) {
-		match := h.cfg.Match(relPath, info.IsDir())
-		if match.Hidden {
-			return
+	q := strings.ToLower(query)
+	for path, item := range h.fileIndex {
+		if strings.Contains(strings.ToLower(item.Name), q) {
+			results = append(results, SearchResult{
+				Path:      path,
+				Name:      item.Name,
+				Type:      item.Type,
+				Protected: item.Protected,
+				IsBinary:  item.IsBinary,
+				Language:  item.Language,
+				Size:      item.Size,
+			})
 		}
-		if strings.Contains(strings.ToLower(info.Name()), strings.ToLower(query)) {
-			result := SearchResult{
-				Path:      relPath,
-				Name:      info.Name(),
-				Type:      h.fileType(info),
-				Protected: match.Protected,
-				Size:      info.Size(),
-			}
-			if !info.IsDir() {
-				result.IsBinary = h.isBinaryFile(relPath)
-				result.Language = h.detectLanguage(relPath)
-			}
-			results = append(results, result)
+	}
+
+	// 简单的相关性排序：路径深度越浅越靠前
+	sort.Slice(results, func(i, j int) bool {
+		di := strings.Count(results[i].Path, "/")
+		dj := strings.Count(results[j].Path, "/")
+		if di != dj {
+			return di < dj
 		}
+		return results[i].Name < results[j].Name
 	})
+
 	return results
 }
 

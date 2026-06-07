@@ -38,8 +38,13 @@
 
     <!-- Body -->
     <div class="viewer-body">
+      <!-- Image preview -->
+      <div v-if="isImage" class="image-view">
+        <img :src="rawUrl" :alt="file.name" class="preview-img" />
+      </div>
+
       <!-- Binary file -->
-      <div v-if="file.isBinary" class="binary-notice">
+      <div v-else-if="file.isBinary" class="binary-notice">
         <div class="binary-mark">
           <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -95,6 +100,11 @@ import hljs from 'highlight.js'
 const props = defineProps<{ file: FileContent }>()
 const toast = useToast()
 const { isFavorite, toggleFavorite } = useFavorites()
+
+const isImage = computed(() => {
+  const ext = props.file.name.split('.').pop()?.toLowerCase() || ''
+  return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext)
+})
 
 const copied = ref<'raw' | 'path' | null>(null)
 
@@ -202,6 +212,25 @@ async function copyPath() {
 
 .viewer-body { flex: 1; overflow: auto; min-height: 0; }
 
+/* Image */
+.image-view {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100%; padding: 24px;
+  background-image:
+    linear-gradient(45deg, var(--bg-hover) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--bg-hover) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--bg-hover) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--bg-hover) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+.preview-img {
+  max-width: 100%; max-height: 80vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+
 /* Binary */
 .binary-notice {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -282,18 +311,24 @@ async function copyPath() {
 @media (max-width: 768px) {
   .viewer-bar {
     position: sticky;
-    bottom: 0;
-    top: auto;
+    bottom: 0; top: auto;
     margin-bottom: 0;
     border-radius: 0;
     border-top: 1px solid var(--glass-border);
     background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    padding: 8px 10px;
+    backdrop-filter: blur(24px);
+    padding: 12px 14px;
     z-index: 10;
-    flex-direction: row;
-    align-items: center;
-    padding-bottom: max(8px, env(safe-area-inset-bottom));
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  .file-path-row {
+    width: 100%;
+    justify-content: center;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 8px;
   }
   .file-actions {
     justify-content: space-around;
@@ -304,12 +339,14 @@ async function copyPath() {
     gap: 2px;
     padding: 6px 8px;
     font-size: 10px;
-    min-height: 44px;
-    min-width: 44px;
+    min-height: 48px;
+    min-width: 48px;
     justify-content: center;
+    border: none;
+    background: transparent;
   }
   .action-text { display: block !important; }
-  .action-btn.active { color: var(--warning); background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.2); }
+  .action-btn.active { color: var(--warning); }
   .line-gutter { display: none; }
   .code-block {
     font-size: 14px;

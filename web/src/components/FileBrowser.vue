@@ -32,11 +32,11 @@
           :class="{locked: item.protected, dir: item.type==='directory', bin: item.isBinary}"
           @click.prevent="openItem(item)"
         >
-          <div class="grid-icon" :class="{locked: item.protected, dir: item.type==='directory', bin: item.isBinary}">
-            <svg v-if="item.protected" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <div class="grid-icon" :class="{locked: item.protected, dir: item.type==='directory', bin: item.isBinary, img: !!item.thumbnail}">
+            <img v-if="item.thumbnail" :src="item.thumbnail" class="grid-thumb" loading="lazy" />
+            <svg v-else-if="item.protected" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             <svg v-else-if="item.type==='directory'" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-            <svg v-else-if="item.isBinary" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10M7 12h10M7 17h6"/></svg>
-            <svg v-else width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <div v-else :style="{ color: getFileIcon(item.name).color }" v-html="icon(getFileIcon(item.name).icon, { size: 22 })"></div>
           </div>
           <div class="grid-name truncate">{{ item.name }}</div>
           <div class="grid-size">{{ fmtSize(item.size) }}</div>
@@ -74,12 +74,16 @@
         <div class="list-icon" :class="{locked: item.protected, dir: item.type==='directory', bin: item.isBinary}">
           <svg v-if="item.protected" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           <svg v-else-if="item.type==='directory'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-          <svg v-else-if="item.isBinary" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10M7 12h10M7 17h6"/></svg>
-          <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <div v-else :style="{ color: getFileIcon(item.name).color }" v-html="icon(getFileIcon(item.name).icon, { size: 16 })"></div>
         </div>
-        <span class="list-name truncate">{{ item.name }}</span>
-        <span class="list-size">{{ fmtSize(item.size) }}</span>
-        <span class="list-time">{{ item.modTime || '—' }}</span>
+        <div class="list-meta">
+          <span class="list-name truncate">{{ item.name }}</span>
+          <div class="list-details">
+            <span class="list-size">{{ fmtSize(item.size) }}</span>
+            <span class="dot-sep">•</span>
+            <span class="list-time">{{ item.modTime || '—' }}</span>
+          </div>
+        </div>
         <div class="list-actions">
           <button v-if="item.type==='directory'" class="row-action" title="复制路径" @click.stop="copyPath(item)">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -108,8 +112,8 @@
     </div>
 
     <!-- Loading -->
-    <div v-if="loading" class="loading">
-      <div class="spinner"></div>
+    <div v-if="loading" class="loading-wrap">
+      <SkeletonLoader :type="viewMode==='grid' ? 'cards' : 'list'" :count="10" />
     </div>
   </div>
 </template>
@@ -118,8 +122,10 @@
 import { ref, watch, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { getLs, getFile, getRawUrl, isLoggedIn, type LsItem } from '../api'
+import { icon, getFileIcon } from '../icons'
 import { useToast } from '../composables/useToast'
 import { useHistory } from '../composables/useHistory'
+import SkeletonLoader from './SkeletonLoader.vue'
 
 const props = defineProps<{ rootPath: string; activeTool: string; excludeDirs?: string[] }>()
 const router = useRouter()
@@ -392,6 +398,9 @@ onBeforeUnmount(() => {
 .grid-icon.dir { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--bg-surface)); }
 .grid-icon.locked { color: var(--warning); background: rgba(251,191,36,0.1); }
 .grid-icon.bin { color: #a855f7; background: rgba(168,85,247,0.1); }
+.grid-icon.img { background: var(--bg-base); overflow: hidden; padding: 0; }
+.grid-thumb { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+.grid-item:hover .grid-thumb { transform: scale(1.1); }
 
 .grid-name { font-size: 12px; font-weight: 500; max-width: 100%; word-break: break-word; line-height: 1.3; }
 .grid-size { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; font-family: var(--font-mono); }
@@ -413,7 +422,6 @@ onBeforeUnmount(() => {
 .grid-action:hover { color: var(--text-primary); border-color: var(--accent); background: var(--bg-hover); }
 
 /* List */
-.list { display: flex; flex-direction: column; }
 .list { display: flex; flex-direction: column; border: 1px solid var(--glass-border); border-radius: var(--radius-lg); overflow: hidden; }
 .list-header, .list-item {
   display: grid;
@@ -423,49 +431,45 @@ onBeforeUnmount(() => {
   padding: 10px 18px;
 }
 .list-header {
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--text-secondary);
-  background: var(--bg-elevated);
-  border-bottom: 1px solid var(--glass-border);
-  white-space: nowrap;
+  font-size: 13px; font-weight: 600; color: var(--text-secondary);
+  background: var(--bg-elevated); border-bottom: 1px solid var(--glass-border);
   min-height: 44px;
 }
-.list-header > span {
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-  line-height: 1;
-}
-.list-header .col-icon { width: 28px; }
-.list-header .col-name { color: var(--text-primary); }
-.list-header .col-size { color: var(--text-primary); text-align: right; justify-content: flex-end; padding-right: 0; }
-.list-header .col-time { color: var(--text-primary); text-align: right; justify-content: flex-end; padding-right: 0; }
-.list-header .col-actions { color: var(--text-primary); text-align: right; justify-content: flex-end; padding-right: 0; }
 .list-item {
-  font-size: 14px;
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--glass-border);
-  cursor: pointer;
-  transition: background var(--t-fast) var(--ease);
-  animation: fadeIn 250ms var(--ease) both;
-  animation-delay: var(--delay, 0ms);
+  font-size: 14px; background: var(--bg-surface); border-bottom: 1px solid var(--glass-border);
+  cursor: pointer; transition: background var(--t-fast) var(--ease);
+  animation: fadeIn 250ms var(--ease) both; animation-delay: var(--delay, 0ms);
   min-height: 52px;
 }
 .list-item:last-child { border-bottom: none; }
 .list-item:hover { background: var(--bg-hover); }
-.list-icon {
-  display: flex; align-items: center; justify-content: center;
-  color: var(--text-tertiary);
-  width: 28px;
-}
+
+.list-icon { display: flex; align-items: center; justify-content: center; color: var(--text-tertiary); width: 28px; }
 .list-icon.dir { color: var(--accent); }
 .list-icon.locked { color: var(--warning); }
-.list-icon.bin { color: #a855f7; }
-.list-name { font-size: 14px; font-weight: 500; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-primary); display: flex; align-items: center; }
-.list-size { font-size: 13px; color: var(--text-secondary); font-family: var(--font-mono); text-align: right; display: flex; align-items: center; justify-content: flex-end; }
-.list-time { font-size: 12px; color: var(--text-secondary); font-family: var(--font-mono); text-align: right; display: flex; align-items: center; justify-content: flex-end; }
+
+.list-meta { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.list-name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+.list-details { display: none; } /* 默认隐藏（在大屏下由 grid 列代替） */
+
+.list-size, .list-time { font-size: 13px; color: var(--text-secondary); font-family: var(--font-mono); text-align: right; display: flex; align-items: center; justify-content: flex-end; }
+
+@media (max-width: 768px) {
+  .list-header { display: none !important; }
+  .list-item {
+    display: flex !important; align-items: center; gap: 12px; padding: 12px 14px; min-height: 64px;
+  }
+  .list-meta { gap: 2px; }
+  .list-name { font-size: 14px; }
+  .list-details {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: var(--text-tertiary);
+  }
+  .dot-sep { opacity: 0.5; }
+  /* 隐藏原始的 grid 列 */
+  .list > .list-size, .list > .list-time, .list-header .col-size, .list-header .col-time { display: none !important; }
+  /* 刚才为了代码兼容，我们在 template 里加了 list-details，现在隐藏直接在 grid 里的那些列 */
+}
 
 /* List row actions - 常驻显示 */
 .list-actions {

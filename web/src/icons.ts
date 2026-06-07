@@ -50,6 +50,26 @@ export const ICONS: Record<string, string> = {
   file2:     '<path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>',
 }
 
+export const FILE_ICONS: Record<string, { icon: string; color?: string }> = {
+  yaml: { icon: 'code', color: '#818cf8' },
+  yml:  { icon: 'code', color: '#818cf8' },
+  conf: { icon: 'config', color: '#fbbf24' },
+  list: { icon: 'list', color: '#34d399' },
+  json: { icon: 'code', color: '#f472b6' },
+  md:   { icon: 'book', color: '#6366f1' },
+  pdf:  { icon: 'file', color: '#f87171' },
+  jpg:  { icon: 'image', color: '#2dd4bf' },
+  png:  { icon: 'image', color: '#2dd4bf' },
+  webp: { icon: 'image', color: '#2dd4bf' },
+  zip:  { icon: 'box', color: '#a855f7' },
+  gz:   { icon: 'box', color: '#a855f7' },
+}
+
+export function getFileIcon(filename: string): { icon: string; color?: string } {
+  const ext = filename.split('.').pop()?.toLowerCase() || ''
+  return FILE_ICONS[ext] || { icon: 'file' }
+}
+
 export function icon(name: string, opts: { size?: number; strokeWidth?: number; class?: string } = {}): string {
   const path = ICONS[name] || ICONS.file2
   const size = opts.size || 18

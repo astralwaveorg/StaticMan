@@ -6,35 +6,17 @@
     </div>
 
     <div class="home-inner">
-      <section class="hero">
-        <div class="hero-text">
-          <h1>欢迎回来</h1>
-          <p class="hero-subtitle" :title="currentTimeFull">{{ currentTime }}</p>
-        </div>
-
-        <!-- 搜索入口：靠右 -->
-        <div class="home-search">
-          <div class="search-shell">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            <input
-              v-model="searchQuery"
-              class="search-input"
-              type="text"
-              :placeholder="searchMode === 'name' ? '搜索文件名、跳转分类…' : '搜索文件内容…'"
-              @keydown.enter="onSearchEnter"
-              @focus="onSearchFocus"
-              @click="onSearchFocus"
-            />
-            <div class="search-mode">
-              <button :class="{active: searchMode==='name'}" @click="searchMode='name'">文件名</button>
-              <button :class="{active: searchMode==='content'}" @click="searchMode='content'">内容</button>
-            </div>
-            <button class="kbd-hint" @click="openCommand" title="打开命令面板">
-              <kbd>⌘</kbd><kbd>K</kbd>
-            </button>
+      <PageHeader
+        :title="siteTitleCN"
+        :subtitle="greeting"
+        :subtitleFull="currentTimeFull"
+      >
+        <template #actions>
+          <div class="home-search">
+            <InstantSearch placeholder="搜索文件名、内容或跳转分类…" />
           </div>
-        </div>
-      </section>
+        </template>
+      </PageHeader>
 
       <div class="stats" v-if="categories.length">
         <div class="stat">
@@ -88,9 +70,8 @@
         </div>
       </section>
 
-      <div v-else-if="loading" class="loading-state">
-        <div class="spinner"></div>
-        <p>加载中…</p>
+      <div v-else-if="loading" class="gallery">
+        <SkeletonLoader type="cards" :count="8" />
       </div>
 
       <div v-else class="empty-state">
@@ -105,52 +86,43 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
-import { getCategories, type CategoryInfo } from '../api'
+import { getCategories, getConfig, type CategoryInfo } from '../api'
 import { icon } from '../icons'
-import { useUIStore } from '../stores/ui'
+import PageHeader from '../components/PageHeader.vue'
+import InstantSearch from '../components/InstantSearch.vue'
+import SkeletonLoader from '../components/SkeletonLoader.vue'
 
 const router = useRouter()
-const ui = useUIStore()
 const categories = ref<CategoryInfo[]>([])
 const loading = ref(true)
 
-const searchQuery = ref('')
-const searchMode = ref<'name' | 'content'>('name')
-
-// 同步首页模式到 UI store，方便命令面板打开时继承
-
-
-function openCommand() {
-  ui.openCommand(searchQuery.value.trim(), searchMode.value)
-}
-
-function onSearchEnter() {
-  openCommand()
-}
-
-function onSearchFocus() {
-  openCommand()
-}
+// 站点配置
+const siteTitleCN = ref('StaticMan')
+const siteTitleEN = ref('')
+const siteDesc = ref('')
+const siteLogo = ref('/logo.svg')
 
 const totalFiles = computed(() => categories.value.reduce((s, c) => s + c.fileCount, 0))
 const totalTools = computed(() => categories.value.reduce((s, c) => s + (c.tools?.length || 0), 0))
 const totalSize = computed(() => categories.value.reduce((s, c) => s + (c.size || 0), 0))
 
-// 当前上海时间（首页副标题）
-const currentTime = ref('')
+// 智能问候语
+const greeting = computed(() => {
+  const hour = new Date().getHours()
+  if (hour < 5) return '🌙 夜深了，还在折腾规则？'
+  if (hour < 11) return '🌅 早上好，开启高效的一天'
+  if (hour < 14) return '🍛 午安，记得休息一下'
+  if (hour < 18) return '☕ 下午好，工作辛苦了'
+  if (hour < 22) return '🌆 晚上好，准备更新配置吗？'
+  return '🌃 晚安，祝好梦'
+})
+
+// 当前时间全称
 const currentTimeFull = ref('')
 let timeTimer: ReturnType<typeof setInterval> | null = null
 
 function updateTime() {
   const now = new Date()
-  currentTime.value = new Intl.DateTimeFormat('zh-CN', {
-    timeZone: 'Asia/Shanghai',
-    month: 'long',
-    day: 'numeric',
-    weekday: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(now)
   currentTimeFull.value = new Intl.DateTimeFormat('zh-CN', {
     timeZone: 'Asia/Shanghai',
     year: 'numeric',
@@ -183,6 +155,15 @@ onMounted(async () => {
   } catch {
     categories.value = []
   }
+
+  try {
+    const { data } = await getConfig()
+    if (data.title_cn) siteTitleCN.value = data.title_cn
+    if (data.title_en) siteTitleEN.value = data.title_en
+    if (data.description) siteDesc.value = data.description
+    if (data.logo) siteLogo.value = data.logo
+  } catch {}
+
   loading.value = false
 })
 
@@ -218,124 +199,11 @@ onBeforeUnmount(() => {
   padding: 20px 24px 32px;
 }
 
-/* Hero */
-.hero {
-  display: flex; align-items: center;
-  gap: 16px;
-  margin-bottom: 14px;
-  padding: 0 4px;
-}
-.hero-text {
-  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
-  flex-shrink: 0;
-}
-.hero h1 {
-  font-size: 19px; font-weight: 700;
-  letter-spacing: -0.02em;
-  margin: 0;
-  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-hover) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.hero-subtitle {
-  font-size: 13px;
-  color: var(--text-secondary);
-  display: flex; align-items: center; gap: 6px;
-  flex-wrap: wrap;
-}
-.kbd-hint { display: inline-flex; align-items: center; gap: 2px; }
-.kbd-hint kbd {
-  font-family: var(--font-sans);
-  font-size: 10px;
-  padding: 1px 5px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--glass-border);
-  border-radius: 4px;
-  color: var(--text-tertiary);
-  line-height: 1.4;
-  font-weight: 500;
-}
-
-/* 搜索框（靠右，最大 2/3 父容器宽度，自适应） */
+/* 搜索框在首页的特殊宽度处理 */
 .home-search {
   flex: 0 1 auto;
-  min-width: 280px;
-  width: clamp(280px, 50%, 66%);
-  max-width: 66%;
-  margin-left: auto;
-}
-.search-shell {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--bg-surface);
-  border: 1px solid var(--glass-border);
-  border-radius: 9px;
-  padding: 0 6px 0 12px;
-  height: 36px;
-  width: 100%;
-  color: var(--text-secondary);
-  transition: all var(--t-base) var(--ease);
-}
-.search-shell:hover {
-  border-color: var(--accent);
-  background: var(--bg-hover);
-}
-.search-shell:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-muted);
-}
-.search-shell .icon { color: var(--text-tertiary); flex-shrink: 0; }
-.search-input {
-  flex: 1; min-width: 0;
-  font-size: 13px;
-  color: var(--text-primary);
-  background: transparent;
-  border: none; outline: none;
-  padding: 0;
-}
-.search-input::placeholder { color: var(--text-tertiary); }
-
-.search-mode {
-  display: flex;
-  background: var(--bg-elevated);
-  border-radius: 5px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-.search-mode button {
-  padding: 3px 9px;
-  font-size: 11px; font-weight: 500;
-  color: var(--text-tertiary);
-  transition: all var(--t-fast) var(--ease);
-  white-space: nowrap;
-}
-.search-mode button:hover { color: var(--text-primary); }
-.search-mode button.active {
-  background: var(--accent);
-  color: white;
-}
-
-.search-shell .kbd-hint {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  flex-shrink: 0;
-  padding: 2px 4px;
-  border-radius: 5px;
-  transition: background var(--t-fast) var(--ease);
-}
-.search-shell .kbd-hint:hover { background: var(--bg-elevated); }
-.kbd-hint kbd {
-  font-family: var(--font-sans);
-  font-size: 10px;
-  padding: 1px 5px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--glass-border);
-  border-radius: 4px;
-  color: var(--text-tertiary);
-  line-height: 1.4;
-  font-weight: 500;
+  min-width: 320px;
+  width: clamp(320px, 450px, 600px);
 }
 
 /* Stats */
@@ -424,7 +292,6 @@ onBeforeUnmount(() => {
 }
 .cat-card:hover .cat-icon { transform: rotate(-4deg) scale(1.08); }
 .cat-name { font-size: 14px; font-weight: 550; line-height: 1.3; }
-.cat-desc { display: none; }
 
 .cat-footer {
   display: flex; align-items: center; justify-content: flex-end;
@@ -432,7 +299,6 @@ onBeforeUnmount(() => {
   padding-top: 10px;
   border-top: 1px solid var(--glass-border);
 }
-.cat-tools { display: none; }
 .cat-stats { display: flex; gap: 8px; flex-shrink: 0; }
 .meta-item {
   display: inline-flex; align-items: center; gap: 3px;
@@ -455,14 +321,7 @@ onBeforeUnmount(() => {
   .home-inner { padding: 12px 10px 20px; }
   .orbs { display: none; }
   .gallery { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .hero { flex-direction: column; align-items: stretch; gap: 10px; }
-  .hero-text { gap: 0; flex-direction: column; align-items: flex-start; }
-  .hero h1 { font-size: 16px; }
-  .hero-subtitle { display: none; }
-  .home-search { max-width: none; flex: 1 1 100%; min-width: 0; }
-  .search-shell { height: 48px; padding: 0 6px 0 12px; }
-  .search-mode button { padding: 6px 12px; font-size: 12px; }
-  .search-shell .kbd-hint { display: none; }
+  .home-search { max-width: none; flex: 1 1 100%; min-width: 0; margin-top: 8px; }
   .stats { margin-bottom: 10px; padding: 6px 10px; }
   .stat-value { font-size: 13px; }
   .stat-label { font-size: 10px; }
@@ -472,13 +331,20 @@ onBeforeUnmount(() => {
   .cat-header { margin-bottom: 6px; }
   .cat-icon { width: 24px; height: 24px; border-radius: 5px; }
   .cat-icon :deep(svg) { width: 14px !important; height: 14px !important; }
-  .cat-arrow { display: none; }
   .cat-name { font-size: 13px; font-weight: 550; }
-  .cat-desc { display: none; }
   .cat-footer { padding-top: 6px; }
-  .cat-tools { display: none; }
   .cat-stats { width: 100%; justify-content: space-between; }
   .meta-item { font-size: 10px; }
   .cat-glow { display: none; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>

@@ -74,6 +74,11 @@ func (c *Cache) Clear() {
 	c.mu.Unlock()
 }
 
+// Flush 清空所有缓存 (Clear 的别名)
+func (c *Cache) Flush() {
+	c.Clear()
+}
+
 // Stats 返回缓存统计
 func (c *Cache) Stats() (total int, expired int) {
 	now := time.Now()

@@ -500,24 +500,33 @@ watch(() => ui.showLogin, (v) => { if (v) nextTick(() => passwordInput.value?.fo
   .brand-sub { display: none; }
   .crumbs {
     display: flex;
-    font-size: 11px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    scrollbar-width: none;
+    max-width: 180px;
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
     gap: 2px;
-    margin-right: 2px;
+    padding-right: 12px;
   }
+  .crumbs::-webkit-scrollbar { display: none; }
   .crumb {
-    max-width: 60px;
-    padding: 4px 4px;
+    max-width: none;
+    font-size: 13px;
+    padding: 4px 6px;
   }
   .crumb-current {
-    max-width: 80px;
+    max-width: none;
+    font-size: 13px;
   }
-  .crumb-sep { display: none; }
+  .crumb-sep { opacity: 0.4; }
 }
 @media (max-width: 480px) {
   .topbar { height: 56px; }
-  .brand-title { font-size: 12px; }
+  .brand-title { display: none; } /* 极窄屏幕隐藏中文名以留出空间给面包屑 */
+  .brand-mark { width: 32px; height: 32px; }
   .login-btn span { display: none; }
-  .login-btn { padding: 7px; }
-  .crumbs { display: none; }
+  .login-btn { padding: 7px; min-width: 40px; }
+  .crumbs { max-width: 220px; }
 }
 </style>

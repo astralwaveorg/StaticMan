@@ -70,6 +70,7 @@ export interface LsItem {
   protected: boolean
   isBinary: boolean
   language?: string
+  thumbnail?: string
 }
 
 export interface Breadcrumb {
@@ -122,6 +123,9 @@ export const getBreadcrumbs = (path: string) =>
 
 export const getFile = (p: string) =>
   api.get<FileContent>(`/file/${p}`)
+
+export const search = (q: string, type: 'name' | 'content', offset = 0, limit = 50) =>
+  api.get<{ results: SearchResult[]; total: number; offset: number; limit: number }>('/search', { params: { q, type, offset, limit } })
 
 export const searchFiles = (q: string, t: 'name' | 'content') =>
   api.get<SearchResult[]>('/search', { params: { q, t } })

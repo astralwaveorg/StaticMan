@@ -1,42 +1,21 @@
 <template>
   <div class="browse">
-    <!-- Compact cover for current directory -->
-    <div v-if="currentPath" class="cover" :style="{'--accent': categoryAccent}">
-      <div class="cover-glow"></div>
-      <div class="cover-content">
-        <button class="cover-back" v-if="currentPath.includes('/')" @click="goUp" :title="`返回上一级`">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-        <div class="cover-icon" v-html="coverIcon" :style="{color: categoryAccent}"></div>
-        <div class="cover-text">
-          <h1 class="cover-title">{{ currentName }}</h1>
-          <p class="cover-desc">{{ coverDesc }}</p>
-        </div>
-
-        <!-- 搜索框：靠右 -->
+    <!-- Unified Page Header -->
+    <PageHeader
+      v-if="currentPath"
+      :title="currentName"
+      :subtitle="coverDesc"
+      :icon="coverIcon"
+      :accentColor="categoryAccent"
+      :showBack="currentPath.includes('/')"
+      @back="goUp"
+    >
+      <template #actions>
         <div class="browse-search">
-          <div class="search-shell">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            <input
-              v-model="searchQuery"
-              class="search-input"
-              type="text"
-              :placeholder="searchMode === 'name' ? '搜索文件名、跳转分类…' : '搜索文件内容…'"
-              @keydown.enter="onSearchEnter"
-              @focus="onSearchFocus"
-              @click="onSearchFocus"
-            />
-            <div class="search-mode">
-              <button :class="{active: searchMode==='name'}" @click="searchMode='name'">文件名</button>
-              <button :class="{active: searchMode==='content'}" @click="searchMode='content'">内容</button>
-            </div>
-            <button class="kbd-hint" @click="openCommand" title="打开命令面板">
-              <kbd>⌘</kbd><kbd>K</kbd>
-            </button>
-          </div>
+          <InstantSearch placeholder="搜索当前目录或全局…" />
         </div>
-      </div>
-    </div>
+      </template>
+    </PageHeader>
 
     <!-- File browser -->
     <div v-if="!currentFile || isDirectory || fileError" class="browser fade-in">
@@ -90,6 +69,8 @@ import { useAuthStore } from '../stores/auth'
 import { useUIStore } from '../stores/ui'
 import FileViewer from '../components/FileViewer.vue'
 import FileBrowser from '../components/FileBrowser.vue'
+import PageHeader from '../components/PageHeader.vue'
+import InstantSearch from '../components/InstantSearch.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -97,17 +78,6 @@ const auth = useAuthStore()
 const ui = useUIStore()
 const currentFile = ref<FileContent | null>(null)
 const categories = ref<CategoryInfo[]>([])
-
-const searchQuery = ref('')
-const searchMode = ref<'name' | 'content'>('name')
-
-
-
-function openCommand() {
-  ui.openCommand(searchQuery.value.trim(), searchMode.value)
-}
-function onSearchEnter() { openCommand() }
-function onSearchFocus() { openCommand() }
 
 const currentPath = computed(() => {
   const p = route.params.pathMatch
@@ -161,10 +131,8 @@ const availableTools = computed(() => {
   })
 })
 
-// Default tool: first one if available
 const activeTool = ref<string>('')
 
-// root path for file browser
 const rootPath = computed(() => {
   if (isCategoryRoot.value) {
     return activeTool.value
@@ -174,7 +142,6 @@ const rootPath = computed(() => {
   return currentPath.value
 })
 
-// path passed to FileBrowser — 分类根始终展示根目录内容，FileBrowser 会自动排除已注册为 tools 的子目录
 const browserPath = computed(() => {
   if (isCategoryRoot.value && !activeTool.value) {
     return currentPath.value
@@ -200,7 +167,6 @@ async function loadFile(path: string) {
     fileError.value = null
     return
   }
-  // 单层路径是分类根：交由 FileBrowser 显示工具列表
   if (!path.includes('/')) {
     currentFile.value = null
     fileError.value = null
@@ -230,11 +196,9 @@ async function loadCategories() {
 }
 
 watch(currentPath, (p) => {
-  // detect active tool from path
   if (p.includes('/')) {
     const parts = p.split('/')
     if (parts.length === 2 && isCategoryRoot.value === false) {
-      // /browse/<cat>/<tool>
       activeTool.value = parts[1]
     }
   } else {
@@ -249,139 +213,10 @@ watch(() => route.fullPath, loadCategories, { immediate: true })
 <style scoped>
 .browse { height: 100%; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
 
-/* ── Compact cover ── */
-.cover {
-  position: relative;
-  padding: 12px 24px;
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  overflow: visible;
-  flex-shrink: 0;
-}
-.cover-glow {
-  position: absolute;
-  top: -100px; left: 50%; transform: translateX(-50%);
-  width: 400px; height: 180px;
-  background: radial-gradient(ellipse, var(--accent) 0%, transparent 60%);
-  opacity: 0.12;
-  filter: blur(50px);
-  pointer-events: none;
-}
-.cover-content {
-  position: relative; z-index: 1;
-  display: flex; align-items: center; gap: 16px;
-  width: 100%;
-}
-.cover-back {
-  display: flex; align-items: center; justify-content: center;
-  width: 30px; height: 30px;
-  border-radius: 8px;
-  background: var(--bg-elevated);
-  color: var(--text-secondary);
-  border: 1px solid var(--glass-border);
-  cursor: pointer;
-  transition: all var(--t-fast) var(--ease);
-  flex-shrink: 0;
-}
-.cover-back:hover { background: var(--bg-hover); color: var(--text-primary); border-color: var(--accent); }
-.cover-icon {
-  width: 36px; height: 36px;
-  border-radius: 9px;
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-  display: flex; align-items: center; justify-content: center;
-  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
-  flex-shrink: 0;
-}
-.cover-text { text-align: left; min-width: 0; }
-.cover-title {
-  font-size: 18px; font-weight: 700;
-  letter-spacing: -0.02em;
-  margin: 0;
-  line-height: 1.1;
-  background: linear-gradient(135deg, var(--text-primary) 0%, color-mix(in srgb, var(--accent) 80%, var(--text-primary)) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.cover-desc { font-size: 12px; color: var(--text-secondary); margin: 1px 0 0; }
-
-/* 搜索框（靠右，最大 2/3 父容器宽度，自适应） */
 .browse-search {
   flex: 0 1 auto;
   min-width: 280px;
-  width: clamp(280px, 50%, 66%);
-  max-width: 66%;
-  margin-left: auto;
-}
-.browse-search .search-shell {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--bg-surface);
-  border: 1px solid var(--glass-border);
-  border-radius: 9px;
-  padding: 0 6px 0 12px;
-  height: 36px;
-  width: 100%;
-  color: var(--text-secondary);
-  transition: all var(--t-base) var(--ease);
-}
-.browse-search .search-shell:hover {
-  border-color: var(--accent);
-  background: var(--bg-hover);
-}
-.browse-search .search-shell:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-muted);
-}
-.browse-search .icon { color: var(--text-tertiary); flex-shrink: 0; }
-.browse-search .search-input {
-  flex: 1; min-width: 0;
-  font-size: 13px;
-  color: var(--text-primary);
-  background: transparent;
-  border: none; outline: none;
-  padding: 0;
-}
-.browse-search .search-input::placeholder { color: var(--text-tertiary); }
-.browse-search .search-mode {
-  display: flex;
-  background: var(--bg-elevated);
-  border-radius: 5px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-.browse-search .search-mode button {
-  padding: 3px 9px;
-  font-size: 11px; font-weight: 500;
-  color: var(--text-tertiary);
-  transition: all var(--t-fast) var(--ease);
-  white-space: nowrap;
-}
-.browse-search .search-mode button:hover { color: var(--text-primary); }
-.browse-search .search-mode button.active {
-  background: var(--accent);
-  color: white;
-}
-.browse-search .kbd-hint {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  flex-shrink: 0;
-  padding: 2px 4px;
-  border-radius: 5px;
-}
-.browse-search .kbd-hint:hover { background: var(--bg-elevated); }
-.browse-search .kbd-hint kbd {
-  font-family: var(--font-sans);
-  font-size: 10px;
-  padding: 1px 5px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--glass-border);
-  border-radius: 4px;
-  color: var(--text-tertiary);
-  line-height: 1.4;
-  font-weight: 500;
+  width: clamp(280px, 400px, 500px);
 }
 
 .viewer-wrap {
@@ -461,16 +296,7 @@ watch(() => route.fullPath, loadCategories, { immediate: true })
 .file-error-notice .btn { padding: 8px 20px; font-size: 13px; }
 
 @media (max-width: 768px) {
-  .cover { padding: 10px 12px; }
-  .cover-content { flex-wrap: wrap; gap: 8px; }
-  .browse-search { flex: 1 1 100%; min-width: 0; max-width: none; order: 2; margin-right: 0; }
-  .browse-search .search-shell { height: 40px; }
-  .browse-search .kbd-hint { display: none; }
-  .cover-icon { width: 28px; height: 28px; border-radius: 7px; }
-  .cover-title { font-size: 15px; }
-  .cover-desc { font-size: 11px; }
-  .cover-back { width: 26px; height: 26px; }
-  .cover-glow { display: none; }
+  .browse-search { flex: 1 1 100%; min-width: 0; max-width: none; order: 2; margin-right: 0; margin-top: 8px; }
   .browser { padding: 0 10px 16px; }
   .viewer-wrap { padding: 8px 10px 16px; }
   .browser-body { border-radius: var(--radius); }

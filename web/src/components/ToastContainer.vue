@@ -40,17 +40,17 @@ import { toasts } from '../composables/useToast'
 .toast {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  border-radius: var(--radius);
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 12px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 550;
   background: var(--bg-surface);
   border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
   pointer-events: auto;
-  min-width: 240px;
-  max-width: 400px;
+  min-width: 140px;
+  max-width: 320px;
   backdrop-filter: blur(20px);
 }
 
