@@ -32,3 +32,4 @@ start.sh
 .git/
 .DS_Store
 staticman-linux
+server
