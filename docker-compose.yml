@@ -11,7 +11,6 @@ services:
     volumes:
       - ./data:/app/data
     environment:
-      - ACCESS_KEY=${ACCESS_KEY:-changeme}
       - PORT=8080
       - DATA_DIR=/app/data
       - SITE_TITLE_CN=${SITE_TITLE_CN:-魔匣}

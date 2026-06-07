@@ -9,9 +9,8 @@ env:
   # 提前启用 Node.js 24，消除 Node 20 弃用告警
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
-  # 从 GitHub Secrets 读取；未配置时使用 __UNSET__ 占位符，
+  # 从 GitHub Secrets 读取站点配置；未配置时使用 __UNSET__ 占位符，
   # 部署脚本会跳过未设置的变量，避免覆盖服务器上已有的手动配置。
-  ACCESS_KEY: ${{ secrets.STATICMAN_ACCESS_KEY != '' && secrets.STATICMAN_ACCESS_KEY || '__UNSET__' }}
   SITE_TITLE: ${{ secrets.STATICMAN_SITE_TITLE != '' && secrets.STATICMAN_SITE_TITLE || '__UNSET__' }}
   SITE_TITLE_CN: ${{ secrets.STATICMAN_SITE_TITLE_CN != '' && secrets.STATICMAN_SITE_TITLE_CN || '__UNSET__' }}
   SITE_TITLE_EN: ${{ secrets.STATICMAN_SITE_TITLE_EN != '' && secrets.STATICMAN_SITE_TITLE_EN || '__UNSET__' }}
@@ -76,8 +75,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script_stop: true
-          envs: ACCESS_KEY,SITE_TITLE,SITE_TITLE_CN,SITE_TITLE_EN,SITE_DESCRIPTION,SITE_LOGO
+          envs: SITE_TITLE,SITE_TITLE_CN,SITE_TITLE_EN,SITE_DESCRIPTION,SITE_LOGO
           script: |
             set -euo pipefail
 
@@ -109,7 +107,6 @@ jobs:
               fi
             }
 
-            update_env_if_set "ACCESS_KEY" "${ACCESS_KEY}"
             update_env "PORT" "8080"
             update_env "DATA_DIR" "/opt/magichub/data"
             update_env_if_set "SITE_TITLE" "${SITE_TITLE}"
