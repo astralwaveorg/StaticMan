@@ -4,32 +4,30 @@
 
 # Editor
 .vscode/
-.codegpt
-.idea
+.idea/
 
-# Python
-.venv
-sqlite_mcp_server.db
+# Go build artifacts
+staticman
+server
+staticman-linux
+*.exe
 
 # Node
 **/node_modules/**
-**/misc.xml
 
-# v2 build artifacts
-staticman
-/bin/server
-web/node_modules/
+# Frontend build output（Go embed 时从 internal/web/dist 读取）
 web/dist/
+
+# Go embed dist（CI 构建，本地不提交）
 internal/web/dist/
-tools/node-checker/node-checker
-*.exe
-*.test.mjs
+
+# Frontend temp/debug files
 web/*.mjs
-# 系统残留
-data/.gitconfig
-data/Git/.gitconfig
-start.sh
-.git/
-.DS_Store
-staticman-linux
-server
+web/vite.config.d.ts
+web/vite.config.js
+
+# SQLite（MCP 工具残留）
+sqlite_mcp_server.db
+
+# Data（运行时挂载，不含在源码仓库）
+data/
