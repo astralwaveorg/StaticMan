@@ -292,8 +292,20 @@ func (c *Config) GetSite() SiteConfig {
 func (c *Config) Match(path string, isDir bool) MatchResult {
 	// 1. 引擎模式匹配
 	res := c.Engine.Match(path, isDir)
-	
-	// 2. 检查 metadata.yaml 中的可见性 (仅文件)
+
+	// 2. 向后兼容：检查旧的 protected 列表
+	if !res.Protected {
+		c.mu.RLock()
+		for _, p := range c.Password.Protected {
+			if path == p.Path || isPathUnder(path, p.Path) {
+				res.Protected = true
+				break
+			}
+		}
+		c.mu.RUnlock()
+	}
+
+	// 3. 检查 metadata.yaml 中的可见性 (仅文件)
 	if !isDir {
 		if meta, ok := c.Metadata.Files[path]; ok {
 			if meta.Visibility == "protected" {
@@ -301,7 +313,7 @@ func (c *Config) Match(path string, isDir bool) MatchResult {
 			}
 		}
 	}
-	
+
 	return res
 }
 

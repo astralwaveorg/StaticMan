@@ -1,6 +1,6 @@
 {
-  "name": "StaticMan - 配置管理中心",
-  "short_name": "StaticMan",
+  "name": "魔匣 MagicBox - 配置管理中心",
+  "short_name": "魔匣",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#09090f",
@@ -9,12 +9,18 @@
     {
       "src": "/logo-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/logo-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "categories": ["utilities", "productivity"],
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "orientation": "portrait-primary"
 }

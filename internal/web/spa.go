@@ -101,6 +101,15 @@ func (h *SPAHandler) serveIndexHTML(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
+		// apple-mobile-web-app-title 动态注入
+		const appleTitlePrefix = `<meta name="apple-mobile-web-app-title" content="`
+		if idx := strings.Index(html, appleTitlePrefix); idx != -1 {
+			start := idx + len(appleTitlePrefix)
+			if end := strings.Index(html[start:], `"`); end != -1 {
+				html = html[:start] + title + html[start+end:]
+			}
+		}
+
 		if site.Logo != "" {
 			html = strings.Replace(html, `<link rel="icon" type="image/svg+xml" href="/logo.svg" />`, `<link rel="icon" type="image/svg+xml" href="`+site.Logo+`" />`, 1)
 			html = strings.Replace(html, `<link rel="apple-touch-icon" href="/logo-192.png" />`, `<link rel="apple-touch-icon" href="`+site.Logo+`" />`, 1)
