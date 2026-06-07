@@ -6,7 +6,6 @@ on:
   workflow_dispatch:
 
 env:
-  # 提前启用 Node.js 24，消除 Node 20 弃用告警
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
   # 从 GitHub Secrets 读取站点配置；未配置时使用 __UNSET__ 占位符，
@@ -56,7 +55,6 @@ jobs:
         run: |
           ls -lh staticman
           file staticman
-          # 确保是 Linux 静态链接二进制
           file staticman | grep -q "ELF.*statically linked"
 
       - name: Upload Artifacts to Server
@@ -65,11 +63,11 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "staticman,staticman.service,docker-compose.yml"
-          target: "/opt/magichub/src/"
+          source: "staticman,staticman.service"
+          target: "/tmp/magichub-deploy/"
           overwrite: true
 
-      - name: Deploy Binary & Restart Service
+      - name: Deploy & Restart
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -79,18 +77,32 @@ jobs:
           script: |
             set -euo pipefail
 
-            SRC="/opt/magichub/src"
+            STAGE="/tmp/magichub-deploy"
             BIN="/opt/magichub/bin/staticman"
-            ENV_FILE="$SRC/.env"
+            ENV_FILE="/opt/magichub/.env"
 
-            echo "==> Updating .env from workflow environment variables"
+            # ── 安装二进制 ──
+            echo "==> Installing binary"
+            mkdir -p /opt/magichub/bin
+            cp -f "$STAGE/staticman" "$BIN"
+            chmod +x "$BIN"
+            ls -lh "$BIN"
+
+            # ── 安装 systemd 服务 ──
+            echo "==> Installing systemd service"
+            cp -f "$STAGE/staticman.service" /etc/systemd/system/staticman.service
+            systemctl daemon-reload
+
+            # ── 清理临时文件 ──
+            rm -rf "$STAGE"
+
+            # ── 更新 .env ──
+            echo "==> Updating .env"
             touch "$ENV_FILE"
             chmod 600 "$ENV_FILE"
 
-            # 辅助函数：更新或追加 env 变量（保留文件中其他自定义变量）
             update_env() {
-              local key="$1"
-              local value="$2"
+              local key="$1" value="$2"
               if grep -q "^${key}=" "$ENV_FILE" 2>/dev/null; then
                 sed -i "s|^${key}=.*|${key}=${value}|" "$ENV_FILE"
               else
@@ -98,10 +110,8 @@ jobs:
               fi
             }
 
-            # 辅助函数：仅当 workflow 显式配置了该变量时才更新，避免覆盖服务器手动配置
             update_env_if_set() {
-              local key="$1"
-              local value="$2"
+              local key="$1" value="$2"
               if [ "${value}" != "__UNSET__" ] && [ -n "${value}" ]; then
                 update_env "$key" "$value"
               fi
@@ -115,21 +125,13 @@ jobs:
             update_env_if_set "SITE_DESCRIPTION" "${SITE_DESCRIPTION}"
             update_env_if_set "SITE_LOGO" "${SITE_LOGO}"
 
-            echo "Current .env:"
             grep -E '^(SITE_|PORT|DATA_DIR)=' "$ENV_FILE"
 
-            echo "==> Installing latest binary"
-            cp -f "$SRC/staticman" "$BIN"
-            chmod +x "$BIN"
-            ls -lh "$BIN"
-
-            echo "==> Installing/Updating systemd service"
-            cp -f "$SRC/staticman.service" /etc/systemd/system/staticman.service
-            systemctl daemon-reload
-
+            # ── 重启服务 ──
             echo "==> Restarting staticman"
             systemctl restart staticman
 
+            # ── 健康检查（最多 12s） ──
             echo "==> Waiting for health check"
             for i in 1 2 3 4 5 6; do
               sleep 2
@@ -146,6 +148,7 @@ jobs:
               echo "Attempt $i failed, retrying..."
             done
 
+            # ── 验证 ──
             echo "==> Verifying site config"
             curl -s http://127.0.0.1:8080/api/config | head -c 500
             echo
