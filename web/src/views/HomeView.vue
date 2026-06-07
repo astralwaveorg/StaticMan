@@ -317,11 +317,11 @@ onBeforeUnmount(() => {
 .empty-state h3 { font-size: 14px; color: var(--text-secondary); }
 .empty-state code { font-family: var(--font-mono); font-size: 12px; padding: 2px 6px; background: var(--bg-elevated); border-radius: 4px; }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .home-inner { padding: 12px 10px 20px; }
   .orbs { display: none; }
   .gallery { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .home-search { max-width: none; flex: 1 1 100%; min-width: 0; margin-top: 8px; }
+  .home-search { width: 100%; max-width: 100%; flex: 1 1 100%; min-width: 0; margin-top: 8px; box-sizing: border-box; }
   .stats { margin-bottom: 10px; padding: 6px 10px; }
   .stat-value { font-size: 13px; }
   .stat-label { font-size: 10px; }
