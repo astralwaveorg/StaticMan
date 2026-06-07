@@ -331,16 +331,17 @@ async function copyPath() {
     padding-bottom: 8px;
   }
   .file-actions {
-    justify-content: space-around;
+    justify-content: center;
     width: 100%;
+    gap: 8px;
   }
   .action-btn {
     flex-direction: column;
     gap: 2px;
-    padding: 6px 8px;
+    padding: 4px 6px;
     font-size: 10px;
-    min-height: 48px;
-    min-width: 48px;
+    min-height: 40px;
+    min-width: 40px;
     justify-content: center;
     border: none;
     background: transparent;

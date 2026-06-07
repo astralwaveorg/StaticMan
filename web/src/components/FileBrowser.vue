@@ -425,7 +425,7 @@ onBeforeUnmount(() => {
 .list { display: flex; flex-direction: column; border: 1px solid var(--glass-border); border-radius: var(--radius-lg); overflow: hidden; }
 .list-header, .list-item {
   display: grid;
-  grid-template-columns: 28px 1fr 100px 170px 240px;
+  grid-template-columns: 28px minmax(0, 1fr) 100px 170px 240px;
   align-items: center;
   gap: 12px;
   padding: 10px 18px;
@@ -449,7 +449,7 @@ onBeforeUnmount(() => {
 .list-icon.locked { color: var(--warning); }
 
 .list-meta { display: flex; flex-direction: column; min-width: 0; flex: 1; }
-.list-name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+.list-name { font-size: 14px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .list-details { display: none; } /* 默认隐藏（在大屏下由 grid 列代替） */
 
 .list-size, .list-time { font-size: 13px; color: var(--text-secondary); font-family: var(--font-mono); text-align: right; display: flex; align-items: center; justify-content: flex-end; }
@@ -484,6 +484,7 @@ onBeforeUnmount(() => {
   border: 1px solid var(--glass-border);
   border-radius: 5px;
   transition: all var(--t-fast) var(--ease);
+  white-space: nowrap;
 }
 .row-action:hover { color: var(--text-primary); border-color: var(--accent); background: var(--bg-hover); }
 

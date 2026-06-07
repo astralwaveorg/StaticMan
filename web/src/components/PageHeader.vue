@@ -73,7 +73,7 @@ defineEmits(['back'])
   border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
   flex-shrink: 0;
 }
-.header-text { text-align: left; min-width: 0; }
+.header-text { text-align: left; min-width: 0; overflow: hidden; }
 .header-title {
   font-size: 18px; font-weight: 700;
   letter-spacing: -0.02em;
@@ -82,8 +82,9 @@ defineEmits(['back'])
   background: linear-gradient(135deg, var(--text-primary) 0%, color-mix(in srgb, var(--accent, var(--text-primary)) 80%, var(--text-primary)) 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.header-subtitle { font-size: 12px; color: var(--text-secondary); margin: 1px 0 0; transition: all 0.3s ease; }
+.header-subtitle { font-size: 12px; color: var(--text-secondary); margin: 1px 0 0; transition: all 0.3s ease; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .header-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; }
 

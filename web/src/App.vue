@@ -420,12 +420,12 @@ watch(() => ui.showLogin, (v) => { if (v) nextTick(() => passwordInput.value?.fo
 
 .login-btn {
   display: inline-flex; align-items: center; gap: 5px;
-  padding: 7px 12px; border-radius: 7px;
+  padding: 5px 10px; border-radius: 7px;
   background: var(--accent); color: white;
   font-size: 13px; font-weight: 500;
   transition: all var(--t-fast) var(--ease);
   box-shadow: 0 2px 8px rgba(124, 58, 237, 0.25);
-  min-height: 44px;
+  min-height: 36px;
 }
 .login-btn:hover { background: var(--accent-hover); }
 
