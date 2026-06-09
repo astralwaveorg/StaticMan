@@ -899,6 +899,11 @@ func (h *Handler) serveRawContent(w http.ResponseWriter, r *http.Request, path s
 	} else {
 		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", filepath.Base(path)))
 	}
+	// 禁用 CDN/反代/浏览器缓存：这些文件是热更新的活数据，
+	// 一旦被中间层缓存就出现"服务器更新了但外部拉到的还是旧文件"的问题
+	w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+	w.Header().Set("Pragma", "no-cache")
+	w.Header().Set("Expires", "0")
 	w.Write(data)
 }
 
